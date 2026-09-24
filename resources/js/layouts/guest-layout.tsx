@@ -1,25 +1,21 @@
-import { Link } from '@inertiajs/react';
-import { Menu, X } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
+import { Link } from "@inertiajs/react";
+import { Menu, X } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 
 const links = [
-    { href: '/menu', label: 'Menu' },
-    { href: '/private', label: 'Private dining' },
-    { href: '/about', label: 'Our story' },
-    { href: '/contact', label: 'Contact' },
+    { href: "/menu", label: "Menu" },
+    { href: "/private", label: "Private dining" },
+    { href: "/about", label: "Our story" },
+    { href: "/contact", label: "Contact" },
 ];
 
-export default function GuestLayout({
-    children,
-}: {
-    children: ReactNode;
-}) {
+export default function GuestLayout({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
 
     return (
-        <div className="flex min-h-screen flex-col overflow-x-hidden bg-background text-foreground">
-            <header className="bg-primary text-primary-foreground">
+        <div className="flex min-h-screen flex-col overflow-x-clip bg-background text-foreground">
+            <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#1f1d1b]/95 text-primary-foreground backdrop-blur-md transition-colors duration-200">
                 <div className="flex w-full items-center gap-3 px-4 py-3 sm:px-6 lg:gap-8 lg:px-12 lg:py-4">
                     <Link
                         href="/"
@@ -38,14 +34,6 @@ export default function GuestLayout({
                                 {link.label}
                             </Link>
                         ))}
-                        <Button
-                            variant="outline"
-                            nativeButton={false}
-                            render={<Link href="/login" />}
-                            className="rounded-full border-2 border-primary-foreground bg-transparent px-5 text-xs font-semibold tracking-wide text-primary-foreground uppercase hover:bg-transparent hover:text-primary-foreground"
-                        >
-                            Staff login
-                        </Button>
                         <Button
                             nativeButton={false}
                             render={<Link href="/reserve" />}
@@ -68,7 +56,7 @@ export default function GuestLayout({
                             size="icon"
                             className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
                             aria-expanded={open}
-                            aria-label={open ? 'Close menu' : 'Menu'}
+                            aria-label={open ? "Close menu" : "Menu"}
                             onClick={() => setOpen((current) => !current)}
                         >
                             {open ? <X /> : <Menu />}
@@ -90,14 +78,64 @@ export default function GuestLayout({
 
             <main className="flex-1">{children}</main>
 
-            <footer className="bg-primary text-primary-foreground">
-                <div className="flex w-full flex-col gap-2 px-6 py-10 text-sm lg:px-12">
-                    <p>18 Mercer Lane</p>
-                    <p>Lunch and dinner, 11:00 to 21:00. Last seating 19:00.</p>
-                    <p className="flex gap-4">
-                        <Link href="/terms">Terms</Link>
-                        <Link href="/privacy">Privacy</Link>
-                    </p>
+            <footer className="border-t border-white/15 bg-primary text-primary-foreground">
+                <div className="mx-auto flex max-w-7xl flex-col gap-8 px-5 py-12 sm:px-8 lg:px-14">
+                    <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+                        <div>
+                            <Link
+                                href="/"
+                                className="font-heading text-2xl tracking-tight"
+                            >
+                                Halden
+                            </Link>
+                            <div className="mt-3 flex flex-col gap-1 text-sm text-primary-foreground/75">
+                                <p>18 Mercer Lane</p>
+                                <p>
+                                    Lunch and dinner, 11:00 to 21:00. Last
+                                    seating 19:00.
+                                </p>
+                            </div>
+                        </div>
+
+                        <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-primary-foreground/80">
+                            {links.map((link) => (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className="transition-colors hover:text-primary-foreground hover:underline underline-offset-4"
+                                >
+                                    {link.label}
+                                </Link>
+                            ))}
+                            <Link
+                                href="/login"
+                                className="transition-colors hover:text-primary-foreground hover:underline underline-offset-4"
+                            >
+                                Staff login
+                            </Link>
+                        </nav>
+                    </div>
+
+                    <div className="flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
+                        <p>
+                            © {new Date().getFullYear()} Halden. All rights
+                            reserved.
+                        </p>
+                        <div className="flex items-center gap-6">
+                            <Link
+                                href="/terms"
+                                className="transition-colors hover:text-primary-foreground hover:underline underline-offset-4"
+                            >
+                                Terms
+                            </Link>
+                            <Link
+                                href="/privacy"
+                                className="transition-colors hover:text-primary-foreground hover:underline underline-offset-4"
+                            >
+                                Privacy
+                            </Link>
+                        </div>
+                    </div>
                 </div>
             </footer>
         </div>
