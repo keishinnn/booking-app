@@ -23,3 +23,15 @@ test('the private dining page can be visited via named route', function () {
         ->assertOk()
         ->assertInertia(fn ($page) => $page->component('private'));
 });
+
+test('the about page returns 200 and renders the about component', function () {
+    $this->get('/about')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->component('about'));
+});
+
+test('the about page can be visited via named route', function () {
+    $this->get(route('about'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->component('about'));
+});
