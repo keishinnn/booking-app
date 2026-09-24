@@ -59,9 +59,16 @@ Switch `.env` from SQLite to MySQL before the first migration of these tables.
 
 | Route | Who | Page | Behavior |
 | --- | --- | --- | --- |
-| `GET /` | guest | `book` | Date, party size, and time. Lists matching tables. |
+| `GET /` | guest | `home` | Dining room introduction and the path to reserve. |
+| `GET /menu` | guest | `menu` | Static lunch and dinner lists. |
+| `GET /private` | guest | `private` | The six-seat table, with a link to reserve. |
+| `GET /about` | guest | `about` | Short story of the room. |
+| `GET /contact` | guest | `contact` | Address, hours, and email. |
+| `GET /reserve` | guest | `book` | Date, party size, and time. Lists matching tables. |
 | `POST /reservations` | guest | | Validates, checks overlap, saves, sends mail, redirects to confirmation. |
 | `GET /reservations/{reservation}/confirmation` | guest | `confirmation` | Shows that booking only. |
+| `GET /terms` | guest | `terms` | Static terms. |
+| `GET /privacy` | guest | `privacy` | Static privacy note. |
 | `GET /login` | guest | `login` | Staff login form. |
 | `POST /login` | guest | | Session login. |
 | `POST /logout` | staff | | Ends the session. |
@@ -91,7 +98,7 @@ Send one mailable when a reservation is created. Body includes guest name, table
 
 1. MySQL connection, `tables` and `reservations` migrations, models, factories, and the table seeder.
 2. Availability query and feature tests for overlap, capacity, and cancel.
-3. Public book page, create action, and confirmation page.
+3. Public pages from `docs/guest-frontend.md`, then the reserve action and confirmation page.
 4. Staff login and logout. Protect list, edit, update, and cancel.
 5. Staff list with search and filters, then edit and cancel.
 6. Confirmation mailable on create.
