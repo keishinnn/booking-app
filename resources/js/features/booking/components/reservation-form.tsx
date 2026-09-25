@@ -1,5 +1,5 @@
 import { Form } from '@inertiajs/react';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import type { RefObject } from 'react';
 import { Button } from '@/shared/components/ui/button';
 import { store } from '@/routes/reservations';
@@ -35,8 +35,8 @@ export default function ReservationForm({
                 </p>
             </div>
 
-            <Form {...store.form()} resetOnSuccess className="mt-8 space-y-6">
-                {({ errors, processing, wasSuccessful }) => (
+            <Form {...store.form()} className="mt-8 space-y-6">
+                {({ errors, processing }) => (
                     <>
                         <input type="hidden" name="table_id" value={table.id} />
                         <input
@@ -55,28 +55,16 @@ export default function ReservationForm({
                             value={filters.party_size ?? ''}
                         />
 
-                        {wasSuccessful && (
-                            <div className="flex items-start gap-3.5 rounded-xl border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 p-5 text-[#2f4a3c]">
-                                <CheckCircle2 className="size-5 shrink-0" />
-                                <div>
-                                    <p className="font-heading text-lg font-normal">
-                                        Table reserved successfully.
-                                    </p>
-                                    <p className="mt-1 text-xs text-[#1d1d1d]/75">
-                                        We look forward to welcoming you to
-                                        Halden on {filters.date} at{' '}
-                                        {filters.starts_at}.
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-
                         {(errors.table_id ||
+                            errors.starts_at ||
+                            errors.party_size ||
                             (errors as Record<string, string>).table ||
                             (errors as Record<string, string>).error) && (
                             <div className="rounded-xl border border-[#8a4b3b]/30 bg-[#8a4b3b]/10 p-4 text-[#8a4b3b]">
                                 <p className="text-sm font-medium">
                                     {errors.table_id ||
+                                        errors.starts_at ||
+                                        errors.party_size ||
                                         (errors as Record<string, string>)
                                             .table ||
                                         (errors as Record<string, string>)

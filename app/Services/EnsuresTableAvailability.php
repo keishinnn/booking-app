@@ -87,6 +87,25 @@ class EnsuresTableAvailability
         }
     }
 
+    /**
+     * Whether the table can host the party for the given 2-hour window.
+     */
+    public function isAvailable(
+        string $tableId,
+        string $reservedOn,
+        string $startsAt,
+        int $partySize,
+        ?int $ignoreReservationId = null,
+    ): bool {
+        try {
+            $this->ensure($tableId, $reservedOn, $startsAt, $partySize, $ignoreReservationId);
+
+            return true;
+        } catch (ValidationException) {
+            return false;
+        }
+    }
+
     public function normalizeTime(string $time): string
     {
         return CarbonImmutable::parse($time)->format('H:i');

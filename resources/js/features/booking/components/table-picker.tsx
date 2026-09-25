@@ -4,40 +4,35 @@ import type { Table } from '@/features/booking/types';
 
 type TablePickerProps = {
     tables: Array<Table>;
-    selectedTableId: number | null;
+    selectedTableId: string | null;
     onSelectTable: (table: Table) => void;
 };
 
-const tableMeta: Record<
-    number,
-    { image: string; tag: string; setting: string }
+const tableCopyByName: Record<
+    string,
+    { tag: string; setting: string }
 > = {
-    1: {
-        image: '/images/dining-table.png',
+    'Table 1': {
         tag: 'Window Setting',
         setting:
             'Mercer Lane window view with generous daylight and linen bench seating.',
     },
-    2: {
-        image: '/images/dining-table.png',
+    'Table 2': {
         tag: 'Window Setting',
         setting:
             'Quiet corner table with soft morning daylight and linen place settings.',
     },
-    3: {
-        image: '/images/dining-table.png',
+    'Table 3': {
         tag: 'Hearth Setting',
         setting:
             'Centered in the dining room, warmed by the wood-fired kitchen hearth.',
     },
-    4: {
-        image: '/images/dining-table.png',
+    'Table 4': {
         tag: 'Banquette Setting',
         setting:
             'Generous bench seating with handcrafted Swedish white oak dining table.',
     },
-    5: {
-        image: '/images/long-table.png',
+    'Table 5': {
         tag: 'The Long Table',
         setting:
             'Solid oak dining table for family celebrations and shared plates.',
@@ -64,11 +59,12 @@ export default function TablePicker({
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {tables.map((table) => {
                     const isSelected = selectedTableId === table.id;
-                    const meta = tableMeta[table.id] ?? {
-                        image: '/images/dining-table.png',
+                    const copy = tableCopyByName[table.name] ?? {
                         tag: 'Dining Room',
                         setting: 'Swedish oak table set with natural linen.',
                     };
+                    const image =
+                        table.image_url || '/images/dining-table.png';
 
                     return (
                         <div
@@ -81,10 +77,9 @@ export default function TablePicker({
                             }`}
                         >
                             <div>
-                                {/* Photo Container */}
                                 <div className="relative aspect-16/10 overflow-hidden rounded-xl bg-stone-100">
                                     <img
-                                        src={meta.image}
+                                        src={image}
                                         alt={table.name}
                                         className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-103"
                                     />
@@ -95,11 +90,10 @@ export default function TablePicker({
                                     )}
                                 </div>
 
-                                {/* Table Meta */}
                                 <div className="p-3 pt-4">
                                     <div className="flex items-baseline justify-between">
                                         <span className="text-[11px] font-semibold tracking-wider text-[#2f4a3c] uppercase">
-                                            {meta.tag}
+                                            {copy.tag}
                                         </span>
                                         <div className="flex items-center gap-1 text-xs text-[#1d1d1d]/70">
                                             <Users className="size-3.5" />
@@ -112,7 +106,7 @@ export default function TablePicker({
                                     </h3>
 
                                     <p className="mt-2 text-xs leading-relaxed text-[#1d1d1d]/75">
-                                        {meta.setting}
+                                        {copy.setting}
                                     </p>
                                 </div>
                             </div>
