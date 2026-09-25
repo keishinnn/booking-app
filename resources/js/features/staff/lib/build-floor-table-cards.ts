@@ -26,11 +26,7 @@ export function reservationTimeWindow(startsAt: string): string {
     return `${startsAt}–${formatEndTime(startsAt)}`;
 }
 
-function isWindowActive(
-    startsAt: string,
-    now: Date,
-    today: string,
-): boolean {
+function isWindowActive(startsAt: string, now: Date, today: string): boolean {
     const todayDate = today.slice(0, 10);
     const nowDate = [
         now.getFullYear(),

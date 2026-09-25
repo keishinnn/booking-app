@@ -103,6 +103,17 @@ test('the reserve page filters out tables smaller than party size', function () 
         );
 });
 
+test('the reserve page handles step 2 query parameters', function () {
+    $this->get('/reserve?date=2026-09-25&party_size=2&starts_at=19:00&table_id=1&step=2')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('book')
+            ->where('filters.step', 2)
+            ->where('filters.table_id', 1)
+            ->where('filters.date', '2026-09-25')
+        );
+});
+
 test('a reservation can be posted to the reservations stub endpoint', function () {
     $this->post('/reservations', [
         'table_id' => 1,

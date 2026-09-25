@@ -99,7 +99,7 @@ export default function StaffReservationsPage({
         >
             <Head title="Staff Reservations | Halden" />
 
-            <div className="relative mx-auto max-w-8xl space-y-6 pb-24">
+            <div className="max-w-8xl relative mx-auto space-y-6 pb-24">
                 <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="font-heading text-2xl font-normal tracking-tight text-[#1d1d1d] sm:text-3xl">
@@ -152,30 +152,26 @@ export default function StaffReservationsPage({
                                 )}
                             </div>
 
-                            {(
-                                [
-                                    'All',
-                                    'confirmed',
-                                    'cancelled',
-                                ] as const
-                            ).map((status) => (
-                                <button
-                                    key={status}
-                                    type="button"
-                                    onClick={() => setStatusFilter(status)}
-                                    className={`rounded-lg px-2.5 py-1.5 text-xs font-medium ${
-                                        statusFilter === status
-                                            ? 'bg-[#1f1d1b] font-semibold text-[#f8f7f3]'
-                                            : 'border border-[#dedbd3] bg-white text-[#1d1d1d]/70'
-                                    }`}
-                                >
-                                    {status === 'All'
-                                        ? 'All'
-                                        : status === 'confirmed'
-                                          ? 'Confirmed'
-                                          : 'Cancelled'}
-                                </button>
-                            ))}
+                            {(['All', 'confirmed', 'cancelled'] as const).map(
+                                (status) => (
+                                    <button
+                                        key={status}
+                                        type="button"
+                                        onClick={() => setStatusFilter(status)}
+                                        className={`rounded-lg px-2.5 py-1.5 text-xs font-medium ${
+                                            statusFilter === status
+                                                ? 'bg-[#1f1d1b] font-semibold text-[#f8f7f3]'
+                                                : 'border border-[#dedbd3] bg-white text-[#1d1d1d]/70'
+                                        }`}
+                                    >
+                                        {status === 'All'
+                                            ? 'All'
+                                            : status === 'confirmed'
+                                              ? 'Confirmed'
+                                              : 'Cancelled'}
+                                    </button>
+                                ),
+                            )}
                         </div>
                     </div>
 
@@ -373,7 +369,10 @@ export default function StaffReservationsPage({
             </div>
 
             {createOpen && (
-                <Modal title="Add reservation" onClose={() => setCreateOpen(false)}>
+                <Modal
+                    title="Add reservation"
+                    onClose={() => setCreateOpen(false)}
+                >
                     <ReservationForm
                         formKey="create-reservation"
                         formProps={store.form()}

@@ -132,7 +132,7 @@ export default function TablePicker({
                                 >
                                     {isSelected
                                         ? 'Table selected'
-                                        : `Select ${table.name}`}
+                                        : `Select ${table.name} & continue`}
                                 </Button>
                             </div>
                         </div>

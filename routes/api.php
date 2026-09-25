@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\TableController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:staff'])->group(function () {
+Route::middleware(['auth', 'role:staff'])->name('api.')->group(function () {
     Route::get('tables', [TableController::class, 'index'])->name('tables.index');
     Route::get('tables/{table}', [TableController::class, 'show'])->name('tables.show');
 
@@ -15,7 +15,7 @@ Route::middleware(['auth', 'role:staff'])->group(function () {
     Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
 });
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin'])->name('api.')->group(function () {
     Route::post('tables', [TableController::class, 'store'])->name('tables.store');
     Route::match(['put', 'patch'], 'tables/{table}', [TableController::class, 'update'])->name('tables.update');
     Route::delete('tables/{table}', [TableController::class, 'destroy'])->name('tables.destroy');

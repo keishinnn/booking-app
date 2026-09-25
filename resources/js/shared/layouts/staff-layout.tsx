@@ -7,7 +7,6 @@ import {
     Menu,
     X,
     Search,
-    Plus,
     ChevronDown,
     PanelLeftClose,
     PanelLeftOpen,
@@ -15,7 +14,7 @@ import {
 } from 'lucide-react';
 import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { Button } from '@/shared/components/ui/button';
-import { logout, reserve } from '@/routes';
+import { logout } from '@/routes';
 import { index as adminTables } from '@/routes/admin/tables';
 import {
     dashboard,
@@ -440,14 +439,6 @@ export default function StaffLayout({
                     </div>
 
                     <div className="flex items-center gap-2.5 sm:gap-4">
-                        <Link
-                            href={reserve.url()}
-                            className="inline-flex items-center gap-1.5 rounded-xl bg-[#1f1d1b] px-3.5 py-2 text-xs font-semibold tracking-wide text-[#f8f7f3] shadow-xs transition-all hover:bg-[#1f1d1b]/90 active:scale-[0.98]"
-                        >
-                            <Plus className="size-3.5" />
-                            <span>New Reservation</span>
-                        </Link>
-
                         <div className="relative" ref={userDropdownRef}>
                             <button
                                 type="button"

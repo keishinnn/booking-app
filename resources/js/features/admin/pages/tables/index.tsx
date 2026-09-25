@@ -1,12 +1,6 @@
 import { Form, Head } from '@inertiajs/react';
 import { MoreVertical, Plus, Users, X } from 'lucide-react';
-import {
-    useEffect,
-    useId,
-    useRef,
-    useState,
-    type ReactNode,
-} from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import TableForm from '@/features/admin/components/table-form';
 import type { DiningTable } from '@/features/staff/types';
 import StaffLayout from '@/shared/layouts/staff-layout';
@@ -203,10 +197,7 @@ export default function AdminTablesIndex({
             </div>
 
             {createOpen && (
-                <Modal
-                    title="Add table"
-                    onClose={() => setCreateOpen(false)}
-                >
+                <Modal title="Add table" onClose={() => setCreateOpen(false)}>
                     <TableForm
                         formKey="create-table"
                         formProps={store.form()}

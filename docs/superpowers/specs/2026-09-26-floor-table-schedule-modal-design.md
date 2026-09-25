@@ -16,11 +16,11 @@ Staff dashboard floor shows live occupancy for **today**, and clicking a table o
 
 For each table, among today’s confirmed reservations for that `table_id`, using a 2-hour seated window `[starts_at, starts_at + 2h)` on today:
 
-| Status | Condition | Card preview |
-| --- | --- | --- |
-| In service | A window contains “now” | That booking |
-| Reserved | No in-progress window; a booking starts later today | Next upcoming booking |
-| Open | No confirmed bookings today | “Available for walk-in” |
+| Status     | Condition                                           | Card preview            |
+| ---------- | --------------------------------------------------- | ----------------------- |
+| In service | A window contains “now”                             | That booking            |
+| Reserved   | No in-progress window; a booking starts later today | Next upcoming booking   |
+| Open       | No confirmed bookings today                         | “Available for walk-in” |
 
 Lunch vs Dinner follows the existing resource rule: hour &lt; 15 → Lunch, otherwise Dinner.
 

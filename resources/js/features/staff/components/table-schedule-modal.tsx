@@ -132,11 +132,7 @@ export default function TableScheduleModal({
     );
 }
 
-function ServiceChip({
-    service,
-}: {
-    service: 'Lunch' | 'Dinner';
-}): ReactNode {
+function ServiceChip({ service }: { service: 'Lunch' | 'Dinner' }): ReactNode {
     return (
         <span className="inline-flex rounded-full border border-[#dedbd3] bg-[#f8f7f3] px-2 py-0.5 text-[10px] font-semibold tracking-wide text-[#1d1d1d]/75 uppercase">
             {service}

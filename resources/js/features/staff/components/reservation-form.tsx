@@ -231,7 +231,9 @@ export default function ReservationForm({
                                 <select
                                     id="status"
                                     name="status"
-                                    defaultValue={defaults?.status ?? 'confirmed'}
+                                    defaultValue={
+                                        defaults?.status ?? 'confirmed'
+                                    }
                                     className="w-full border border-[#dedbd3] bg-[#f8f7f3]/50 px-4 py-3 text-sm focus:border-[#1d1d1d] focus:bg-white focus:outline-none"
                                 >
                                     <option value="confirmed">Confirmed</option>

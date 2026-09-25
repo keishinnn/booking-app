@@ -120,8 +120,14 @@ export default function Login({ error }: LoginPageProps) {
                                         </Button>
 
                                         <div className="mt-6 space-y-1 border border-[#dedbd3] bg-[#f8f7f3] p-4 text-xs text-[#1d1d1d]/75">
-                                            <p>Demo staff: staff@halden.test / password</p>
-                                            <p>Demo admin: admin@halden.test / password</p>
+                                            <p>
+                                                Demo staff: staff@halden.test /
+                                                password
+                                            </p>
+                                            <p>
+                                                Demo admin: admin@halden.test /
+                                                password
+                                            </p>
                                         </div>
                                     </>
                                 );

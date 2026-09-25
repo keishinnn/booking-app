@@ -172,8 +172,8 @@ export default function StaffDashboard({
                             Service Overview
                         </h1>
                         <p className="mt-1 text-xs text-[#1d1d1d]/65 sm:text-sm">
-                            Today&apos;s floor operations and live table schedule
-                            · {today}
+                            Today&apos;s floor operations and live table
+                            schedule · {today}
                         </p>
                     </div>
 

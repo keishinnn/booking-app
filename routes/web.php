@@ -46,9 +46,17 @@ Route::get('/reserve', function (Request $request) {
     $date = $request->query('date');
     $partySize = $request->integer('party_size') ?: null;
     $startsAt = $request->query('starts_at');
+    $tableId = $request->integer('table_id') ?: null;
+    $step = $request->integer('step', 1);
+
+    // If step 2 is requested without required selections, fall back to step 1
+    if ($step === 2 && (! $date || ! $partySize || ! $startsAt || ! $tableId)) {
+        $step = 1;
+        $tableId = null;
+    }
 
     // Halden standard dining tables:
-    // Table 1–2 capacity 2, Table 3–4 capacity 4, Table 5 capacity 6
+    // Table 1-2 capacity 2, Table 3-4 capacity 4, Table 5 capacity 6
     $allTables = [
         ['id' => 1, 'name' => 'Table 1', 'capacity' => 2],
         ['id' => 2, 'name' => 'Table 2', 'capacity' => 2],
@@ -69,6 +77,8 @@ Route::get('/reserve', function (Request $request) {
             'date' => $date,
             'party_size' => $partySize,
             'starts_at' => $startsAt,
+            'table_id' => $tableId,
+            'step' => $step,
         ],
         'tables' => $tables,
     ]);

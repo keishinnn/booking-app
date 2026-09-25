@@ -8,6 +8,8 @@ export type BookingFilters = {
     date: string | null;
     party_size: number | null;
     starts_at: string | null;
+    table_id?: number | null;
+    step?: number | null;
 };
 
 export type BookPageProps = {
