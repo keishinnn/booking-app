@@ -1,21 +1,21 @@
-import { Head } from '@inertiajs/react';
-import { CheckCircle2 } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { initialReservations } from '@/features/staff/components/mock-data';
-import ReservationList from '@/features/staff/components/reservation-list';
-import StaffLayout from '@/shared/layouts/staff-layout';
+import { Head } from "@inertiajs/react";
+import { CheckCircle2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { initialReservations } from "@/features/staff/components/mock-data";
+import ReservationList from "@/features/staff/components/reservation-list";
+import StaffLayout from "@/shared/layouts/staff-layout";
 import type {
     Reservation,
     ReservationServiceFilter,
     ReservationStatusFilter,
-} from '@/features/staff/types';
+} from "@/features/staff/types";
 
 export default function StaffReservationsPage() {
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] =
-        useState<ReservationStatusFilter>('All');
+        useState<ReservationStatusFilter>("All");
     const [serviceFilter, setServiceFilter] =
-        useState<ReservationServiceFilter>('All');
+        useState<ReservationServiceFilter>("All");
     const [reservations, setReservations] =
         useState<Reservation[]>(initialReservations);
     const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -31,10 +31,10 @@ export default function StaffReservationsPage() {
                 res.table.toLowerCase().includes(query);
 
             const matchesStatus =
-                statusFilter === 'All' || res.status === statusFilter;
+                statusFilter === "All" || res.status === statusFilter;
 
             const matchesService =
-                serviceFilter === 'All' || res.service === serviceFilter;
+                serviceFilter === "All" || res.service === serviceFilter;
 
             return matchesQuery && matchesStatus && matchesService;
         });
@@ -46,7 +46,7 @@ export default function StaffReservationsPage() {
         tableLabel: string,
     ) => {
         setReservations((prev) =>
-            prev.map((r) => (r.id === id ? { ...r, status: 'Seated' } : r)),
+            prev.map((r) => (r.id === id ? { ...r, status: "Seated" } : r)),
         );
         setActionMessage(`Seated ${guestName} at ${tableLabel}.`);
         setTimeout(() => setActionMessage(null), 4000);
@@ -54,7 +54,7 @@ export default function StaffReservationsPage() {
 
     const handleCompleteParty = (id: string, guestName: string) => {
         setReservations((prev) =>
-            prev.map((r) => (r.id === id ? { ...r, status: 'Completed' } : r)),
+            prev.map((r) => (r.id === id ? { ...r, status: "Completed" } : r)),
         );
         setActionMessage(`Service completed for ${guestName}. Table reset.`);
         setTimeout(() => setActionMessage(null), 4000);
@@ -68,7 +68,7 @@ export default function StaffReservationsPage() {
         >
             <Head title="Staff Reservations | Halden" />
 
-            <div className="mx-auto max-w-7xl space-y-6">
+            <div className="mx-auto max-w-8xl space-y-6">
                 {/* Action Feedback Banner */}
                 {actionMessage && (
                     <div className="flex items-center justify-between rounded-xl border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 px-4 py-3 text-xs font-medium text-[#2f4a3c] shadow-2xs">
@@ -118,9 +118,9 @@ export default function StaffReservationsPage() {
                     onStatusFilterChange={setStatusFilter}
                     onServiceFilterChange={setServiceFilter}
                     onClearFilters={() => {
-                        setSearch('');
-                        setStatusFilter('All');
-                        setServiceFilter('All');
+                        setSearch("");
+                        setStatusFilter("All");
+                        setServiceFilter("All");
                     }}
                     onSeatParty={handleSeatParty}
                     onCompleteParty={handleCompleteParty}

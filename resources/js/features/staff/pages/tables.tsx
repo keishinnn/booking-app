@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head } from "@inertiajs/react";
 import {
     Users,
     CheckCircle2,
@@ -8,17 +8,17 @@ import {
     MapPin,
     Check,
     RotateCcw,
-} from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { initialTables } from '@/features/staff/components/mock-data';
-import StaffLayout from '@/shared/layouts/staff-layout';
-import type { TableState, TableStatus } from '@/features/staff/types';
+} from "lucide-react";
+import { useMemo, useState } from "react";
+import { initialTables } from "@/features/staff/components/mock-data";
+import StaffLayout from "@/shared/layouts/staff-layout";
+import type { TableState, TableStatus } from "@/features/staff/types";
 
 export default function StaffTablesPage() {
     const [tables, setTables] = useState<TableState[]>(initialTables);
-    const [search, setSearch] = useState('');
-    const [statusFilter, setStatusFilter] = useState<'All' | TableStatus>(
-        'All',
+    const [search, setSearch] = useState("");
+    const [statusFilter, setStatusFilter] = useState<"All" | TableStatus>(
+        "All",
     );
     const [actionMessage, setActionMessage] = useState<string | null>(null);
 
@@ -36,7 +36,7 @@ export default function StaffTablesPage() {
                     table.partyInfo.toLowerCase().includes(query));
 
             const matchesStatus =
-                statusFilter === 'All' || table.status === statusFilter;
+                statusFilter === "All" || table.status === statusFilter;
 
             return matchesQuery && matchesStatus;
         });
@@ -48,10 +48,10 @@ export default function StaffTablesPage() {
                 t.id === tableId
                     ? {
                           ...t,
-                          status: 'Open' as TableStatus,
-                          statusLabel: 'Open',
-                          partyInfo: 'Available for walk-in',
-                          timeSlot: 'Free all evening',
+                          status: "Open" as TableStatus,
+                          statusLabel: "Open",
+                          partyInfo: "Available for walk-in",
+                          timeSlot: "Free all evening",
                       }
                     : t,
             ),
@@ -68,10 +68,10 @@ export default function StaffTablesPage() {
                 t.id === tableId
                     ? {
                           ...t,
-                          status: 'Occupied' as TableStatus,
-                          statusLabel: 'Occupied',
-                          partyInfo: 'Walk-in party seated',
-                          timeSlot: 'Seated just now',
+                          status: "Occupied" as TableStatus,
+                          statusLabel: "Occupied",
+                          partyInfo: "Walk-in party seated",
+                          timeSlot: "Seated just now",
                       }
                     : t,
             ),
@@ -86,9 +86,9 @@ export default function StaffTablesPage() {
                 t.id === tableId
                     ? {
                           ...t,
-                          status: 'Occupied' as TableStatus,
-                          statusLabel: 'Occupied',
-                          partyInfo: `${t.partyInfo?.replace('Reserved 19:00', '') || 'Guest'} • Seated`,
+                          status: "Occupied" as TableStatus,
+                          statusLabel: "Occupied",
+                          partyInfo: `${t.partyInfo?.replace("Reserved 19:00", "") || "Guest"} • Seated`,
                       }
                     : t,
             ),
@@ -99,15 +99,15 @@ export default function StaffTablesPage() {
         setTimeout(() => setActionMessage(null), 4000);
     };
 
-    const occupiedCount = tables.filter((t) => t.status === 'Occupied').length;
-    const reservedCount = tables.filter((t) => t.status === 'Reserved').length;
-    const openCount = tables.filter((t) => t.status === 'Open').length;
+    const occupiedCount = tables.filter((t) => t.status === "Occupied").length;
+    const reservedCount = tables.filter((t) => t.status === "Reserved").length;
+    const openCount = tables.filter((t) => t.status === "Open").length;
 
     return (
         <StaffLayout activeTablesCount={`${occupiedCount}/${tables.length}`}>
             <Head title="Staff Tables | Halden" />
 
-            <div className="mx-auto max-w-7xl space-y-6">
+            <div className="mx-auto max-w-8xl space-y-6">
                 {/* Action Feedback Banner */}
                 {actionMessage && (
                     <div className="flex items-center justify-between rounded-xl border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 px-4 py-3 text-xs font-medium text-[#2f4a3c] shadow-2xs">
@@ -165,22 +165,22 @@ export default function StaffTablesPage() {
                         </span>
                         <button
                             type="button"
-                            onClick={() => setStatusFilter('All')}
+                            onClick={() => setStatusFilter("All")}
                             className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-                                statusFilter === 'All'
-                                    ? 'bg-[#1f1d1b] font-semibold text-[#f8f7f3] shadow-2xs'
-                                    : 'border border-[#dedbd3] bg-white text-[#1d1d1d]/70 hover:bg-[#f8f7f3]'
+                                statusFilter === "All"
+                                    ? "bg-[#1f1d1b] font-semibold text-[#f8f7f3] shadow-2xs"
+                                    : "border border-[#dedbd3] bg-white text-[#1d1d1d]/70 hover:bg-[#f8f7f3]"
                             }`}
                         >
                             All ({tables.length})
                         </button>
                         <button
                             type="button"
-                            onClick={() => setStatusFilter('Occupied')}
+                            onClick={() => setStatusFilter("Occupied")}
                             className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-                                statusFilter === 'Occupied'
-                                    ? 'bg-[#1f1d1b] font-semibold text-[#f8f7f3] shadow-2xs'
-                                    : 'border border-[#dedbd3] bg-white text-[#1d1d1d]/70 hover:bg-[#f8f7f3]'
+                                statusFilter === "Occupied"
+                                    ? "bg-[#1f1d1b] font-semibold text-[#f8f7f3] shadow-2xs"
+                                    : "border border-[#dedbd3] bg-white text-[#1d1d1d]/70 hover:bg-[#f8f7f3]"
                             }`}
                         >
                             <span className="size-1.5 rounded-full bg-amber-500" />
@@ -188,11 +188,11 @@ export default function StaffTablesPage() {
                         </button>
                         <button
                             type="button"
-                            onClick={() => setStatusFilter('Reserved')}
+                            onClick={() => setStatusFilter("Reserved")}
                             className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-                                statusFilter === 'Reserved'
-                                    ? 'bg-[#1f1d1b] font-semibold text-[#f8f7f3] shadow-2xs'
-                                    : 'border border-[#dedbd3] bg-white text-[#1d1d1d]/70 hover:bg-[#f8f7f3]'
+                                statusFilter === "Reserved"
+                                    ? "bg-[#1f1d1b] font-semibold text-[#f8f7f3] shadow-2xs"
+                                    : "border border-[#dedbd3] bg-white text-[#1d1d1d]/70 hover:bg-[#f8f7f3]"
                             }`}
                         >
                             <span className="size-1.5 rounded-full bg-[#2f4a3c]" />
@@ -200,23 +200,23 @@ export default function StaffTablesPage() {
                         </button>
                         <button
                             type="button"
-                            onClick={() => setStatusFilter('Open')}
+                            onClick={() => setStatusFilter("Open")}
                             className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-                                statusFilter === 'Open'
-                                    ? 'bg-[#1f1d1b] font-semibold text-[#f8f7f3] shadow-2xs'
-                                    : 'border border-[#dedbd3] bg-white text-[#1d1d1d]/70 hover:bg-[#f8f7f3]'
+                                statusFilter === "Open"
+                                    ? "bg-[#1f1d1b] font-semibold text-[#f8f7f3] shadow-2xs"
+                                    : "border border-[#dedbd3] bg-white text-[#1d1d1d]/70 hover:bg-[#f8f7f3]"
                             }`}
                         >
                             <span className="size-1.5 rounded-full bg-stone-400" />
                             Open ({openCount})
                         </button>
 
-                        {(search || statusFilter !== 'All') && (
+                        {(search || statusFilter !== "All") && (
                             <button
                                 type="button"
                                 onClick={() => {
-                                    setSearch('');
-                                    setStatusFilter('All');
+                                    setSearch("");
+                                    setStatusFilter("All");
                                 }}
                                 className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-rose-600 transition-colors hover:bg-rose-50"
                             >
@@ -230,9 +230,9 @@ export default function StaffTablesPage() {
                 {/* Photo-First Table Cards Grid */}
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {filteredTables.map((table) => {
-                        const isOccupied = table.status === 'Occupied';
-                        const isReserved = table.status === 'Reserved';
-                        const isOpen = table.status === 'Open';
+                        const isOccupied = table.status === "Occupied";
+                        const isReserved = table.status === "Reserved";
+                        const isOpen = table.status === "Open";
 
                         return (
                             <div
@@ -245,7 +245,7 @@ export default function StaffTablesPage() {
                                         <img
                                             src={
                                                 table.image ||
-                                                '/images/dining-table.png'
+                                                "/images/dining-table.png"
                                             }
                                             alt={table.name}
                                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -264,7 +264,7 @@ export default function StaffTablesPage() {
                                                 <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-[#2f4a3c]/95 px-2.5 py-1 text-[11px] font-semibold tracking-wider text-[#f8f7f3] uppercase shadow-xs backdrop-blur-xs">
                                                     <span className="size-1.5 rounded-full bg-emerald-400" />
                                                     {table.statusLabel ||
-                                                        'Reserved'}
+                                                        "Reserved"}
                                                 </span>
                                             )}
                                             {isOpen && (
@@ -315,7 +315,7 @@ export default function StaffTablesPage() {
                                                 <div className="min-w-0">
                                                     <p className="truncate text-xs font-semibold text-[#1d1d1d]">
                                                         {table.partyInfo ||
-                                                            'No active party'}
+                                                            "No active party"}
                                                     </p>
                                                     {table.timeSlot && (
                                                         <div className="mt-1 flex items-center gap-1 text-[11px] text-[#1d1d1d]/60">
@@ -329,17 +329,17 @@ export default function StaffTablesPage() {
                                                 <span
                                                     className={`shrink-0 rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase ${
                                                         isOccupied
-                                                            ? 'bg-amber-100 text-amber-800'
+                                                            ? "bg-amber-100 text-amber-800"
                                                             : isReserved
-                                                              ? 'bg-[#2f4a3c]/15 text-[#2f4a3c]'
-                                                              : 'bg-emerald-100 text-emerald-800'
+                                                              ? "bg-[#2f4a3c]/15 text-[#2f4a3c]"
+                                                              : "bg-emerald-100 text-emerald-800"
                                                     }`}
                                                 >
                                                     {isOccupied
-                                                        ? 'Seated'
+                                                        ? "Seated"
                                                         : isReserved
-                                                          ? 'Booked'
-                                                          : 'Available'}
+                                                          ? "Booked"
+                                                          : "Available"}
                                                 </span>
                                             </div>
                                         </div>

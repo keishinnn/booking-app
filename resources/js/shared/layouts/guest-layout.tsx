@@ -1,7 +1,7 @@
-import { Link } from '@inertiajs/react';
-import { Menu, X } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
-import { Button } from '@/shared/components/ui/button';
+import { Link } from "@inertiajs/react";
+import { Menu, X } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { Button } from "@/shared/components/ui/button";
 import {
     about,
     contact,
@@ -11,14 +11,14 @@ import {
     privateMethod,
     reserve,
     terms,
-} from '@/routes';
+} from "@/routes";
 
 const links = [
-    { href: menu.url(), label: 'Menu' },
-    { href: privateMethod.url(), label: 'Private dining' },
-    { href: about.url(), label: 'Our story' },
-    { href: contact.url(), label: 'Contact' },
-    { href: reserve.url(), label: 'Reservations' },
+    { href: menu.url(), label: "Menu" },
+    { href: privateMethod.url(), label: "Private dining" },
+    { href: about.url(), label: "Our story" },
+    { href: contact.url(), label: "Contact" },
+    { href: reserve.url(), label: "Reservations" },
 ];
 
 export default function GuestLayout({ children }: { children: ReactNode }) {
@@ -67,7 +67,7 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                             size="icon"
                             className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
                             aria-expanded={open}
-                            aria-label={open ? 'Close menu' : 'Menu'}
+                            aria-label={open ? "Close menu" : "Menu"}
                             onClick={() => setOpen((current) => !current)}
                         >
                             {open ? <X /> : <Menu />}
