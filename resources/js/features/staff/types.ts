@@ -7,6 +7,30 @@ export type DiningTable = {
     updated_at?: string | null;
 };
 
+export type ReservationStatus = 'confirmed' | 'cancelled';
+
+export type DiningReservation = {
+    id: number;
+    table_id: string;
+    table: {
+        id: string;
+        name: string;
+        capacity: number;
+    } | null;
+    guest_name: string;
+    email: string;
+    phone: string;
+    party_size: number;
+    reserved_on: string;
+    starts_at: string;
+    status: ReservationStatus;
+    notes: string | null;
+    service: 'Lunch' | 'Dinner';
+    created_at?: string | null;
+    updated_at?: string | null;
+};
+
+/** @deprecated Prefer DiningReservation for live data */
 export type TableStatus = 'Occupied' | 'Reserved' | 'Open';
 
 export type TableState = {
@@ -22,14 +46,7 @@ export type TableState = {
     location?: string;
 };
 
-export type ReservationStatus =
-    | 'Seated'
-    | 'Confirmed'
-    | 'Completed'
-    | 'Cancelled';
-
-export type ReservationService = 'Lunch' | 'Dinner';
-
+/** @deprecated Prefer DiningReservation */
 export type Reservation = {
     id: string;
     time: string;
@@ -38,15 +55,17 @@ export type Reservation = {
     phone: string;
     table: string;
     partySize: number;
-    status: ReservationStatus;
-    service: ReservationService;
+    status: 'Seated' | 'Confirmed' | 'Completed' | 'Cancelled';
+    service: 'Lunch' | 'Dinner';
     notes?: string;
 };
 
 export type ReservationStatusFilter =
     | 'All'
-    | 'Seated'
+    | 'confirmed'
+    | 'cancelled'
     | 'Confirmed'
+    | 'Seated'
     | 'Completed';
 
 export type ReservationServiceFilter = 'All' | 'Dinner' | 'Lunch';

@@ -26,8 +26,14 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->group(function () {
     Route::redirect('/', '/staff/dashboard');
     Route::get('/dashboard', StaffDashboardController::class)->name('dashboard');
-    Route::get('/reservations', StaffReservationController::class)->name('reservations');
     Route::get('/tables', StaffTableController::class)->name('tables');
+
+    Route::get('/reservations', [StaffReservationController::class, 'index'])->name('reservations');
+    Route::get('/reservations/create', [StaffReservationController::class, 'create'])->name('reservations.create');
+    Route::post('/reservations', [StaffReservationController::class, 'store'])->name('reservations.store');
+    Route::get('/reservations/{reservation}/edit', [StaffReservationController::class, 'edit'])->name('reservations.edit');
+    Route::match(['put', 'patch'], '/reservations/{reservation}', [StaffReservationController::class, 'update'])->name('reservations.update');
+    Route::delete('/reservations/{reservation}', [StaffReservationController::class, 'destroy'])->name('reservations.destroy');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
