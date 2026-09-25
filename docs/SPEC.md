@@ -2,13 +2,17 @@
 
 Spec for the full-stack trial. One Laravel app, React pages through Inertia, MySQL.
 
-## Auth
+The trial asks for a designed booking site with working create, read, update, and delete, plus search, filtering, and an email when a table is reserved. Guests do all of that on the public site. There is no login and no staff account.
 
-Guests do not create accounts. They book from the public page.
+## Workflow
 
-Staff do log in. The reservation list can update or cancel any booking, so it stays behind one seeded staff account. No registration page, no guest accounts, and no roles. Laravel session auth on the existing `users` table is enough.
-
-Seed one staff user: `staff@restaurant.test` / `password`.
+1. **Create.** On `/reserve`, the guest picks a date, party size, and time, chooses a free table, and enters name, email, phone, and an optional note. The reservation is saved as confirmed.
+2. **Email.** Halden sends the guest the table, date, time, and party size.
+3. **Read.** `/reservations` lists every reservation. The confirmation page shows the one that was just saved.
+4. **Search.** The list matches guest name, email, or phone.
+5. **Filter.** The list narrows by date, status, party size, or table.
+6. **Update.** **Edit** changes the guest details, date, time, party size, or table. The same availability rule applies, ignoring the reservation being edited.
+7. **Delete.** **Cancel reservation** sets status to `cancelled` and keeps the row, so the table can be booked again and the list can still be filtered.
 
 ## Product rules
 
@@ -66,16 +70,13 @@ Switch `.env` from SQLite to MySQL before the first migration of these tables.
 | `GET /contact` | guest | `contact` | Address, hours, and email. |
 | `GET /reserve` | guest | `book` | Date, party size, and time. Lists matching tables. |
 | `POST /reservations` | guest | | Validates, checks overlap, saves, sends mail, redirects to confirmation. |
+| `GET /reservations` | guest | `reservations/index` | List, search, and filters. |
 | `GET /reservations/{reservation}/confirmation` | guest | `confirmation` | Shows that booking only. |
+| `GET /reservations/{reservation}/edit` | guest | `reservations/edit` | Edit form. |
+| `PUT /reservations/{reservation}` | guest | | Update with the availability rule. |
+| `DELETE /reservations/{reservation}` | guest | | Cancel. |
 | `GET /terms` | guest | `terms` | Static terms. |
 | `GET /privacy` | guest | `privacy` | Static privacy note. |
-| `GET /login` | guest | `login` | Staff login form. |
-| `POST /login` | guest | | Session login. |
-| `POST /logout` | staff | | Ends the session. |
-| `GET /reservations` | staff | `reservations/index` | List, search, and filters. |
-| `GET /reservations/{reservation}/edit` | staff | `reservations/edit` | Edit form. |
-| `PUT /reservations/{reservation}` | staff | | Update with the availability rule. |
-| `DELETE /reservations/{reservation}` | staff | | Cancel. |
 
 Search matches guest name, email, or phone. Filters are date, status, party size, and table. Default order is newest first.
 
@@ -90,16 +91,15 @@ Send one mailable when a reservation is created. Body includes guest name, table
 - A guest can book a table that fits the party and is free for that 2-hour window.
 - A table that is too small or already confirmed for an overlap is not offered, and a direct submit for it fails.
 - Confirmation shows the saved booking, and the mail log contains the same details.
-- A guest who is not logged in cannot open the list, edit, or cancel.
-- Staff can search, filter, update, and cancel. A cancelled table can be booked again for that window.
+- The public list can be searched and filtered, then a reservation can be updated or cancelled without logging in.
+- A cancelled table can be booked again for that window.
 - An update that collides with another confirmed reservation is rejected.
 
 ## Build order
 
 1. MySQL connection, `tables` and `reservations` migrations, models, factories, and the table seeder.
 2. Availability query and feature tests for overlap, capacity, and cancel.
-3. Public pages from `docs/guest-frontend.md`, then the reserve action and confirmation page.
-4. Staff login and logout. Protect list, edit, update, and cancel.
-5. Staff list with search and filters, then edit and cancel.
-6. Confirmation mailable on create.
-7. shadcn/ui on the book form, confirmation, login, and reservation list.
+3. Public pages from `docs/guest-frontend.md`, then create and the confirmation page.
+4. Public reservation list with search and filters, then update and cancel.
+5. Confirmation mailable on create.
+6. shadcn/ui on the book form, confirmation, and reservation list.

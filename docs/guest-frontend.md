@@ -1,10 +1,10 @@
 # Guest frontend
 
-Plan for every public Halden page. Staff login, the reservation book, and mail stay out of this plan. Copy and color come from `docs/BRAND.md`. Availability rules come from `docs/SPEC.md`.
+Plan for every public Halden page. Copy and color come from `docs/BRAND.md`. Availability rules and the booking workflow come from `docs/SPEC.md`.
 
 The reference site is a full visit: a bar, a home page, several content pages, a footer, and one filled action. Halden keeps that shape and drops the software catalog. There is no pricing, demo, blog, careers, or platform menu.
 
-Guests do not log in. Only **Reserve** writes to the database. Every other public page is static.
+Guests do not log in. They create a reservation, then read, search, filter, update, and cancel from the public list. Mail goes out when a reservation is created.
 
 ## Bar and footer
 
@@ -19,7 +19,7 @@ Bar, `#1F1D1B`:
 | Private dining | `/private` | Cream text |
 | Our story | `/about` | Cream text |
 | Contact | `/contact` | Cream text |
-| Staff login | `/login` | Outline pill. The page itself is staff work. |
+| Reservations | `/reservations` | Cream text |
 | Reserve | `/reserve` | Filled cream pill, ink text. This is the one primary action. |
 
 Below the `lg` breakpoint, the wordmark and **Reserve** stay visible. The other links sit behind a **Menu** button.
@@ -42,9 +42,13 @@ Page background is cream `#F8F7F3`. Text is ink `#1D1D1D`. Cards are white with 
 | `GET /private` | `resources/js/pages/private.tsx` | Static |
 | `GET /about` | `resources/js/pages/about.tsx` | Static |
 | `GET /contact` | `resources/js/pages/contact.tsx` | Static |
-| `GET /reserve` | `resources/js/pages/book.tsx` | Booking |
-| `POST /reservations` | | Saves, then redirects |
-| `GET /reservations/{reservation}/confirmation` | `resources/js/pages/confirmation.tsx` | Booking |
+| `GET /reserve` | `resources/js/pages/book.tsx` | Create |
+| `POST /reservations` | | Saves, sends mail, then redirects |
+| `GET /reservations` | `resources/js/pages/reservations/index.tsx` | Read, search, filter, cancel |
+| `GET /reservations/{reservation}/confirmation` | `resources/js/pages/confirmation.tsx` | Read |
+| `GET /reservations/{reservation}/edit` | `resources/js/pages/reservations/edit.tsx` | Update |
+| `PUT /reservations/{reservation}` | | Saves the edit |
+| `DELETE /reservations/{reservation}` | | Sets status to cancelled |
 | `GET /terms` | `resources/js/pages/terms.tsx` | Static |
 | `GET /privacy` | `resources/js/pages/privacy.tsx` | Static |
 
@@ -186,13 +190,13 @@ One white card, in this order: guest name, table name, date as `Thursday, 24 Sep
 
 Under the card: **This table is yours for two hours.**
 
-No second button. A text link back to **Halden** at `/`.
+Text links: **Reservations** at `/reservations`, and **Halden** at `/`.
 
 ### Terms
 
 Headline: **Terms.**
 
-A few sentences: a reservation holds one table for two hours from the start time, the guest should arrive for that time, and the floor team can cancel a booking from the reservation book. This is trial copy, not a legal policy.
+A few sentences: a reservation holds one table for two hours from the start time, the guest should arrive for that time, and a guest can change or cancel it from **Reservations**. This is trial copy, not a legal policy.
 
 ### Privacy
 
@@ -213,6 +217,8 @@ A few sentences: the reservation stores the guest's name, email, phone, party si
 | `resources/js/pages/contact.tsx` | Visit |
 | `resources/js/pages/book.tsx` | Finder, cards, guest form |
 | `resources/js/pages/confirmation.tsx` | Saved booking |
+| `resources/js/pages/reservations/index.tsx` | List, search, filters, cancel |
+| `resources/js/pages/reservations/edit.tsx` | Update form |
 | `resources/js/pages/terms.tsx` | Terms |
 | `resources/js/pages/privacy.tsx` | Privacy |
 | `resources/js/components/guest/table-card.tsx` | One free table |
@@ -227,7 +233,8 @@ Use shadcn/ui `Button`, `Input`, `Label`, and `Card` on the reserve page, restyl
 3. Reserve finder reloading `/reserve` with the three query params.
 4. Table cards, including the empty line, and the guest form.
 5. Confirmation page.
-6. Field errors and the held-table message.
+6. Reservation list with search, filters, edit, and cancel.
+7. Field errors and the held-table message.
 
 ## Done when
 
@@ -235,5 +242,7 @@ Use shadcn/ui `Button`, `Input`, `Label`, and `Card` on the reserve page, restyl
 - **Reserve** in the bar lands on `/reserve` from any public page.
 - Home introduces the room and does not show the finder.
 - Menu, private dining, our story, contact, terms, and privacy are readable without a booking.
-- A guest can still book a free table and land on **You're booked.**
+- A guest can book a free table and land on **You're booked.**
+- **Reservations** lists bookings, searches name, email, or phone, and filters by date, status, party size, and table.
+- **Edit** saves a change. **Cancel reservation** marks it cancelled and frees the table.
 - Narrow screens keep **Halden** and **Reserve** on the bar and tuck the other links into **Menu**.

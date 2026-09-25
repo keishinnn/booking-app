@@ -8,6 +8,7 @@ const links = [
     { href: "/private", label: "Private dining" },
     { href: "/about", label: "Our story" },
     { href: "/contact", label: "Contact" },
+    { href: "/reservations", label: "Reservations" },
 ];
 
 export default function GuestLayout({ children }: { children: ReactNode }) {
@@ -71,7 +72,6 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                                 {link.label}
                             </Link>
                         ))}
-                        <Link href="/login">Staff login</Link>
                     </nav>
                 )}
             </header>
@@ -107,12 +107,6 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                                     {link.label}
                                 </Link>
                             ))}
-                            <Link
-                                href="/login"
-                                className="transition-colors hover:text-primary-foreground hover:underline underline-offset-4"
-                            >
-                                Staff login
-                            </Link>
                         </nav>
                     </div>
 

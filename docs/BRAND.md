@@ -12,7 +12,7 @@ Brand for the restaurant table reservation trial. Visual reference: [SevenRooms]
 | Hours | 11:00–21:00. Last seating 19:00. Each table is held for 2 hours. |
 | Tables | Two 2-tops, two 4-tops, one 6-top. |
 
-The public site is the guest's way to reserve. The staff screens are the reservation book. Both use this brand. Staff screens stay quieter: same colors, less display type.
+The public site is the guest's way to reserve and to manage a booking. The reservation list uses the same colors, with less display type.
 
 ## What to take from the reference
 
@@ -47,13 +47,13 @@ The reference uses a custom serif for headlines and a custom sans for the interf
 | Role | Face | Notes |
 | --- | --- | --- |
 | Headlines | Fraunces | Regular, tight tracking. Guest pages only. |
-| Interface | Instrument Sans | Already loaded by this app. Navigation, forms, staff screens, email. |
+| Interface | Instrument Sans | Already loaded by this app. Navigation, forms, the reservation list, email. |
 
 | Style | Size | Use |
 | --- | --- | --- |
 | Display | 56–68px, weight 400 | Guest page title |
 | Title | 32px, weight 400, Fraunces | Confirmation heading |
-| Section | 20px, weight 500, Instrument Sans | Form groups, staff page title |
+| Section | 20px, weight 500, Instrument Sans | Form groups, reservation list title |
 | Body | 16px, weight 400 | Paragraphs and fields |
 | Label | 14px, weight 600, uppercase, slight tracking | Buttons and status |
 
@@ -62,7 +62,7 @@ The reference uses a custom serif for headlines and a custom sans for the interf
 Pills, fully rounded.
 
 - **Primary:** `bar` fill, `cream` text. Label is uppercase. Guest primary is **Reserve**. Staff primary is **Save**.
-- **Secondary:** transparent, 2px `cream` border when on the bar, 2px `bar` border when on cream. Staff login in the header uses this.
+- **Secondary:** transparent, 2px `cream` border when on the bar, 2px `bar` border when on cream.
 - **Quiet:** text only, `ink`, for Cancel reservation.
 
 One primary button per screen.
@@ -87,7 +87,7 @@ Avoid:
 
 ## Screens
 
-The public site is a set of pages, the way the reference is. The bar carries **Halden**, then **Menu**, **Private dining**, **Our story**, **Contact**, **Staff login** as the outline pill, and **Reserve** as the filled pill. Page-by-page layout is in `docs/guest-frontend.md`.
+The public site is a set of pages, the way the reference is. The bar carries **Halden**, then **Menu**, **Private dining**, **Our story**, **Contact**, **Reservations**, and **Reserve** as the filled pill. Page-by-page layout is in `docs/guest-frontend.md`. Guests manage bookings themselves. There is no staff login.
 
 ### Home (`/`)
 
@@ -137,15 +137,7 @@ Headline: **You're booked.**
 
 Then the facts, in this order: guest name, table, date, time, party size. A line under them: **This table is yours for two hours.**
 
-### Staff login
-
-Headline: **Reservation book.**
-
-Support: **For the Halden floor team.**
-
-Fields: email, password. Button: **Log in.**
-
-### Reservation list
+### Reservation list (`/reservations`)
 
 No display serif. Title: **Reservations.**
 
@@ -153,7 +145,7 @@ Search placeholder: **Name, email, or phone.**
 
 Filters: date, status, party size, table. Status reads **Confirmed** in moss or **Cancelled** in clay.
 
-Row action: **Edit.** Header action: **Log out.**
+Row actions: **Edit** and **Cancel reservation.**
 
 ### Edit
 
