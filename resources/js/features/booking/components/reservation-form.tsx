@@ -33,11 +33,7 @@ export default function ReservationForm({
                 </p>
             </div>
 
-            <Form
-                {...store.form()}
-                resetOnSuccess
-                className="mt-8 space-y-6"
-            >
+            <Form {...store.form()} resetOnSuccess className="mt-8 space-y-6">
                 {({ errors, processing, wasSuccessful }) => (
                     <>
                         <input type="hidden" name="table_id" value={table.id} />

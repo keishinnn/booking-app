@@ -21,7 +21,7 @@ export default function About() {
                     </div>
 
                     {/* Featured Imagery Container */}
-                    <div className="animate-fade-slide-up animation-delay-200 mt-10 border border-[#dedbd3] bg-white p-3 sm:p-4 lg:p-5 sm:mt-12">
+                    <div className="animate-fade-slide-up animation-delay-200 mt-10 border border-[#dedbd3] bg-white p-3 sm:mt-12 sm:p-4 lg:p-5">
                         <div className="overflow-hidden bg-[#f0eee6]">
                             <img
                                 src="/images/dining-room.png"
@@ -36,16 +36,22 @@ export default function About() {
                     </div>
 
                     {/* Editorial Story Narrative */}
-                    <div className="animate-fade-slide-up animation-delay-300 mt-10 border border-[#dedbd3] bg-white p-8 sm:p-12 lg:p-16 sm:mt-12">
+                    <div className="animate-fade-slide-up animation-delay-300 mt-10 border border-[#dedbd3] bg-white p-8 sm:mt-12 sm:p-12 lg:p-16">
                         <div className="max-w-3xl space-y-6 text-base leading-relaxed text-[#1d1d1d]/85 sm:text-lg sm:leading-relaxed">
                             <p>
-                                Halden is one dining room. A quiet room built with oak wood, linen-covered tables, and natural daylight.
+                                Halden is one dining room. A quiet room built
+                                with oak wood, linen-covered tables, and natural
+                                daylight.
                             </p>
                             <p>
-                                Service runs from 11:00 to 21:00. A reservation holds a table for two hours, and the last seating is 19:00.
+                                Service runs from 11:00 to 21:00. A reservation
+                                holds a table for two hours, and the last
+                                seating is 19:00.
                             </p>
                             <p>
-                                Every table is held for two full hours with no rush, no second seatings breathing down your neck, so you can linger over bread and wine.
+                                Every table is held for two full hours with no
+                                rush, no second seatings breathing down your
+                                neck, so you can linger over bread and wine.
                             </p>
                         </div>
 

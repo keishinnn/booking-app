@@ -25,7 +25,10 @@ export default function Privacy() {
                     <div className="animate-fade-slide-up animation-delay-200 mt-10 border border-[#dedbd3] bg-white p-8 sm:mt-12 sm:p-12 lg:p-14">
                         <div className="max-w-2xl space-y-6 text-base leading-relaxed text-[#1d1d1d]/85 sm:text-lg sm:leading-relaxed">
                             <p>
-                                The reservation stores the guest's name, email, phone, party size, date, time, and optional note so the table can be held and a confirmation can be sent.
+                                The reservation stores the guest's name, email,
+                                phone, party size, date, time, and optional note
+                                so the table can be held and a confirmation can
+                                be sent.
                             </p>
                         </div>
 

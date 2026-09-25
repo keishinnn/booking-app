@@ -30,31 +30,31 @@ The trial asks for a designed booking site with working create, read, update, an
 
 ### `tables`
 
-| Column | Notes |
-| --- | --- |
-| id | UUID primary key |
-| name | unique, e.g. "Table 1" |
-| capacity | integer, at least 1 |
-| image_url | nullable string; public URL or path for the table photo |
-| timestamps | |
+| Column     | Notes                                                   |
+| ---------- | ------------------------------------------------------- |
+| id         | UUID primary key                                        |
+| name       | unique, e.g. "Table 1"                                  |
+| capacity   | integer, at least 1                                     |
+| image_url  | nullable string; public URL or path for the table photo |
+| timestamps |                                                         |
 
 Seed: Table 1–2 capacity 2, Table 3–4 capacity 4, Table 5 capacity 6. Each seeded table gets an `image_url`.
 
 ### `reservations`
 
-| Column | Notes |
-| --- | --- |
-| id | |
-| table_id | UUID foreign key → `tables.id`, restrict on delete |
-| guest_name | required |
-| email | required |
-| phone | required |
-| party_size | integer, at least 1, not above the chosen table's capacity |
-| reserved_on | date |
-| starts_at | time, one of 11:00–19:00 |
-| status | `confirmed` or `cancelled`, default `confirmed` |
-| notes | nullable |
-| timestamps | |
+| Column      | Notes                                                      |
+| ----------- | ---------------------------------------------------------- |
+| id          |                                                            |
+| table_id    | UUID foreign key → `tables.id`, restrict on delete         |
+| guest_name  | required                                                   |
+| email       | required                                                   |
+| phone       | required                                                   |
+| party_size  | integer, at least 1, not above the chosen table's capacity |
+| reserved_on | date                                                       |
+| starts_at   | time, one of 11:00–19:00                                   |
+| status      | `confirmed` or `cancelled`, default `confirmed`            |
+| notes       | nullable                                                   |
+| timestamps  |                                                            |
 
 Index `(table_id, reserved_on, status)` for the overlap check. Also index `reserved_on`, `status`, `party_size`, `guest_name`, `email`, `phone`, and `created_at` for list filters, search, and newest-first order. On `tables`, `name` is unique and `capacity` is indexed for party-size matching.
 
@@ -62,22 +62,22 @@ Switch `.env` from SQLite to MySQL before the first migration of these tables.
 
 ## Pages
 
-| Route | Who | Page | Behavior |
-| --- | --- | --- | --- |
-| `GET /` | guest | `home` | Dining room introduction and the path to reserve. |
-| `GET /menu` | guest | `menu` | Static lunch and dinner lists. |
-| `GET /private` | guest | `private` | The six-seat table, with a link to reserve. |
-| `GET /about` | guest | `about` | Short story of the room. |
-| `GET /contact` | guest | `contact` | Address, hours, and email. |
-| `GET /reserve` | guest | `book` | Date, party size, and time. Lists matching tables. |
-| `POST /reservations` | guest | | Validates, checks overlap, saves, sends mail, redirects to confirmation. |
-| `GET /reservations` | guest | `reservations/index` | List, search, and filters. |
-| `GET /reservations/{reservation}/confirmation` | guest | `confirmation` | Shows that booking only. |
-| `GET /reservations/{reservation}/edit` | guest | `reservations/edit` | Edit form. |
-| `PUT /reservations/{reservation}` | guest | | Update with the availability rule. |
-| `DELETE /reservations/{reservation}` | guest | | Cancel. |
-| `GET /terms` | guest | `terms` | Static terms. |
-| `GET /privacy` | guest | `privacy` | Static privacy note. |
+| Route                                          | Who   | Page                 | Behavior                                                                 |
+| ---------------------------------------------- | ----- | -------------------- | ------------------------------------------------------------------------ |
+| `GET /`                                        | guest | `home`               | Dining room introduction and the path to reserve.                        |
+| `GET /menu`                                    | guest | `menu`               | Static lunch and dinner lists.                                           |
+| `GET /private`                                 | guest | `private`            | The six-seat table, with a link to reserve.                              |
+| `GET /about`                                   | guest | `about`              | Short story of the room.                                                 |
+| `GET /contact`                                 | guest | `contact`            | Address, hours, and email.                                               |
+| `GET /reserve`                                 | guest | `book`               | Date, party size, and time. Lists matching tables.                       |
+| `POST /reservations`                           | guest |                      | Validates, checks overlap, saves, sends mail, redirects to confirmation. |
+| `GET /reservations`                            | guest | `reservations/index` | List, search, and filters.                                               |
+| `GET /reservations/{reservation}/confirmation` | guest | `confirmation`       | Shows that booking only.                                                 |
+| `GET /reservations/{reservation}/edit`         | guest | `reservations/edit`  | Edit form.                                                               |
+| `PUT /reservations/{reservation}`              | guest |                      | Update with the availability rule.                                       |
+| `DELETE /reservations/{reservation}`           | guest |                      | Cancel.                                                                  |
+| `GET /terms`                                   | guest | `terms`              | Static terms.                                                            |
+| `GET /privacy`                                 | guest | `privacy`            | Static privacy note.                                                     |
 
 Search matches guest name, email, or phone. Filters are date, status, party size, and table. Default order is newest first.
 

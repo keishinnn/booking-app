@@ -112,7 +112,7 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className="transition-colors hover:text-primary-foreground hover:underline underline-offset-4"
+                                    className="underline-offset-4 transition-colors hover:text-primary-foreground hover:underline"
                                 >
                                     {link.label}
                                 </Link>
@@ -128,13 +128,13 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                         <div className="flex items-center gap-6">
                             <Link
                                 href={terms.url()}
-                                className="transition-colors hover:text-primary-foreground hover:underline underline-offset-4"
+                                className="underline-offset-4 transition-colors hover:text-primary-foreground hover:underline"
                             >
                                 Terms
                             </Link>
                             <Link
                                 href={privacy.url()}
-                                className="transition-colors hover:text-primary-foreground hover:underline underline-offset-4"
+                                className="underline-offset-4 transition-colors hover:text-primary-foreground hover:underline"
                             >
                                 Privacy
                             </Link>

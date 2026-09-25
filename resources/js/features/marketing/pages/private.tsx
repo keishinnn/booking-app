@@ -20,12 +20,13 @@ export default function Private() {
                             The long table.
                         </h1>
                         <p className="animate-fade-slide-up animation-delay-200 mt-4 text-base leading-relaxed text-[#1d1d1d]/80 sm:text-lg">
-                            Table 5 seats six. We hold it for two hours, same as every other table.
+                            Table 5 seats six. We hold it for two hours, same as
+                            every other table.
                         </p>
                     </div>
 
                     {/* Featured Imagery Container */}
-                    <div className="animate-fade-slide-up animation-delay-200 mt-10 border border-[#dedbd3] bg-white p-3 sm:p-4 lg:p-5 sm:mt-12">
+                    <div className="animate-fade-slide-up animation-delay-200 mt-10 border border-[#dedbd3] bg-white p-3 sm:mt-12 sm:p-4 lg:p-5">
                         <div className="overflow-hidden bg-[#f0eee6]">
                             <img
                                 src="/images/long-table.png"
@@ -55,10 +56,18 @@ export default function Private() {
 
                                 <div className="mt-6 space-y-4 text-base leading-relaxed text-[#1d1d1d]/80">
                                     <p>
-                                        Table 5 is in the dining room, not a separate salon or secluded back room. You share the energy, the natural daylight, and the quiet rhythm of service with the rest of the house.
+                                        Table 5 is in the dining room, not a
+                                        separate salon or secluded back room.
+                                        You share the energy, the natural
+                                        daylight, and the quiet rhythm of
+                                        service with the rest of the house.
                                     </p>
                                     <p>
-                                        Set with comfortable oak chairs and linen, it gives a party of six ample space to sit together, share plates, and talk without being closed off from the room.
+                                        Set with comfortable oak chairs and
+                                        linen, it gives a party of six ample
+                                        space to sit together, share plates, and
+                                        talk without being closed off from the
+                                        room.
                                     </p>
                                 </div>
                             </div>
@@ -78,10 +87,17 @@ export default function Private() {
 
                                 <div className="mt-6 space-y-4 text-base leading-relaxed text-[#1d1d1d]/80">
                                     <p>
-                                        A guest books it the same way as any other table at Halden. There are no private dining inquiries to file, no fixed minimum spends, and no predetermined set menus.
+                                        A guest books it the same way as any
+                                        other table at Halden. There are no
+                                        private dining inquiries to file, no
+                                        fixed minimum spends, and no
+                                        predetermined set menus.
                                     </p>
                                     <p>
-                                        Simply choose your date and select a party of six. We hold the table for two hours, giving you the time to enjoy lunch or dinner at your own pace.
+                                        Simply choose your date and select a
+                                        party of six. We hold the table for two
+                                        hours, giving you the time to enjoy
+                                        lunch or dinner at your own pace.
                                     </p>
                                 </div>
                             </div>

@@ -1,4 +1,7 @@
-import type { BookingFilterField, BookingFilters } from '@/features/booking/types';
+import type {
+    BookingFilterField,
+    BookingFilters,
+} from '@/features/booking/types';
 
 const partySizeOptions = [1, 2, 3, 4, 5, 6];
 const timeOptions = [

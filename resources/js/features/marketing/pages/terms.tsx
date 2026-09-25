@@ -25,13 +25,16 @@ export default function Terms() {
                     <div className="animate-fade-slide-up animation-delay-200 mt-10 border border-[#dedbd3] bg-white p-8 sm:mt-12 sm:p-12 lg:p-14">
                         <div className="max-w-2xl space-y-6 text-base leading-relaxed text-[#1d1d1d]/85 sm:text-lg sm:leading-relaxed">
                             <p>
-                                A reservation holds one table for two hours from the start time.
+                                A reservation holds one table for two hours from
+                                the start time.
                             </p>
                             <p>
-                                Guests should arrive promptly for their reserved time.
+                                Guests should arrive promptly for their reserved
+                                time.
                             </p>
                             <p>
-                                The floor team can cancel a booking from the reservation book if needed.
+                                The floor team can cancel a booking from the
+                                reservation book if needed.
                             </p>
                         </div>
 

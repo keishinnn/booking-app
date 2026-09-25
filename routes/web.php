@@ -18,6 +18,8 @@ Route::post('/login', function (Request $request) {
 
 Route::get('/staff', fn () => redirect()->route('staff.dashboard'));
 Route::get('/staff/dashboard', fn () => Inertia::render('staff/dashboard'))->name('staff.dashboard');
+Route::get('/staff/reservations', fn () => Inertia::render('staff/reservations'))->name('staff.reservations');
+Route::get('/staff/tables', fn () => Inertia::render('staff/tables'))->name('staff.tables');
 
 Route::get('/reserve', function (Request $request) {
     $date = $request->query('date');

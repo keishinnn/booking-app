@@ -1,15 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
 import RevealSection from '@/features/marketing/components/reveal-section';
-import StoryBand, { type StoryBandData } from '@/features/marketing/components/story-band';
+import StoryBand, {
+    type StoryBandData,
+} from '@/features/marketing/components/story-band';
 import { Button } from '@/shared/components/ui/button';
 import GuestLayout from '@/shared/layouts/guest-layout';
-import {
-    about,
-    menu,
-    privateMethod,
-    reserve,
-} from '@/routes';
+import { about, menu, privateMethod, reserve } from '@/routes';
 
 const bands: StoryBandData[] = [
     {

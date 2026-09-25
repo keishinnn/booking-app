@@ -12,15 +12,15 @@ Both live in `resources/js/layouts/guest-layout.tsx` and wrap every page below.
 
 Bar, `#1F1D1B`:
 
-| Item | Destination | Treatment |
-| --- | --- | --- |
-| Halden | `/` | Fraunces wordmark, cream |
-| Menu | `/menu` | Cream text |
-| Private dining | `/private` | Cream text |
-| Our story | `/about` | Cream text |
-| Contact | `/contact` | Cream text |
-| Reservations | `/reservations` | Cream text |
-| Reserve | `/reserve` | Filled cream pill, ink text. This is the one primary action. |
+| Item           | Destination     | Treatment                                                    |
+| -------------- | --------------- | ------------------------------------------------------------ |
+| Halden         | `/`             | Fraunces wordmark, cream                                     |
+| Menu           | `/menu`         | Cream text                                                   |
+| Private dining | `/private`      | Cream text                                                   |
+| Our story      | `/about`        | Cream text                                                   |
+| Contact        | `/contact`      | Cream text                                                   |
+| Reservations   | `/reservations` | Cream text                                                   |
+| Reserve        | `/reserve`      | Filled cream pill, ink text. This is the one primary action. |
 
 Below the `lg` breakpoint, the wordmark and **Reserve** stay visible. The other links sit behind a **Menu** button.
 
@@ -35,22 +35,22 @@ Page background is cream `#F8F7F3`. Text is ink `#1D1D1D`. Cards are white with 
 
 ## Pages
 
-| Route | File | Kind |
-| --- | --- | --- |
-| `GET /` | `resources/js/pages/home.tsx` | Static |
-| `GET /menu` | `resources/js/pages/menu.tsx` | Static |
-| `GET /private` | `resources/js/pages/private.tsx` | Static |
-| `GET /about` | `resources/js/pages/about.tsx` | Static |
-| `GET /contact` | `resources/js/pages/contact.tsx` | Static |
-| `GET /reserve` | `resources/js/pages/book.tsx` | Create |
-| `POST /reservations` | | Saves, sends mail, then redirects |
-| `GET /reservations` | `resources/js/pages/reservations/index.tsx` | Read, search, filter, cancel |
-| `GET /reservations/{reservation}/confirmation` | `resources/js/pages/confirmation.tsx` | Read |
-| `GET /reservations/{reservation}/edit` | `resources/js/pages/reservations/edit.tsx` | Update |
-| `PUT /reservations/{reservation}` | | Saves the edit |
-| `DELETE /reservations/{reservation}` | | Sets status to cancelled |
-| `GET /terms` | `resources/js/pages/terms.tsx` | Static |
-| `GET /privacy` | `resources/js/pages/privacy.tsx` | Static |
+| Route                                          | File                                        | Kind                              |
+| ---------------------------------------------- | ------------------------------------------- | --------------------------------- |
+| `GET /`                                        | `resources/js/pages/home.tsx`               | Static                            |
+| `GET /menu`                                    | `resources/js/pages/menu.tsx`               | Static                            |
+| `GET /private`                                 | `resources/js/pages/private.tsx`            | Static                            |
+| `GET /about`                                   | `resources/js/pages/about.tsx`              | Static                            |
+| `GET /contact`                                 | `resources/js/pages/contact.tsx`            | Static                            |
+| `GET /reserve`                                 | `resources/js/pages/book.tsx`               | Create                            |
+| `POST /reservations`                           |                                             | Saves, sends mail, then redirects |
+| `GET /reservations`                            | `resources/js/pages/reservations/index.tsx` | Read, search, filter, cancel      |
+| `GET /reservations/{reservation}/confirmation` | `resources/js/pages/confirmation.tsx`       | Read                              |
+| `GET /reservations/{reservation}/edit`         | `resources/js/pages/reservations/edit.tsx`  | Update                            |
+| `PUT /reservations/{reservation}`              |                                             | Saves the edit                    |
+| `DELETE /reservations/{reservation}`           |                                             | Sets status to cancelled          |
+| `GET /terms`                                   | `resources/js/pages/terms.tsx`              | Static                            |
+| `GET /privacy`                                 | `resources/js/pages/privacy.tsx`            | Static                            |
 
 ### Home
 
@@ -59,9 +59,9 @@ The arrival page. It does not contain the finder.
 1. Split hero. Left: **A table, when you want it.** Support: **Lunch and dinner at Halden. Last seating is 19:00.** Button: **Reserve**, linking to `/reserve`. Right: a photograph of a set table in daylight. Use one local image, not a SevenRooms asset.
 2. A cream band. Headline: **Welcome to the table.** One paragraph on the room: a single dining room, lunch and dinner, tables held for two hours.
 3. Three bands, each with a headline, two sentences, and a text link:
-   - **Reserve a table.** Link: **Reserve** → `/reserve`
-   - **Lunch and dinner.** Link: **See the menu** → `/menu`
-   - **The long table.** Link: **Private dining** → `/private`
+    - **Reserve a table.** Link: **Reserve** → `/reserve`
+    - **Lunch and dinner.** Link: **See the menu** → `/menu`
+    - **The long table.** Link: **Private dining** → `/private`
 4. Closing band on the bar, cream type: **Ready for a table?** Button: **Reserve.**
 
 ### Menu
@@ -74,20 +74,20 @@ Two groups on white cards.
 
 Lunch:
 
-| Dish | Line |
-| --- | --- |
-| Greens | Leaves, lemon, oil |
+| Dish        | Line                          |
+| ----------- | ----------------------------- |
+| Greens      | Leaves, lemon, oil            |
 | Market soup | Whatever came in this morning |
-| Chicken | Roast, bread, a green salad |
+| Chicken     | Roast, bread, a green salad   |
 
 Dinner:
 
-| Dish | Line |
-| --- | --- |
-| Crudo | Citrus, salt |
-| Pasta | The sauce of the day |
-| Steak | For the table to share |
-| Chocolate | A small finish |
+| Dish      | Line                   |
+| --------- | ---------------------- |
+| Crudo     | Citrus, salt           |
+| Pasta     | The sauce of the day   |
+| Steak     | For the table to share |
+| Chocolate | A small finish         |
 
 No prices. A text link under the cards: **Reserve a table.**
 
@@ -130,11 +130,11 @@ Support: **Lunch and dinner, 11:00 to 21:00. Last seating is 19:00.**
 
 Finder, one row from `lg` up and a stack below it:
 
-| Field | Control | Values |
-| --- | --- | --- |
-| Date | date input | Today or later |
-| Party size | select | 1 through 6 |
-| Time | select | 11:00 through 19:00, on the hour |
+| Field      | Control    | Values                           |
+| ---------- | ---------- | -------------------------------- |
+| Date       | date input | Today or later                   |
+| Party size | select     | 1 through 6                      |
+| Time       | select     | 11:00 through 19:00, on the hour |
 
 Changing a field visits `GET /reserve` with `date`, `party_size`, and `starts_at`. Use an Inertia `<Form method="get">`. The server returns tables that fit the party and are free for the two-hour window. The page does not decide availability.
 
@@ -160,12 +160,12 @@ Each card shows the table photo (or a cream placeholder if `image_url` is null),
 
 The form line: **{Table name} is free at {time}.**
 
-| Field | Name | Required |
-| --- | --- | --- |
-| Name | `guest_name` | yes |
-| Email | `email` | yes |
-| Phone | `phone` | yes |
-| Note | `notes` | no |
+| Field | Name         | Required |
+| ----- | ------------ | -------- |
+| Name  | `guest_name` | yes      |
+| Email | `email`      | yes      |
+| Phone | `phone`      | yes      |
+| Note  | `notes`      | no       |
 
 Hidden fields: `table_id`, `reserved_on`, `starts_at`, `party_size`. Submit with `<Form method="post">` to `POST /reservations`. The button reads **Reserve** and disables while `processing`. Field errors render in clay `#8A4B3B` under the field. If the table was taken: **That table is already held then.**
 
@@ -207,23 +207,23 @@ A few sentences: the reservation stores the guest's name, email, phone, party si
 
 ## Files
 
-| File | Role |
-| --- | --- |
-| `resources/css/app.css` | Cream, ink, bar, line, clay, Fraunces |
-| `resources/js/layouts/guest-layout.tsx` | Bar, footer, mobile menu |
-| `resources/js/pages/home.tsx` | Arrival |
-| `resources/js/pages/menu.tsx` | Lunch and dinner |
-| `resources/js/pages/private.tsx` | Table 5 |
-| `resources/js/pages/about.tsx` | The room |
-| `resources/js/pages/contact.tsx` | Visit |
-| `resources/js/pages/book.tsx` | Finder, cards, guest form |
-| `resources/js/pages/confirmation.tsx` | Saved booking |
-| `resources/js/pages/reservations/index.tsx` | List, search, filters, cancel |
-| `resources/js/pages/reservations/edit.tsx` | Update form |
-| `resources/js/pages/terms.tsx` | Terms |
-| `resources/js/pages/privacy.tsx` | Privacy |
-| `resources/js/components/guest/table-card.tsx` | One free table |
-| `resources/js/types/reservation.ts` | Reserve and confirmation props |
+| File                                           | Role                                  |
+| ---------------------------------------------- | ------------------------------------- |
+| `resources/css/app.css`                        | Cream, ink, bar, line, clay, Fraunces |
+| `resources/js/layouts/guest-layout.tsx`        | Bar, footer, mobile menu              |
+| `resources/js/pages/home.tsx`                  | Arrival                               |
+| `resources/js/pages/menu.tsx`                  | Lunch and dinner                      |
+| `resources/js/pages/private.tsx`               | Table 5                               |
+| `resources/js/pages/about.tsx`                 | The room                              |
+| `resources/js/pages/contact.tsx`               | Visit                                 |
+| `resources/js/pages/book.tsx`                  | Finder, cards, guest form             |
+| `resources/js/pages/confirmation.tsx`          | Saved booking                         |
+| `resources/js/pages/reservations/index.tsx`    | List, search, filters, cancel         |
+| `resources/js/pages/reservations/edit.tsx`     | Update form                           |
+| `resources/js/pages/terms.tsx`                 | Terms                                 |
+| `resources/js/pages/privacy.tsx`               | Privacy                               |
+| `resources/js/components/guest/table-card.tsx` | One free table                        |
+| `resources/js/types/reservation.ts`            | Reserve and confirmation props        |
 
 Use shadcn/ui `Button`, `Input`, `Label`, and `Card` on the reserve page, restyled to these tokens. Link with Inertia `<Link>`. Wire the reservation post with Wayfinder once the named routes exist.
 

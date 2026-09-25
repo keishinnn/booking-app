@@ -23,10 +23,7 @@ export default function Book({ filters, tables }: BookPageProps) {
         filters.date && filters.party_size && filters.starts_at,
     );
 
-    const handleFilterChange = (
-        field: BookingFilterField,
-        value: string,
-    ) => {
+    const handleFilterChange = (field: BookingFilterField, value: string) => {
         setSelectedTable(null);
 
         const newDate = field === 'date' ? value : (filters.date ?? '');
@@ -73,8 +70,7 @@ export default function Book({ filters, tables }: BookPageProps) {
         }, 80);
     };
 
-    const activeTable =
-        tables.find((t) => t.id === selectedTable?.id) ?? null;
+    const activeTable = tables.find((t) => t.id === selectedTable?.id) ?? null;
 
     return (
         <GuestLayout>

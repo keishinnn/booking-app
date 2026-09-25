@@ -4,13 +4,13 @@ Brand for the restaurant table reservation trial. Visual reference: [SevenRooms]
 
 ## Restaurant
 
-| | |
-| --- | --- |
-| Name | Halden |
-| Line | A table, when you want it. |
-| What it is | One dining room. Lunch and dinner. |
-| Hours | 11:00–21:00. Last seating 19:00. Each table is held for 2 hours. |
-| Tables | Two 2-tops, two 4-tops, one 6-top. |
+|            |                                                                  |
+| ---------- | ---------------------------------------------------------------- |
+| Name       | Halden                                                           |
+| Line       | A table, when you want it.                                       |
+| What it is | One dining room. Lunch and dinner.                               |
+| Hours      | 11:00–21:00. Last seating 19:00. Each table is held for 2 hours. |
+| Tables     | Two 2-tops, two 4-tops, one 6-top.                               |
 
 The public site is the guest's way to reserve and to manage a booking. The reservation list uses the same colors, with less display type.
 
@@ -28,15 +28,15 @@ Halden keeps that structure and drops the SaaS layer. There is no pricing, demo,
 
 ## Color
 
-| Token | Hex | Use |
-| --- | --- | --- |
-| `bar` | `#1F1D1B` | Header, footer, filled buttons on cream |
+| Token   | Hex       | Use                                          |
+| ------- | --------- | -------------------------------------------- |
+| `bar`   | `#1F1D1B` | Header, footer, filled buttons on cream      |
 | `cream` | `#F8F7F3` | Page background, text and buttons on the bar |
-| `ink` | `#1D1D1D` | Headlines and body |
-| `line` | `#DEDBD3` | Borders, dividers, empty table cards |
-| `paper` | `#FFFFFF` | Forms and reservation cards |
-| `moss` | `#2F4A3C` | Confirmed |
-| `clay` | `#8A4B3B` | Cancelled, and any blocking error |
+| `ink`   | `#1D1D1D` | Headlines and body                           |
+| `line`  | `#DEDBD3` | Borders, dividers, empty table cards         |
+| `paper` | `#FFFFFF` | Forms and reservation cards                  |
+| `moss`  | `#2F4A3C` | Confirmed                                    |
+| `clay`  | `#8A4B3B` | Cancelled, and any blocking error            |
 
 No bright blue, no gradients, no drop shadows. Cards sit on cream with a 1px `line` border.
 
@@ -44,18 +44,18 @@ No bright blue, no gradients, no drop shadows. Cards sit on cream with a 1px `li
 
 The reference uses a custom serif for headlines and a custom sans for the interface. Use stand-ins that are free to ship:
 
-| Role | Face | Notes |
-| --- | --- | --- |
-| Headlines | Fraunces | Regular, tight tracking. Guest pages only. |
+| Role      | Face            | Notes                                                                       |
+| --------- | --------------- | --------------------------------------------------------------------------- |
+| Headlines | Fraunces        | Regular, tight tracking. Guest pages only.                                  |
 | Interface | Instrument Sans | Already loaded by this app. Navigation, forms, the reservation list, email. |
 
-| Style | Size | Use |
-| --- | --- | --- |
-| Display | 56–68px, weight 400 | Guest page title |
-| Title | 32px, weight 400, Fraunces | Confirmation heading |
-| Section | 20px, weight 500, Instrument Sans | Form groups, reservation list title |
-| Body | 16px, weight 400 | Paragraphs and fields |
-| Label | 14px, weight 600, uppercase, slight tracking | Buttons and status |
+| Style   | Size                                         | Use                                 |
+| ------- | -------------------------------------------- | ----------------------------------- |
+| Display | 56–68px, weight 400                          | Guest page title                    |
+| Title   | 32px, weight 400, Fraunces                   | Confirmation heading                |
+| Section | 20px, weight 500, Instrument Sans            | Form groups, reservation list title |
+| Body    | 16px, weight 400                             | Paragraphs and fields               |
+| Label   | 14px, weight 600, uppercase, slight tracking | Buttons and status                  |
 
 ## Buttons
 
