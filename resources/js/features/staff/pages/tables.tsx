@@ -67,12 +67,8 @@ export default function StaffTablesPage({
     }, [reservations, selectedTableId]);
 
     const totalSeats = tables.reduce((sum, table) => sum + table.capacity, 0);
-    const inServiceCount = floorTables.filter(
-        (table) => table.status === 'In service',
-    ).length;
-
     return (
-        <StaffLayout activeTablesCount={`${inServiceCount}/${tables.length}`}>
+        <StaffLayout>
             <Head title="Staff Tables | Halden" />
 
             <div className="max-w-8xl mx-auto space-y-6">

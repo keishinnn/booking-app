@@ -32,9 +32,6 @@ export type DiningReservation = {
 
 export type FloorTableStatus = 'In service' | 'Reserved' | 'Open';
 
-/** @deprecated Prefer FloorTableStatus for live floor */
-export type TableStatus = FloorTableStatus | 'Occupied';
-
 export type FloorTableCard = {
     id: string;
     name: string;
@@ -46,42 +43,6 @@ export type FloorTableCard = {
     service: 'Lunch' | 'Dinner' | null;
 };
 
-/** @deprecated Prefer FloorTableCard for live floor */
-export type TableState = {
-    id: number | string;
-    name: string;
-    subtitle?: string;
-    capacity: number;
-    status: TableStatus;
-    statusLabel?: string;
-    partyInfo?: string;
-    timeSlot?: string;
-    image?: string;
-    image_url?: string | null;
-    location?: string;
-    service?: 'Lunch' | 'Dinner' | null;
-};
-
-/** @deprecated Prefer DiningReservation */
-export type Reservation = {
-    id: string;
-    time: string;
-    guestName: string;
-    email: string;
-    phone: string;
-    table: string;
-    partySize: number;
-    status: 'Seated' | 'Confirmed' | 'Completed' | 'Cancelled';
-    service: 'Lunch' | 'Dinner';
-    notes?: string;
-};
-
-export type ReservationStatusFilter =
-    | 'All'
-    | 'confirmed'
-    | 'cancelled'
-    | 'Confirmed'
-    | 'Seated'
-    | 'Completed';
+export type ReservationStatusFilter = 'All' | ReservationStatus;
 
 export type ReservationServiceFilter = 'All' | 'Dinner' | 'Lunch';

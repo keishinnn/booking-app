@@ -1,6 +1,5 @@
 import { Head } from '@inertiajs/react';
 import {
-    CheckCircle2,
     Users,
     Grid3X3,
     Clock,
@@ -8,7 +7,6 @@ import {
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import FloorBoard from '@/features/staff/components/floor-board';
-import { initialReservations } from '@/features/staff/components/mock-data';
 import ReservationList from '@/features/staff/components/reservation-list';
 import TableScheduleModal from '@/features/staff/components/table-schedule-modal';
 import { buildFloorTableCards } from '@/features/staff/lib/build-floor-table-cards';
@@ -16,7 +14,6 @@ import StaffLayout from '@/shared/layouts/staff-layout';
 import type {
     DiningReservation,
     DiningTable,
-    Reservation,
     ReservationServiceFilter,
     ReservationStatusFilter,
 } from '@/features/staff/types';
@@ -29,7 +26,7 @@ type StaffDashboardProps = {
 
 export default function StaffDashboard({
     tables,
-    reservations: todayReservations,
+    reservations: upcomingReservations,
     today,
 }: StaffDashboardProps) {
     const [search, setSearch] = useState('');
@@ -37,17 +34,14 @@ export default function StaffDashboard({
         useState<ReservationStatusFilter>('All');
     const [serviceFilter, setServiceFilter] =
         useState<ReservationServiceFilter>('All');
-    const [ledgerReservations, setLedgerReservations] =
-        useState<Reservation[]>(initialReservations);
-    const [actionMessage, setActionMessage] = useState<string | null>(null);
     const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
 
     const todaysReservations = useMemo(
         () =>
-            todayReservations.filter(
+            upcomingReservations.filter(
                 (reservation) => reservation.reserved_on === today,
             ),
-        [todayReservations, today],
+        [upcomingReservations, today],
     );
 
     const floorTables = useMemo(
@@ -65,50 +59,32 @@ export default function StaffDashboard({
             return [];
         }
 
-        return todayReservations.filter(
+        return upcomingReservations.filter(
             (reservation) => reservation.table_id === selectedTableId,
         );
-    }, [todayReservations, selectedTableId]);
+    }, [upcomingReservations, selectedTableId]);
 
     const filteredReservations = useMemo(() => {
-        return ledgerReservations.filter((res) => {
+        return todaysReservations.filter((reservation) => {
             const query = search.trim().toLowerCase();
+            const tableName = reservation.table?.name ?? '';
             const matchesQuery =
                 !query ||
-                res.guestName.toLowerCase().includes(query) ||
-                res.email.toLowerCase().includes(query) ||
-                res.phone.toLowerCase().includes(query) ||
-                res.table.toLowerCase().includes(query);
+                reservation.guest_name.toLowerCase().includes(query) ||
+                reservation.email.toLowerCase().includes(query) ||
+                reservation.phone.toLowerCase().includes(query) ||
+                tableName.toLowerCase().includes(query);
 
             const matchesStatus =
-                statusFilter === 'All' || res.status === statusFilter;
+                statusFilter === 'All' || reservation.status === statusFilter;
 
             const matchesService =
-                serviceFilter === 'All' || res.service === serviceFilter;
+                serviceFilter === 'All' ||
+                reservation.service === serviceFilter;
 
             return matchesQuery && matchesStatus && matchesService;
         });
-    }, [ledgerReservations, search, statusFilter, serviceFilter]);
-
-    const handleSeatParty = (
-        id: string,
-        guestName: string,
-        _tableLabel: string,
-    ) => {
-        setLedgerReservations((prev) =>
-            prev.map((r) => (r.id === id ? { ...r, status: 'Seated' } : r)),
-        );
-        setActionMessage(`Seated ${guestName}.`);
-        setTimeout(() => setActionMessage(null), 4000);
-    };
-
-    const handleCompleteParty = (id: string, guestName: string) => {
-        setLedgerReservations((prev) =>
-            prev.map((r) => (r.id === id ? { ...r, status: 'Completed' } : r)),
-        );
-        setActionMessage(`Service completed for ${guestName}.`);
-        setTimeout(() => setActionMessage(null), 4000);
-    };
+    }, [todaysReservations, search, statusFilter, serviceFilter]);
 
     const inServiceCount = floorTables.filter(
         (t) => t.status === 'In service',
@@ -124,6 +100,7 @@ export default function StaffDashboard({
         const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
         const upcoming = todaysReservations
+            .filter((reservation) => reservation.status === 'confirmed')
             .map((reservation) => {
                 const [hours, minutes] = reservation.starts_at
                     .split(':')
@@ -149,31 +126,10 @@ export default function StaffDashboard({
     }, [todaysReservations]);
 
     return (
-        <StaffLayout
-            reservationCount={todaysReservations.length}
-            activeTablesCount={`${inServiceCount}/${tables.length}`}
-            searchValue={search}
-            onSearchChange={setSearch}
-        >
+        <StaffLayout searchValue={search} onSearchChange={setSearch}>
             <Head title="Staff Overview | Halden" />
 
             <div className="max-w-8xl mx-auto space-y-6">
-                {actionMessage && (
-                    <div className="flex items-center justify-between rounded-xl border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 px-4 py-3 text-xs font-medium text-[#2f4a3c] shadow-2xs">
-                        <span className="flex items-center gap-2">
-                            <CheckCircle2 className="size-4 shrink-0 text-[#2f4a3c]" />
-                            {actionMessage}
-                        </span>
-                        <button
-                            type="button"
-                            onClick={() => setActionMessage(null)}
-                            className="font-semibold underline underline-offset-2 hover:opacity-80"
-                        >
-                            Dismiss
-                        </button>
-                    </div>
-                )}
-
                 <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="font-heading text-2xl font-normal tracking-tight text-[#1d1d1d] sm:text-3xl">
@@ -259,7 +215,7 @@ export default function StaffDashboard({
                 />
 
                 <ReservationList
-                    reservations={ledgerReservations}
+                    reservations={todaysReservations}
                     filteredReservations={filteredReservations}
                     search={search}
                     statusFilter={statusFilter}
@@ -272,10 +228,8 @@ export default function StaffDashboard({
                         setStatusFilter('All');
                         setServiceFilter('All');
                     }}
-                    onSeatParty={handleSeatParty}
-                    onCompleteParty={handleCompleteParty}
                     showViewAllLink={true}
-                    title="Active Seating & Bookings"
+                    title="Today's bookings"
                 />
             </div>
 
