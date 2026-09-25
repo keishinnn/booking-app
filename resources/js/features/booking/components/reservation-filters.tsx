@@ -28,14 +28,15 @@ export default function ReservationFilters({
     onFilterChange,
 }: ReservationFiltersProps) {
     return (
-        <div className="animate-fade-slide-up animation-delay-300 mt-10 border border-[#dedbd3] bg-white p-6 sm:mt-12 sm:p-8">
+        <div className="mt-8 rounded-2xl border border-[#dedbd3] bg-white p-6 shadow-2xs sm:mt-10 sm:p-8">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                {/* Date Filter */}
                 <div>
                     <label
                         htmlFor="reserve-date"
-                        className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/80 uppercase"
+                        className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/70 uppercase"
                     >
-                        Date
+                        Dining Date
                     </label>
                     <input
                         type="date"
@@ -43,16 +44,17 @@ export default function ReservationFilters({
                         min={today}
                         value={filters.date ?? ''}
                         onChange={(e) => onFilterChange('date', e.target.value)}
-                        className="w-full border border-[#dedbd3] bg-[#f8f7f3]/50 px-4 py-3 text-sm text-[#1d1d1d] transition-colors focus:border-[#1d1d1d] focus:bg-white focus:outline-none"
+                        className="w-full rounded-xl border border-[#dedbd3] bg-[#f8f7f3]/60 px-4 py-3 text-sm text-[#1d1d1d] transition-all focus:border-[#1f1d1b] focus:bg-white focus:ring-2 focus:ring-[#1f1d1b]/10 focus:outline-none"
                     />
                 </div>
 
+                {/* Party Size Filter */}
                 <div>
                     <label
                         htmlFor="reserve-party-size"
-                        className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/80 uppercase"
+                        className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/70 uppercase"
                     >
-                        Party size
+                        Party Size
                     </label>
                     <select
                         id="reserve-party-size"
@@ -60,23 +62,24 @@ export default function ReservationFilters({
                         onChange={(e) =>
                             onFilterChange('party_size', e.target.value)
                         }
-                        className="w-full border border-[#dedbd3] bg-[#f8f7f3]/50 px-4 py-3 text-sm text-[#1d1d1d] transition-colors focus:border-[#1d1d1d] focus:bg-white focus:outline-none"
+                        className="w-full rounded-xl border border-[#dedbd3] bg-[#f8f7f3]/60 px-4 py-3 text-sm text-[#1d1d1d] transition-all focus:border-[#1f1d1b] focus:bg-white focus:ring-2 focus:ring-[#1f1d1b]/10 focus:outline-none"
                     >
                         <option value="">Select party size</option>
                         {partySizeOptions.map((size) => (
                             <option key={size} value={size}>
-                                {size} {size === 1 ? 'guest' : 'guests'}
+                                {size} {size === 1 ? 'Guest' : 'Guests'}
                             </option>
                         ))}
                     </select>
                 </div>
 
+                {/* Time Filter */}
                 <div>
                     <label
                         htmlFor="reserve-starts-at"
-                        className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/80 uppercase"
+                        className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/70 uppercase"
                     >
-                        Time
+                        Seating Time
                     </label>
                     <select
                         id="reserve-starts-at"
@@ -84,12 +87,12 @@ export default function ReservationFilters({
                         onChange={(e) =>
                             onFilterChange('starts_at', e.target.value)
                         }
-                        className="w-full border border-[#dedbd3] bg-[#f8f7f3]/50 px-4 py-3 text-sm text-[#1d1d1d] transition-colors focus:border-[#1d1d1d] focus:bg-white focus:outline-none"
+                        className="w-full rounded-xl border border-[#dedbd3] bg-[#f8f7f3]/60 px-4 py-3 text-sm text-[#1d1d1d] transition-all focus:border-[#1f1d1b] focus:bg-white focus:ring-2 focus:ring-[#1f1d1b]/10 focus:outline-none"
                     >
-                        <option value="">Select time</option>
+                        <option value="">Select seating time</option>
                         {timeOptions.map((time) => (
                             <option key={time} value={time}>
-                                {time}
+                                {time} (held for 2 hours)
                             </option>
                         ))}
                     </select>

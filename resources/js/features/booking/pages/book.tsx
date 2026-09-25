@@ -74,20 +74,20 @@ export default function Book({ filters, tables }: BookPageProps) {
 
     return (
         <GuestLayout>
-            <Head title="Reserve a table" />
+            <Head title="Reserve a table | Halden" />
 
-            <section className="min-h-[calc(100vh-4.25rem)] bg-[#f8f7f3] py-12 sm:py-16 lg:py-20">
+            <section className="min-h-[calc(100vh-4.5rem)] bg-[#f8f7f3] py-16 sm:py-20 lg:py-24">
                 <div className="mx-auto max-w-5xl px-5 sm:px-8">
                     <div className="max-w-2xl">
-                        <span className="text-xs font-semibold tracking-widest text-[#2f4a3c] uppercase">
+                        <span className="text-xs font-semibold tracking-wider text-[#2f4a3c] uppercase">
                             Reservations
                         </span>
-                        <h1 className="animate-fade-slide-up animation-delay-100 mt-3 font-heading text-4xl font-normal tracking-tight text-[#1d1d1d] sm:text-5xl lg:text-[3.5rem] lg:leading-[1.05]">
+                        <h1 className="mt-3 font-heading text-4xl font-normal tracking-tight text-[#1d1d1d] sm:text-5xl lg:text-[3.75rem] lg:leading-[1.05]">
                             Reserve a table.
                         </h1>
-                        <p className="animate-fade-slide-up animation-delay-200 mt-4 text-base leading-relaxed text-[#1d1d1d]/80 sm:text-lg">
-                            Lunch and dinner, 11:00 to 21:00. Last seating is
-                            19:00.
+                        <p className="mt-4 text-base leading-relaxed text-[#1d1d1d]/80 sm:text-lg">
+                            Lunch and dinner daily from 11:00 to 21:00. Last
+                            seating is at 19:00.
                         </p>
                     </div>
 
@@ -98,27 +98,29 @@ export default function Book({ filters, tables }: BookPageProps) {
                     />
 
                     {!hasAllFilters ? (
-                        <div className="animate-fade-slide-up animation-delay-400 mt-8 border border-[#dedbd3] bg-white p-8 text-center sm:p-12">
+                        <div className="mt-10 rounded-2xl border border-[#dedbd3] bg-white p-8 text-center shadow-2xs sm:p-14">
                             <p className="font-heading text-xl font-normal text-[#1d1d1d] sm:text-2xl">
-                                Select a date, party size, and time to view
-                                available tables.
+                                Select a date, party size, and time to view open
+                                tables.
                             </p>
                             <p className="mt-2 text-sm text-[#1d1d1d]/70">
-                                We hold each table for two full hours.
+                                Every reservation includes our guaranteed
+                                two-hour table hold.
                             </p>
                         </div>
                     ) : tables.length === 0 ? (
-                        <div className="animate-fade-slide-up animation-delay-400 mt-8 border border-[#dedbd3] bg-white p-8 text-center sm:p-12">
+                        <div className="mt-10 rounded-2xl border border-[#dedbd3] bg-white p-8 text-center shadow-2xs sm:p-14">
                             <h2 className="font-heading text-xl font-normal text-[#1d1d1d] sm:text-2xl">
-                                Nothing open at that time. Try another hour.
+                                No tables currently open for that seating.
                             </h2>
                             <p className="mt-2 text-sm text-[#1d1d1d]/70">
-                                Lunch and dinner are served from 11:00 to 21:00.
-                                Last seating is 19:00.
+                                Please try an adjacent time slot or another
+                                date. Lunch and dinner are served from 11:00 to
+                                21:00.
                             </p>
                         </div>
                     ) : (
-                        <div className="animate-fade-slide-up animation-delay-400 mt-8 space-y-8">
+                        <div className="mt-10 space-y-10">
                             <TablePicker
                                 tables={tables}
                                 selectedTableId={activeTable?.id ?? null}

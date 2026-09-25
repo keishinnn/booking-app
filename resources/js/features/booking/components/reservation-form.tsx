@@ -1,4 +1,5 @@
 import { Form } from '@inertiajs/react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import type { RefObject } from 'react';
 import { Button } from '@/shared/components/ui/button';
 import { store } from '@/routes/reservations';
@@ -19,17 +20,18 @@ export default function ReservationForm({
         <div
             ref={formSectionRef}
             id="reservation-form"
-            className="animate-fade-slide-up border border-[#dedbd3] bg-white p-6 sm:p-10"
+            className="rounded-2xl border border-[#dedbd3] bg-white p-6 shadow-2xs sm:p-10"
         >
             <div className="border-b border-[#dedbd3] pb-6">
-                <span className="text-xs font-semibold tracking-widest text-[#2f4a3c] uppercase">
-                    Booking details
+                <span className="text-xs font-semibold tracking-wider text-[#2f4a3c] uppercase">
+                    Guest Details
                 </span>
                 <h2 className="mt-2 font-heading text-2xl font-normal tracking-tight text-[#1d1d1d] sm:text-3xl">
-                    {table.name} is free at {filters.starts_at}.
+                    {table.name} at {filters.starts_at}
                 </h2>
-                <p className="mt-1.5 text-sm text-[#1d1d1d]/75">
-                    Held for two hours from {filters.starts_at}.
+                <p className="mt-1 text-xs text-[#1d1d1d]/70 sm:text-sm">
+                    Reserved exclusively for your party of {filters.party_size}{' '}
+                    for two full hours.
                 </p>
             </div>
 
@@ -54,27 +56,32 @@ export default function ReservationForm({
                         />
 
                         {wasSuccessful && (
-                            <div className="border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 p-5 text-center">
-                                <p className="font-heading text-lg font-normal text-[#2f4a3c]">
-                                    Table reserved successfully.
-                                </p>
-                                <p className="mt-1 text-xs text-[#1d1d1d]/70">
-                                    We look forward to welcoming you to Halden.
-                                </p>
+                            <div className="flex items-start gap-3.5 rounded-xl border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 p-5 text-[#2f4a3c]">
+                                <CheckCircle2 className="size-5 shrink-0" />
+                                <div>
+                                    <p className="font-heading text-lg font-normal">
+                                        Table reserved successfully.
+                                    </p>
+                                    <p className="mt-1 text-xs text-[#1d1d1d]/75">
+                                        We look forward to welcoming you to
+                                        Halden on {filters.date} at{' '}
+                                        {filters.starts_at}.
+                                    </p>
+                                </div>
                             </div>
                         )}
 
                         {(errors.table_id ||
                             (errors as Record<string, string>).table ||
                             (errors as Record<string, string>).error) && (
-                            <div className="border border-[#8a4b3b]/30 bg-[#8a4b3b]/10 p-4 text-[#8a4b3b]">
+                            <div className="rounded-xl border border-[#8a4b3b]/30 bg-[#8a4b3b]/10 p-4 text-[#8a4b3b]">
                                 <p className="text-sm font-medium">
                                     {errors.table_id ||
                                         (errors as Record<string, string>)
                                             .table ||
                                         (errors as Record<string, string>)
                                             .error ||
-                                        'That table is already held then.'}
+                                        'That table is no longer available. Please select another table.'}
                                 </p>
                             </div>
                         )}
@@ -83,17 +90,17 @@ export default function ReservationForm({
                             <div>
                                 <label
                                     htmlFor="guest_name"
-                                    className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/80 uppercase"
+                                    className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/70 uppercase"
                                 >
-                                    Name
+                                    Full Name
                                 </label>
                                 <input
                                     type="text"
                                     id="guest_name"
                                     name="guest_name"
                                     required
-                                    placeholder="Your full name"
-                                    className="w-full border border-[#dedbd3] bg-[#f8f7f3]/50 px-4 py-3 text-sm text-[#1d1d1d] transition-colors placeholder:text-[#1d1d1d]/40 focus:border-[#1d1d1d] focus:bg-white focus:outline-none"
+                                    placeholder="Astrid Lind"
+                                    className="w-full rounded-xl border border-[#dedbd3] bg-[#f8f7f3]/60 px-4 py-3 text-sm text-[#1d1d1d] transition-all placeholder:text-[#1d1d1d]/35 focus:border-[#1f1d1b] focus:bg-white focus:ring-2 focus:ring-[#1f1d1b]/10 focus:outline-none"
                                 />
                                 {errors.guest_name && (
                                     <p className="mt-1.5 text-xs font-medium text-[#8a4b3b]">
@@ -105,17 +112,17 @@ export default function ReservationForm({
                             <div>
                                 <label
                                     htmlFor="email"
-                                    className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/80 uppercase"
+                                    className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/70 uppercase"
                                 >
-                                    Email
+                                    Email Address
                                 </label>
                                 <input
                                     type="email"
                                     id="email"
                                     name="email"
                                     required
-                                    placeholder="you@example.com"
-                                    className="w-full border border-[#dedbd3] bg-[#f8f7f3]/50 px-4 py-3 text-sm text-[#1d1d1d] transition-colors placeholder:text-[#1d1d1d]/40 focus:border-[#1d1d1d] focus:bg-white focus:outline-none"
+                                    placeholder="astrid@example.com"
+                                    className="w-full rounded-xl border border-[#dedbd3] bg-[#f8f7f3]/60 px-4 py-3 text-sm text-[#1d1d1d] transition-all placeholder:text-[#1d1d1d]/35 focus:border-[#1f1d1b] focus:bg-white focus:ring-2 focus:ring-[#1f1d1b]/10 focus:outline-none"
                                 />
                                 {errors.email && (
                                     <p className="mt-1.5 text-xs font-medium text-[#8a4b3b]">
@@ -128,17 +135,17 @@ export default function ReservationForm({
                         <div>
                             <label
                                 htmlFor="phone"
-                                className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/80 uppercase"
+                                className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/70 uppercase"
                             >
-                                Phone
+                                Contact Phone
                             </label>
                             <input
                                 type="tel"
                                 id="phone"
                                 name="phone"
                                 required
-                                placeholder="Your phone number"
-                                className="w-full border border-[#dedbd3] bg-[#f8f7f3]/50 px-4 py-3 text-sm text-[#1d1d1d] transition-colors placeholder:text-[#1d1d1d]/40 focus:border-[#1d1d1d] focus:bg-white focus:outline-none"
+                                placeholder="+46 8 123 45 67"
+                                className="w-full rounded-xl border border-[#dedbd3] bg-[#f8f7f3]/60 px-4 py-3 text-sm text-[#1d1d1d] transition-all placeholder:text-[#1d1d1d]/35 focus:border-[#1f1d1b] focus:bg-white focus:ring-2 focus:ring-[#1f1d1b]/10 focus:outline-none"
                             />
                             {errors.phone && (
                                 <p className="mt-1.5 text-xs font-medium text-[#8a4b3b]">
@@ -150,16 +157,16 @@ export default function ReservationForm({
                         <div>
                             <label
                                 htmlFor="notes"
-                                className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/80 uppercase"
+                                className="mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/70 uppercase"
                             >
-                                Notes / Dietary requests (optional)
+                                Dietary Preferences or Occasion (Optional)
                             </label>
                             <textarea
                                 id="notes"
                                 name="notes"
                                 rows={3}
-                                placeholder="Allergies, preferences, or special requests"
-                                className="w-full border border-[#dedbd3] bg-[#f8f7f3]/50 px-4 py-3 text-sm text-[#1d1d1d] transition-colors placeholder:text-[#1d1d1d]/40 focus:border-[#1d1d1d] focus:bg-white focus:outline-none"
+                                placeholder="Please let us know of any allergies, pescatarian preferences, or celebrations."
+                                className="w-full rounded-xl border border-[#dedbd3] bg-[#f8f7f3]/60 px-4 py-3 text-sm text-[#1d1d1d] transition-all placeholder:text-[#1d1d1d]/35 focus:border-[#1f1d1b] focus:bg-white focus:ring-2 focus:ring-[#1f1d1b]/10 focus:outline-none"
                             />
                             {errors.notes && (
                                 <p className="mt-1.5 text-xs font-medium text-[#8a4b3b]">
@@ -172,9 +179,16 @@ export default function ReservationForm({
                             <Button
                                 type="submit"
                                 disabled={processing}
-                                className="h-12 rounded-full bg-[#1f1d1b] px-8 text-xs font-semibold tracking-wide text-[#f8f7f3] uppercase transition-all duration-300 hover:bg-[#1f1d1b]/90 disabled:opacity-50"
+                                className="group h-12 rounded-full bg-[#1f1d1b] px-8 text-xs font-semibold tracking-wider text-[#f8f7f3] uppercase transition-all duration-300 hover:bg-[#1f1d1b]/90 hover:shadow-xs active:scale-98 disabled:opacity-50"
                             >
-                                {processing ? 'Reserving...' : 'Reserve'}
+                                <span>
+                                    {processing
+                                        ? 'Holding table...'
+                                        : 'Confirm reservation'}
+                                </span>
+                                <span className="ml-3 flex size-6 items-center justify-center rounded-full bg-white/10 transition-transform duration-300 group-hover:translate-x-1">
+                                    <ArrowRight className="size-3.5" />
+                                </span>
                             </Button>
                         </div>
                     </>

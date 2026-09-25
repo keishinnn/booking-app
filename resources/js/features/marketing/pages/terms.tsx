@@ -7,60 +7,74 @@ import { home, reserve } from '@/routes';
 export default function Terms() {
     return (
         <GuestLayout>
-            <Head title="Terms" />
+            <Head title="Terms of Reservation | Halden" />
 
-            <section className="bg-[#f8f7f3] py-12 sm:py-16 lg:py-20">
-                <div className="mx-auto max-w-4xl px-5 sm:px-8">
-                    {/* Header */}
-                    <div className="max-w-2xl">
-                        <span className="text-xs font-semibold tracking-widest text-[#2f4a3c] uppercase">
-                            Halden
-                        </span>
-                        <h1 className="animate-fade-slide-up animation-delay-100 mt-3 font-heading text-4xl font-normal tracking-tight text-[#1d1d1d] sm:text-5xl lg:text-[3.5rem] lg:leading-[1.05]">
-                            Terms.
-                        </h1>
+            <section className="bg-[#f8f7f3] py-16 sm:py-24 lg:py-28">
+                <div className="mx-auto max-w-3xl px-5 sm:px-8">
+                    <p className="text-xs font-semibold tracking-wider text-[#2f4a3c] uppercase">
+                        Dining Policy
+                    </p>
+                    <h1 className="mt-3 font-heading text-4xl font-normal tracking-tight text-[#1d1d1d] sm:text-5xl lg:text-[3.5rem]">
+                        Terms of reservation.
+                    </h1>
+
+                    <div className="mt-12 space-y-10 border-t border-[#dedbd3] pt-10 text-base leading-relaxed text-[#1d1d1d]/85 sm:text-lg">
+                        <div>
+                            <h2 className="font-heading text-xl text-[#1d1d1d] sm:text-2xl">
+                                Two-Hour Table Hold
+                            </h2>
+                            <p className="mt-2 text-sm text-[#1d1d1d]/80 sm:text-base">
+                                Each booking reserves a dedicated table for two
+                                full hours from your seating time. We do not
+                                rush our guests, and we ask that parties arrive
+                                promptly so the kitchen can prepare each course
+                                without delay.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h2 className="font-heading text-xl text-[#1d1d1d] sm:text-2xl">
+                                Cancellations and Adjustments
+                            </h2>
+                            <p className="mt-2 text-sm text-[#1d1d1d]/80 sm:text-base">
+                                Because Halden has only five tables, advance
+                                notice of cancellations allows another party to
+                                join us. You may modify your reservation time or
+                                guest count subject to room availability.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h2 className="font-heading text-xl text-[#1d1d1d] sm:text-2xl">
+                                Dietary Notes and Special Requests
+                            </h2>
+                            <p className="mt-2 text-sm text-[#1d1d1d]/80 sm:text-base">
+                                We cater gladly to pescatarian, vegetarian, and
+                                common allergy preferences with advance notice.
+                                Direct notes can be submitted during booking or
+                                sent to hello@halden.test.
+                            </p>
+                        </div>
                     </div>
 
-                    {/* Terms Card */}
-                    <div className="animate-fade-slide-up animation-delay-200 mt-10 border border-[#dedbd3] bg-white p-8 sm:mt-12 sm:p-12 lg:p-14">
-                        <div className="max-w-2xl space-y-6 text-base leading-relaxed text-[#1d1d1d]/85 sm:text-lg sm:leading-relaxed">
-                            <p>
-                                A reservation holds one table for two hours from
-                                the start time.
-                            </p>
-                            <p>
-                                Guests should arrive promptly for their reserved
-                                time.
-                            </p>
-                            <p>
-                                The floor team can cancel a booking from the
-                                reservation book if needed.
-                            </p>
-                        </div>
+                    <div className="mt-12 flex flex-wrap items-center gap-6 border-t border-[#dedbd3] pt-8">
+                        <Button
+                            nativeButton={false}
+                            render={<Link href={reserve.url()} />}
+                            className="group h-12 rounded-full bg-[#1f1d1b] px-7 text-xs font-semibold tracking-wider text-[#f8f7f3] uppercase transition-all duration-300 hover:bg-[#1f1d1b]/90 active:scale-98"
+                        >
+                            <span>Reserve a table</span>
+                            <span className="ml-3 flex size-6 items-center justify-center rounded-full bg-white/10 transition-transform duration-300 group-hover:translate-x-1">
+                                <ArrowRight className="size-3.5" />
+                            </span>
+                        </Button>
 
-                        <div className="mt-8 border-t border-[#dedbd3] pt-6 sm:mt-10 sm:pt-8">
-                            <p className="text-xs text-[#1d1d1d]/60 sm:text-sm">
-                                Note: This is trial copy, not a legal policy.
-                            </p>
-                        </div>
-
-                        <div className="mt-10 flex flex-wrap items-center gap-6 border-t border-[#dedbd3] pt-6 sm:mt-12 sm:pt-8">
-                            <Button
-                                nativeButton={false}
-                                render={<Link href={reserve.url()} />}
-                                className="group h-12 rounded-full bg-[#1f1d1b] px-8 text-xs font-semibold tracking-wide text-[#f8f7f3] uppercase transition-all duration-300 hover:bg-[#1f1d1b]/90 active:scale-98 sm:h-13 sm:px-9 sm:text-sm"
-                            >
-                                <span>Reserve a table</span>
-                                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                            </Button>
-
-                            <Link
-                                href={home.url()}
-                                className="text-sm font-semibold tracking-wide text-[#1d1d1d] underline underline-offset-6 transition-colors hover:text-[#2f4a3c]"
-                            >
-                                Back to Halden
-                            </Link>
-                        </div>
+                        <Link
+                            href={home.url()}
+                            className="text-sm font-medium text-[#1d1d1d] underline underline-offset-6 transition-colors hover:text-[#2f4a3c]"
+                        >
+                            Back to Halden
+                        </Link>
                     </div>
                 </div>
             </section>
