@@ -1,26 +1,27 @@
 import { Link } from '@inertiajs/react';
 import { ArrowUpRight, Clock, Users } from 'lucide-react';
+import type { FloorTableCard } from '@/features/staff/types';
 import { tables as tablesRoute } from '@/routes/staff';
-import type { TableState } from '@/features/staff/types';
 
 type FloorBoardProps = {
-    tables: TableState[];
-    onResetTable?: (id: number) => void;
+    tables: FloorTableCard[];
+    onSelectTable?: (tableId: string) => void;
     showViewAllLink?: boolean;
 };
 
 export default function FloorBoard({
     tables,
-    onResetTable,
+    onSelectTable,
     showViewAllLink = false,
 }: FloorBoardProps) {
-    const occupiedCount = tables.filter((t) => t.status === 'Occupied').length;
+    const inServiceCount = tables.filter(
+        (t) => t.status === 'In service',
+    ).length;
     const reservedCount = tables.filter((t) => t.status === 'Reserved').length;
     const openCount = tables.filter((t) => t.status === 'Open').length;
 
     return (
         <div className="rounded-2xl border border-[#dedbd3] bg-white p-5 shadow-xs md:p-6">
-            {/* Header */}
             <div className="flex flex-col gap-3 border-b border-[#dedbd3]/70 pb-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <div className="flex items-center gap-2.5">
@@ -28,7 +29,8 @@ export default function FloorBoard({
                             Dining Room Floor Plan
                         </h2>
                         <span className="rounded-full border border-[#dedbd3] bg-[#f8f7f3] px-2.5 py-0.5 text-xs font-medium text-[#1d1d1d]/70">
-                            5 Tables
+                            {tables.length}{' '}
+                            {tables.length === 1 ? 'Table' : 'Tables'}
                         </span>
                     </div>
                     <p className="mt-1 text-xs text-[#1d1d1d]/60">
@@ -37,10 +39,10 @@ export default function FloorBoard({
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 text-xs">
+                    <div className="flex flex-wrap items-center gap-2 text-xs">
                         <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 font-medium text-amber-800">
                             <span className="size-1.5 rounded-full bg-amber-500" />
-                            {occupiedCount} Seated
+                            {inServiceCount} In service
                         </span>
                         <span className="inline-flex items-center gap-1.5 rounded-full border border-[#2f4a3c]/20 bg-[#2f4a3c]/10 px-2.5 py-0.5 font-medium text-[#2f4a3c]">
                             <span className="size-1.5 rounded-full bg-[#2f4a3c]" />
@@ -64,18 +66,19 @@ export default function FloorBoard({
                 </div>
             </div>
 
-            {/* Grid of Tables with Real Table Photography */}
             <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
                 {tables.map((table) => {
-                    const isOccupied = table.status === 'Occupied';
+                    const isInService = table.status === 'In service';
                     const isReserved = table.status === 'Reserved';
                     const isOpen = table.status === 'Open';
 
                     return (
-                        <div
+                        <button
                             key={table.id}
-                            className={`group relative flex flex-col justify-between rounded-xl border p-3.5 transition-all hover:shadow-xs ${
-                                isOccupied
+                            type="button"
+                            onClick={() => onSelectTable?.(table.id)}
+                            className={`group relative flex flex-col justify-between rounded-xl border p-3.5 text-left transition-all hover:shadow-xs focus-visible:ring-2 focus-visible:ring-[#2f4a3c]/40 focus-visible:outline-none ${
+                                isInService
                                     ? 'border-[#1f1d1b] bg-white ring-1 ring-[#1f1d1b]/10'
                                     : isReserved
                                       ? 'border-[#2f4a3c]/40 bg-white'
@@ -83,11 +86,10 @@ export default function FloorBoard({
                             }`}
                         >
                             <div>
-                                {/* Table Image Thumbnail */}
                                 <div className="relative mb-3 aspect-16/10 w-full overflow-hidden rounded-lg bg-stone-100">
                                     <img
                                         src={
-                                            table.image ||
+                                            table.image_url ||
                                             '/images/dining-table.png'
                                         }
                                         alt={table.name}
@@ -102,22 +104,19 @@ export default function FloorBoard({
                                 </div>
 
                                 <div className="flex items-start justify-between gap-1">
-                                    <div>
-                                        <h3 className="font-heading text-base font-semibold text-[#1d1d1d]">
-                                            {table.name}
-                                        </h3>
-                                        {table.subtitle && (
-                                            <p className="text-[10px] font-medium text-[#2f4a3c]">
-                                                {table.subtitle}
-                                            </p>
-                                        )}
-                                    </div>
+                                    <h3 className="font-heading text-base font-semibold text-[#1d1d1d]">
+                                        {table.name}
+                                    </h3>
+                                    {table.service && (
+                                        <span className="text-[10px] font-semibold tracking-wide text-[#2f4a3c] uppercase">
+                                            {table.service}
+                                        </span>
+                                    )}
                                 </div>
 
                                 <div className="mt-2 min-h-[44px]">
                                     <p className="line-clamp-2 text-[11px] font-medium text-[#1d1d1d]">
-                                        {table.partyInfo ||
-                                            'Available for walk-in'}
+                                        {table.partyInfo}
                                     </p>
                                     {table.timeSlot && (
                                         <div className="mt-1 flex items-center gap-1 text-[10px] text-[#1d1d1d]/60">
@@ -129,10 +128,10 @@ export default function FloorBoard({
                             </div>
 
                             <div className="mt-3 flex items-center justify-between border-t border-[#dedbd3]/60 pt-2.5">
-                                {isOccupied && (
+                                {isInService && (
                                     <span className="inline-flex items-center gap-1 rounded-full bg-[#1f1d1b] px-2 py-0.5 text-[9px] font-semibold tracking-wider text-[#f8f7f3] uppercase">
                                         <span className="size-1.5 rounded-full bg-amber-400" />
-                                        Occupied
+                                        In service
                                     </span>
                                 )}
                                 {isReserved && (
@@ -147,18 +146,8 @@ export default function FloorBoard({
                                         Open
                                     </span>
                                 )}
-
-                                {onResetTable && isOccupied && (
-                                    <button
-                                        type="button"
-                                        onClick={() => onResetTable(table.id)}
-                                        className="text-[10px] font-medium text-[#1d1d1d]/60 underline underline-offset-2 transition-colors hover:text-[#1d1d1d]"
-                                    >
-                                        Reset
-                                    </button>
-                                )}
                             </div>
-                        </div>
+                        </button>
                     );
                 })}
             </div>

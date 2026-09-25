@@ -1,34 +1,70 @@
 import { Head } from '@inertiajs/react';
-import { Search, Users } from 'lucide-react';
+import { Clock, Search, Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import type { DiningTable } from '@/features/staff/types';
+import TableScheduleModal from '@/features/staff/components/table-schedule-modal';
+import { buildFloorTableCards } from '@/features/staff/lib/build-floor-table-cards';
+import type {
+    DiningReservation,
+    DiningTable,
+    FloorTableCard,
+} from '@/features/staff/types';
 import StaffLayout from '@/shared/layouts/staff-layout';
 
 type StaffTablesPageProps = {
     tables: DiningTable[];
+    reservations: DiningReservation[];
+    today: string;
 };
 
-export default function StaffTablesPage({ tables }: StaffTablesPageProps) {
+export default function StaffTablesPage({
+    tables,
+    reservations,
+    today,
+}: StaffTablesPageProps) {
     const [search, setSearch] = useState('');
+    const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
+
+    const floorTables = useMemo(
+        () => buildFloorTableCards(tables, reservations, today),
+        [tables, reservations, today],
+    );
 
     const filteredTables = useMemo(() => {
         const query = search.trim().toLowerCase();
 
         if (!query) {
-            return tables;
+            return floorTables;
         }
 
-        return tables.filter(
+        return floorTables.filter(
             (table) =>
                 table.name.toLowerCase().includes(query) ||
                 String(table.capacity).includes(query),
         );
-    }, [tables, search]);
+    }, [floorTables, search]);
+
+    const selectedTable = useMemo(
+        () => tables.find((table) => table.id === selectedTableId) ?? null,
+        [tables, selectedTableId],
+    );
+
+    const selectedTableReservations = useMemo(() => {
+        if (!selectedTableId) {
+            return [];
+        }
+
+        return reservations.filter(
+            (reservation) => reservation.table_id === selectedTableId,
+        );
+    }, [reservations, selectedTableId]);
 
     const totalSeats = tables.reduce((sum, table) => sum + table.capacity, 0);
+    const inServiceCount = floorTables.filter(
+        (table) => table.status === 'In service',
+    ).length;
 
     return (
-        <StaffLayout activeTablesCount={`${tables.length}`}>
+        <StaffLayout activeTablesCount={`${inServiceCount}/${tables.length}`}>
             <Head title="Staff Tables | Halden" />
 
             <div className="max-w-8xl mx-auto space-y-6">
@@ -41,7 +77,8 @@ export default function StaffTablesPage({ tables }: StaffTablesPageProps) {
                             Dining tables
                         </h1>
                         <p className="mt-2 text-sm text-[#1d1d1d]/70">
-                            {tables.length} tables · {totalSeats} seats total
+                            {tables.length} tables · {totalSeats} seats · Today{' '}
+                            {today}
                         </p>
                     </div>
 
@@ -66,42 +103,112 @@ export default function StaffTablesPage({ tables }: StaffTablesPageProps) {
                 ) : (
                     <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                         {filteredTables.map((table) => (
-                            <article
+                            <FloorTableItem
                                 key={table.id}
-                                className="overflow-hidden border border-[#dedbd3] bg-white"
-                            >
-                                <div className="aspect-[4/3] bg-[#f8f7f3]">
-                                    {table.image_url ? (
-                                        <img
-                                            src={table.image_url}
-                                            alt={table.name}
-                                            className="h-full w-full object-cover"
-                                        />
-                                    ) : (
-                                        <div className="flex h-full items-center justify-center text-xs tracking-widest text-[#1d1d1d]/40 uppercase">
-                                            No photo
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="space-y-3 p-5">
-                                    <div className="flex items-start justify-between gap-3">
-                                        <h2 className="font-heading text-2xl text-[#1d1d1d]">
-                                            {table.name}
-                                        </h2>
-                                        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#1d1d1d]/70">
-                                            <Users className="size-3.5" />
-                                            Seats {table.capacity}
-                                        </span>
-                                    </div>
-                                    <p className="text-[11px] tracking-wide text-[#1d1d1d]/45 uppercase">
-                                        ID {table.id.slice(0, 8)}
-                                    </p>
-                                </div>
-                            </article>
+                                table={table}
+                                onSelect={() => setSelectedTableId(table.id)}
+                            />
                         ))}
                     </div>
                 )}
             </div>
+
+            {selectedTable && (
+                <TableScheduleModal
+                    table={selectedTable}
+                    today={today}
+                    reservations={selectedTableReservations}
+                    onClose={() => setSelectedTableId(null)}
+                />
+            )}
         </StaffLayout>
+    );
+}
+
+function FloorTableItem({
+    table,
+    onSelect,
+}: {
+    table: FloorTableCard;
+    onSelect: () => void;
+}) {
+    const isInService = table.status === 'In service';
+    const isReserved = table.status === 'Reserved';
+
+    return (
+        <button
+            type="button"
+            onClick={onSelect}
+            className={`overflow-hidden border bg-white text-left transition-shadow hover:shadow-xs focus-visible:ring-2 focus-visible:ring-[#2f4a3c]/40 focus-visible:outline-none ${
+                isInService
+                    ? 'border-[#1f1d1b] ring-1 ring-[#1f1d1b]/10'
+                    : isReserved
+                      ? 'border-[#2f4a3c]/40'
+                      : 'border-[#dedbd3]'
+            }`}
+        >
+            <div className="aspect-[4/3] bg-[#f8f7f3]">
+                {table.image_url ? (
+                    <img
+                        src={table.image_url}
+                        alt={table.name}
+                        className="h-full w-full object-cover"
+                    />
+                ) : (
+                    <div className="flex h-full items-center justify-center text-xs tracking-widest text-[#1d1d1d]/40 uppercase">
+                        No photo
+                    </div>
+                )}
+            </div>
+            <div className="space-y-3 p-5">
+                <div className="flex items-start justify-between gap-3">
+                    <h2 className="font-heading text-2xl text-[#1d1d1d]">
+                        {table.name}
+                    </h2>
+                    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#1d1d1d]/70">
+                        <Users className="size-3.5" />
+                        Seats {table.capacity}
+                    </span>
+                </div>
+
+                <div className="min-h-[40px]">
+                    <p className="text-sm font-medium text-[#1d1d1d]">
+                        {table.partyInfo}
+                    </p>
+                    {table.timeSlot && (
+                        <div className="mt-1 flex items-center gap-1.5 text-xs text-[#1d1d1d]/60">
+                            <Clock className="size-3 shrink-0" />
+                            <span>{table.timeSlot}</span>
+                            {table.service && (
+                                <span className="font-semibold tracking-wide text-[#2f4a3c] uppercase">
+                                    · {table.service}
+                                </span>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                <div className="border-t border-[#dedbd3]/70 pt-3">
+                    {isInService && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[#1f1d1b] px-2.5 py-0.5 text-[10px] font-semibold tracking-wider text-[#f8f7f3] uppercase">
+                            <span className="size-1.5 rounded-full bg-amber-400" />
+                            In service
+                        </span>
+                    )}
+                    {isReserved && (
+                        <span className="inline-flex items-center gap-1 rounded-full border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 px-2.5 py-0.5 text-[10px] font-semibold tracking-wider text-[#2f4a3c] uppercase">
+                            <span className="size-1.5 rounded-full bg-[#2f4a3c]" />
+                            Reserved
+                        </span>
+                    )}
+                    {table.status === 'Open' && (
+                        <span className="inline-flex items-center gap-1 rounded-full border border-[#dedbd3] bg-[#f8f7f3] px-2.5 py-0.5 text-[10px] font-semibold tracking-wider text-[#1d1d1d]/70 uppercase">
+                            <span className="size-1.5 rounded-full bg-stone-400" />
+                            Open
+                        </span>
+                    )}
+                </div>
+            </div>
+        </button>
     );
 }

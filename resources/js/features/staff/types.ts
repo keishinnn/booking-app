@@ -30,11 +30,25 @@ export type DiningReservation = {
     updated_at?: string | null;
 };
 
-/** @deprecated Prefer DiningReservation for live data */
-export type TableStatus = 'Occupied' | 'Reserved' | 'Open';
+export type FloorTableStatus = 'In service' | 'Reserved' | 'Open';
 
+/** @deprecated Prefer FloorTableStatus for live floor */
+export type TableStatus = FloorTableStatus | 'Occupied';
+
+export type FloorTableCard = {
+    id: string;
+    name: string;
+    capacity: number;
+    image_url: string | null;
+    status: FloorTableStatus;
+    partyInfo: string;
+    timeSlot: string | null;
+    service: 'Lunch' | 'Dinner' | null;
+};
+
+/** @deprecated Prefer FloorTableCard for live floor */
 export type TableState = {
-    id: number;
+    id: number | string;
     name: string;
     subtitle?: string;
     capacity: number;
@@ -43,7 +57,9 @@ export type TableState = {
     partyInfo?: string;
     timeSlot?: string;
     image?: string;
+    image_url?: string | null;
     location?: string;
+    service?: 'Lunch' | 'Dinner' | null;
 };
 
 /** @deprecated Prefer DiningReservation */
