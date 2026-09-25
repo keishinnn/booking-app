@@ -1,42 +1,33 @@
 <?php
 
-test('the staff entry point redirects to staff dashboard', function () {
-    $this->get('/staff')
+use App\Models\User;
+
+test('guests are redirected from staff pages to login', function () {
+    $this->get('/staff')->assertRedirect(route('login'));
+    $this->get(route('staff.dashboard'))->assertRedirect(route('login'));
+    $this->get(route('staff.reservations'))->assertRedirect(route('login'));
+    $this->get(route('staff.tables'))->assertRedirect(route('login'));
+});
+
+test('authenticated staff can visit staff pages', function () {
+    $user = User::factory()->staff()->create();
+
+    $this->actingAs($user)
+        ->get('/staff')
         ->assertRedirect('/staff/dashboard');
-});
 
-test('the staff dashboard page returns 200 and renders staff/dashboard component', function () {
-    $this->get('/staff/dashboard')
+    $this->actingAs($user)
+        ->get(route('staff.dashboard'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page->component('staff/dashboard'));
-});
 
-test('the staff dashboard can be visited via named route', function () {
-    $this->get(route('staff.dashboard'))
-        ->assertOk()
-        ->assertInertia(fn ($page) => $page->component('staff/dashboard'));
-});
-
-test('the staff reservations page returns 200 and renders staff/reservations component', function () {
-    $this->get('/staff/reservations')
+    $this->actingAs($user)
+        ->get(route('staff.reservations'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page->component('staff/reservations'));
-});
 
-test('the staff reservations can be visited via named route', function () {
-    $this->get(route('staff.reservations'))
-        ->assertOk()
-        ->assertInertia(fn ($page) => $page->component('staff/reservations'));
-});
-
-test('the staff tables page returns 200 and renders staff/tables component', function () {
-    $this->get('/staff/tables')
-        ->assertOk()
-        ->assertInertia(fn ($page) => $page->component('staff/tables'));
-});
-
-test('the staff tables can be visited via named route', function () {
-    $this->get(route('staff.tables'))
+    $this->actingAs($user)
+        ->get(route('staff.tables'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page->component('staff/tables'));
 });

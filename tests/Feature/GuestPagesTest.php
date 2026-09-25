@@ -48,14 +48,14 @@ test('the login page can be visited via named route', function () {
         ->assertInertia(fn ($page) => $page->component('login'));
 });
 
-test('a login attempt returns redirect back', function () {
+test('a login attempt with invalid credentials returns validation errors', function () {
     $this->from('/login')
         ->post('/login', [
             'email' => 'staff@halden.test',
             'password' => 'password',
         ])
         ->assertRedirect('/login')
-        ->assertSessionHas('error', 'Staff authentication requires active database connection.');
+        ->assertSessionHasErrors('email');
 });
 
 test('the reserve page returns 200 and renders the book component', function () {
@@ -115,21 +115,4 @@ test('a reservation can be posted to the reservations stub endpoint', function (
     ])
         ->assertRedirect()
         ->assertSessionHas('success', 'Table reserved successfully.');
-});
-
-test('the staff entry point redirects to staff dashboard', function () {
-    $this->get('/staff')
-        ->assertRedirect('/staff/dashboard');
-});
-
-test('the staff dashboard page returns 200 and renders the staff/dashboard component', function () {
-    $this->get('/staff/dashboard')
-        ->assertOk()
-        ->assertInertia(fn ($page) => $page->component('staff/dashboard'));
-});
-
-test('the staff dashboard page can be visited via named route', function () {
-    $this->get(route('staff.dashboard'))
-        ->assertOk()
-        ->assertInertia(fn ($page) => $page->component('staff/dashboard'));
 });

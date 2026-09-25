@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
+use App\Http\Controllers\Staff\ReservationController as StaffReservationController;
+use App\Http\Controllers\Staff\TableController as StaffTableController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -7,15 +12,27 @@ use Inertia\Inertia;
 Route::inertia('/', 'home')->name('home');
 Route::inertia('/terms', 'terms')->name('terms');
 Route::inertia('/privacy', 'privacy')->name('privacy');
-Route::inertia('/login', 'login')->name('login');
-Route::post('/login', function (Request $request) {
-    return redirect()->back()->with('error', 'Staff authentication requires active database connection.');
-})->name('login.store');
 
-Route::get('/staff', fn () => redirect()->route('staff.dashboard'));
-Route::get('/staff/dashboard', fn () => Inertia::render('staff/dashboard'))->name('staff.dashboard');
-Route::get('/staff/reservations', fn () => Inertia::render('staff/reservations'))->name('staff.reservations');
-Route::get('/staff/tables', fn () => Inertia::render('staff/tables'))->name('staff.tables');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
+});
+
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('logout');
+
+Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->group(function () {
+    Route::redirect('/', '/staff/dashboard');
+    Route::get('/dashboard', StaffDashboardController::class)->name('dashboard');
+    Route::get('/reservations', StaffReservationController::class)->name('reservations');
+    Route::get('/tables', StaffTableController::class)->name('tables');
+});
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::redirect('/', '/admin/dashboard');
+    Route::get('/dashboard', AdminDashboardController::class)->name('dashboard');
+});
 
 Route::get('/reserve', function (Request $request) {
     $date = $request->query('date');

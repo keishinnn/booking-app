@@ -14,12 +14,13 @@ import {
 } from 'lucide-react';
 import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { Button } from '@/shared/components/ui/button';
-import { login, reserve } from '@/routes';
+import { logout, reserve } from '@/routes';
 import {
     dashboard,
     reservations as reservationsRoute,
     tables as tablesRoute,
 } from '@/routes/staff';
+import type { Auth } from '@/shared/types/auth';
 
 interface StaffLayoutProps {
     children: ReactNode;
@@ -29,6 +30,15 @@ interface StaffLayoutProps {
     onSearchChange?: (value: string) => void;
 }
 
+function initials(name: string): string {
+    return name
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0]?.toUpperCase() ?? '')
+        .join('');
+}
+
 export default function StaffLayout({
     children,
     reservationCount = 5,
@@ -36,7 +46,12 @@ export default function StaffLayout({
     searchValue,
     onSearchChange,
 }: StaffLayoutProps) {
-    const { url } = usePage();
+    const { url, props } = usePage<{ auth: Auth }>();
+    const user = props.auth.user;
+    const displayName = user?.name ?? 'Staff';
+    const displayEmail = user?.email ?? '';
+    const displayRole = user?.role === 'admin' ? 'Admin' : 'Floor Staff';
+    const displayInitials = initials(displayName) || 'ST';
     const [mobileOpen, setMobileOpen] = useState(false);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -208,20 +223,22 @@ export default function StaffLayout({
                         <div className="flex items-center justify-between rounded-xl border border-[#dedbd3]/60 bg-[#f8f7f3]/60 p-2.5">
                             <div className="flex min-w-0 items-center gap-3">
                                 <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1f1d1b] text-xs font-semibold text-[#f8f7f3]">
-                                    ME
+                                    {displayInitials}
                                     <span className="absolute right-0 bottom-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
                                 </div>
                                 <div className="min-w-0 flex-1">
                                     <p className="truncate text-xs font-semibold text-[#1d1d1d]">
-                                        Maja Eklund
+                                        {displayName}
                                     </p>
                                     <p className="truncate text-[11px] text-[#1d1d1d]/60">
-                                        Head Host
+                                        {displayRole}
                                     </p>
                                 </div>
                             </div>
                             <Link
-                                href={login.url()}
+                                href={logout.url()}
+                                method="post"
+                                as="button"
                                 title="Sign out"
                                 className="flex h-8 w-8 items-center justify-center rounded-lg text-[#1d1d1d]/60 shadow-2xs transition-colors hover:bg-white hover:text-rose-600"
                             >
@@ -231,11 +248,13 @@ export default function StaffLayout({
                     ) : (
                         <div className="flex flex-col items-center gap-3">
                             <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#1f1d1b] text-xs font-semibold text-[#f8f7f3]">
-                                ME
+                                {displayInitials}
                                 <span className="absolute right-0 bottom-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
                             </div>
                             <Link
-                                href={login.url()}
+                                href={logout.url()}
+                                method="post"
+                                as="button"
                                 title="Sign out"
                                 className="flex h-8 w-8 items-center justify-center rounded-lg text-[#1d1d1d]/60 transition-colors hover:bg-[#f8f7f3] hover:text-rose-600"
                             >
@@ -331,20 +350,22 @@ export default function StaffLayout({
                             <div className="flex items-center justify-between rounded-xl border border-[#dedbd3]/60 bg-[#f8f7f3]/60 p-3">
                                 <div className="flex items-center gap-3">
                                     <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#1f1d1b] text-xs font-semibold text-[#f8f7f3]">
-                                        ME
+                                        {displayInitials}
                                         <span className="absolute right-0 bottom-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
                                     </div>
                                     <div>
                                         <p className="text-xs font-semibold text-[#1d1d1d]">
-                                            Maja Eklund
+                                            {displayName}
                                         </p>
                                         <p className="text-[11px] text-[#1d1d1d]/60">
-                                            Head Host
+                                            {displayRole}
                                         </p>
                                     </div>
                                 </div>
                                 <Link
-                                    href={login.url()}
+                                    href={logout.url()}
+                                    method="post"
+                                    as="button"
                                     className="flex h-8 w-8 items-center justify-center rounded-lg text-[#1d1d1d]/60 shadow-2xs transition-colors hover:bg-white hover:text-rose-600"
                                 >
                                     <LogOut className="size-4" />
@@ -432,14 +453,14 @@ export default function StaffLayout({
                                 aria-haspopup="true"
                             >
                                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1f1d1b] text-xs font-bold text-[#f8f7f3]">
-                                    ME
+                                    {displayInitials}
                                 </div>
                                 <div className="hidden text-left sm:block">
                                     <p className="text-xs leading-tight font-semibold text-[#1d1d1d]">
-                                        Maja Eklund
+                                        {displayName}
                                     </p>
                                     <p className="text-[10px] leading-tight text-[#1d1d1d]/60">
-                                        Head Host
+                                        {displayRole}
                                     </p>
                                 </div>
                                 <ChevronDown
@@ -454,10 +475,10 @@ export default function StaffLayout({
                                 <div className="absolute right-0 z-50 mt-2 w-56 animate-in rounded-2xl border border-[#dedbd3] bg-white p-2 shadow-lg duration-100 zoom-in-95 fade-in">
                                     <div className="border-b border-[#dedbd3]/70 px-3 py-2">
                                         <p className="text-xs font-semibold text-[#1d1d1d]">
-                                            Maja Eklund
+                                            {displayName}
                                         </p>
                                         <p className="text-[11px] text-[#1d1d1d]/60">
-                                            maja.host@halden.se
+                                            {displayEmail}
                                         </p>
                                     </div>
                                     <div className="py-1">
@@ -494,8 +515,10 @@ export default function StaffLayout({
                                     </div>
                                     <div className="border-t border-[#dedbd3]/70 pt-1">
                                         <Link
-                                            href={login.url()}
-                                            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-rose-600 transition-colors hover:bg-rose-50"
+                                            href={logout.url()}
+                                            method="post"
+                                            as="button"
+                                            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-rose-600 transition-colors hover:bg-rose-50"
                                         >
                                             <LogOut className="size-4 text-rose-500" />
                                             <span>Sign out</span>
