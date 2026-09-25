@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { useEffect, useId, type ReactNode } from 'react';
 import { reservationTimeWindow } from '@/features/staff/lib/build-floor-table-cards';
 import type { DiningReservation, DiningTable } from '@/features/staff/types';
+import { useLockBodyScroll } from '@/shared/lib/use-lock-body-scroll';
 import { reservations as reservationsRoute } from '@/routes/staff';
 
 type TableScheduleModalProps = {
@@ -20,10 +21,9 @@ export default function TableScheduleModal({
 }: TableScheduleModalProps) {
     const titleId = useId();
 
-    useEffect(() => {
-        const previous = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
+    useLockBodyScroll();
 
+    useEffect(() => {
         const onKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
                 onClose();
@@ -33,7 +33,6 @@ export default function TableScheduleModal({
         document.addEventListener('keydown', onKeyDown);
 
         return () => {
-            document.body.style.overflow = previous;
             document.removeEventListener('keydown', onKeyDown);
         };
     }, [onClose]);

@@ -16,6 +16,7 @@ import type {
     ReservationStatusFilter,
 } from '@/features/staff/types';
 import StaffLayout from '@/shared/layouts/staff-layout';
+import { useLockBodyScroll } from '@/shared/lib/use-lock-body-scroll';
 import {
     destroy,
     store,
@@ -475,13 +476,7 @@ function Modal({
 }) {
     const titleId = useId();
 
-    useEffect(() => {
-        const previous = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
-        return () => {
-            document.body.style.overflow = previous;
-        };
-    }, []);
+    useLockBodyScroll();
 
     return (
         <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6">

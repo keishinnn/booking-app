@@ -10,6 +10,7 @@ import {
 import TableForm from '@/features/admin/components/table-form';
 import type { DiningTable } from '@/features/staff/types';
 import StaffLayout from '@/shared/layouts/staff-layout';
+import { useLockBodyScroll } from '@/shared/lib/use-lock-body-scroll';
 import { destroy, store, update } from '@/routes/admin/tables';
 
 type ImageOption = {
@@ -297,14 +298,7 @@ function Modal({
 }) {
     const titleId = useId();
 
-    useEffect(() => {
-        const previousOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
-
-        return () => {
-            document.body.style.overflow = previousOverflow;
-        };
-    }, []);
+    useLockBodyScroll();
 
     return (
         <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6">
