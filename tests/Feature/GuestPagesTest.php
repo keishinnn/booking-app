@@ -47,3 +47,15 @@ test('the contact page can be visited via named route', function () {
         ->assertOk()
         ->assertInertia(fn ($page) => $page->component('contact'));
 });
+
+test('the terms page returns 200 and renders the terms component', function () {
+    $this->get('/terms')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->component('terms'));
+});
+
+test('the terms page can be visited via named route', function () {
+    $this->get(route('terms'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->component('terms'));
+});
