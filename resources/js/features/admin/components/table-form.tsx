@@ -21,7 +21,10 @@ type TableFormProps = {
     imageOptions: ImageOption[];
     defaults?: TableFormFields;
     submitLabel: string;
+    onCancel?: () => void;
+    onSuccess?: () => void;
     cancelSlot?: ReactNode;
+    formKey?: string;
 };
 
 export default function TableForm({
@@ -29,12 +32,18 @@ export default function TableForm({
     imageOptions,
     defaults,
     submitLabel,
+    onCancel,
+    onSuccess,
     cancelSlot,
+    formKey,
 }: TableFormProps) {
     return (
         <Form
+            key={formKey}
             {...formProps}
-            className="max-w-xl space-y-6 border border-[#dedbd3] bg-white p-6 sm:p-8"
+            className="space-y-5"
+            options={{ preserveScroll: true }}
+            onSuccess={() => onSuccess?.()}
         >
             {({ errors, processing }) => (
                 <>
@@ -111,7 +120,18 @@ export default function TableForm({
                         )}
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-3 pt-2">
+                    <div className="flex flex-wrap items-center justify-end gap-3 pt-1">
+                        {onCancel ? (
+                            <button
+                                type="button"
+                                onClick={onCancel}
+                                className="px-3 py-2 text-sm text-[#1d1d1d]/70 underline-offset-4 hover:underline"
+                            >
+                                Cancel
+                            </button>
+                        ) : (
+                            cancelSlot
+                        )}
                         <Button
                             type="submit"
                             disabled={processing}
@@ -119,7 +139,6 @@ export default function TableForm({
                         >
                             {processing ? 'Saving…' : submitLabel}
                         </Button>
-                        {cancelSlot}
                     </div>
                 </>
             )}

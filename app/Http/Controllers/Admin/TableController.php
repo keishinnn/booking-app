@@ -34,13 +34,11 @@ class TableController extends Controller
     /**
      * Show the form for creating a new dining table.
      */
-    public function create(): Response
+    public function create(): RedirectResponse
     {
         $this->authorize('create', Table::class);
 
-        return Inertia::render('admin/tables/create', [
-            'imageOptions' => $this->imageOptions(),
-        ]);
+        return redirect()->route('admin.tables.index');
     }
 
     /**
@@ -58,14 +56,11 @@ class TableController extends Controller
     /**
      * Show the form for editing the specified dining table.
      */
-    public function edit(Table $table): Response
+    public function edit(Table $table): RedirectResponse
     {
         $this->authorize('update', $table);
 
-        return Inertia::render('admin/tables/edit', [
-            'table' => (new TableResource($table))->resolve(),
-            'imageOptions' => $this->imageOptions(),
-        ]);
+        return redirect()->route('admin.tables.index');
     }
 
     /**

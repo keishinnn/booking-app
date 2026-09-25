@@ -1,22 +1,15 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { Search, Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { DiningTable } from '@/features/staff/types';
-import { index as adminTables } from '@/routes/admin/tables';
 import StaffLayout from '@/shared/layouts/staff-layout';
-import type { Auth } from '@/shared/types/auth';
 
 type StaffTablesPageProps = {
     tables: DiningTable[];
 };
 
 export default function StaffTablesPage({ tables }: StaffTablesPageProps) {
-    const { flash, auth } = usePage<{
-        auth: Auth;
-        flash?: { success?: string | null; error?: string | null };
-    }>().props;
     const [search, setSearch] = useState('');
-    const isAdmin = auth.user?.role === 'admin';
 
     const filteredTables = useMemo(() => {
         const query = search.trim().toLowerCase();
@@ -39,18 +32,6 @@ export default function StaffTablesPage({ tables }: StaffTablesPageProps) {
             <Head title="Staff Tables | Halden" />
 
             <div className="max-w-8xl mx-auto space-y-6">
-                {(flash?.success || flash?.error) && (
-                    <div
-                        className={`rounded-xl border px-4 py-3 text-xs font-medium ${
-                            flash.error
-                                ? 'border-[#8a4b3b]/30 bg-[#8a4b3b]/10 text-[#8a4b3b]'
-                                : 'border-[#2f4a3c]/30 bg-[#2f4a3c]/10 text-[#2f4a3c]'
-                        }`}
-                    >
-                        {flash.error || flash.success}
-                    </div>
-                )}
-
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                         <p className="text-xs font-semibold tracking-widest text-[#2f4a3c] uppercase">
@@ -119,19 +100,6 @@ export default function StaffTablesPage({ tables }: StaffTablesPageProps) {
                             </article>
                         ))}
                     </div>
-                )}
-
-                {isAdmin && (
-                    <p className="text-xs text-[#1d1d1d]/55">
-                        Need to change the catalog?{' '}
-                        <Link
-                            href={adminTables.url()}
-                            className="underline underline-offset-4 hover:text-[#1d1d1d]"
-                        >
-                            Manage tables in admin
-                        </Link>
-                        .
-                    </p>
                 )}
             </div>
         </StaffLayout>

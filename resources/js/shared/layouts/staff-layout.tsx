@@ -11,10 +11,14 @@ import {
     ChevronDown,
     PanelLeftClose,
     PanelLeftOpen,
+    Settings2,
+    Library,
 } from 'lucide-react';
 import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { Button } from '@/shared/components/ui/button';
 import { logout, reserve } from '@/routes';
+import { dashboard as adminDashboard } from '@/routes/admin';
+import { index as adminTables } from '@/routes/admin/tables';
 import {
     dashboard,
     reservations as reservationsRoute,
@@ -29,6 +33,14 @@ interface StaffLayoutProps {
     searchValue?: string;
     onSearchChange?: (value: string) => void;
 }
+
+type NavItem = {
+    href: string;
+    label: string;
+    icon: typeof LayoutDashboard;
+    isActive: boolean;
+    badge: string | null;
+};
 
 function initials(name: string): string {
     return name
@@ -46,11 +58,16 @@ export default function StaffLayout({
     searchValue,
     onSearchChange,
 }: StaffLayoutProps) {
-    const { url, props } = usePage<{ auth: Auth }>();
+    const { url, props } = usePage<{
+        auth: Auth;
+        flash?: { success?: string | null; error?: string | null };
+    }>();
     const user = props.auth.user;
+    const flash = props.flash;
+    const isAdmin = user?.role === 'admin';
     const displayName = user?.name ?? 'Staff';
     const displayEmail = user?.email ?? '';
-    const displayRole = user?.role === 'admin' ? 'Admin' : 'Floor Staff';
+    const displayRole = isAdmin ? 'Admin' : 'Floor Staff';
     const displayInitials = initials(displayName) || 'ST';
     const [mobileOpen, setMobileOpen] = useState(false);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -58,7 +75,6 @@ export default function StaffLayout({
     const searchInputRef = useRef<HTMLInputElement>(null);
     const userDropdownRef = useRef<HTMLDivElement>(null);
 
-    // Global keyboard shortcut for Search (⌘K / Ctrl+K)
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -70,7 +86,6 @@ export default function StaffLayout({
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
 
-    // Close user dropdown on outside click
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
             if (
@@ -85,47 +100,117 @@ export default function StaffLayout({
             document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const isOverviewActive =
-        url === '/staff' ||
-        url === '/staff/dashboard' ||
-        url.startsWith('/staff/dashboard?');
-    const isReservationsActive = url.startsWith('/staff/reservations');
-    const isTablesActive = url.startsWith('/staff/tables');
-
-    const navItems = [
+    const floorNavItems: NavItem[] = [
         {
             href: dashboard.url(),
             label: 'Overview',
             icon: LayoutDashboard,
-            isActive: isOverviewActive,
+            isActive:
+                url === '/staff' ||
+                url === '/staff/dashboard' ||
+                url.startsWith('/staff/dashboard?'),
             badge: null,
         },
         {
             href: reservationsRoute.url(),
             label: 'Reservations',
             icon: Calendar,
-            isActive: isReservationsActive,
+            isActive: url.startsWith('/staff/reservations'),
             badge: String(reservationCount),
         },
         {
             href: tablesRoute.url(),
-            label: 'Tables',
+            label: 'Floor tables',
             icon: Grid3X3,
-            isActive: isTablesActive,
+            isActive: url.startsWith('/staff/tables'),
             badge: activeTablesCount,
         },
     ];
 
+    const adminNavItems: NavItem[] = isAdmin
+        ? [
+              {
+                  href: adminDashboard.url(),
+                  label: 'Control',
+                  icon: Settings2,
+                  isActive:
+                      url === '/admin' ||
+                      url === '/admin/dashboard' ||
+                      url.startsWith('/admin/dashboard?'),
+                  badge: null,
+              },
+              {
+                  href: adminTables.url(),
+                  label: 'Catalog',
+                  icon: Library,
+                  isActive: url.startsWith('/admin/tables'),
+                  badge: null,
+              },
+          ]
+        : [];
+
+    const renderNavItems = (
+        items: NavItem[],
+        options: { collapsed: boolean; onNavigate?: () => void } = {
+            collapsed: false,
+        },
+    ) =>
+        items.map((item) => {
+            const Icon = item.icon;
+            return (
+                <Link
+                    key={item.href}
+                    href={item.href}
+                    title={options.collapsed ? item.label : undefined}
+                    onClick={options.onNavigate}
+                    className={`group relative flex items-center rounded-xl px-3.5 py-3 text-sm font-medium transition-all ${
+                        options.collapsed ? 'justify-center' : 'justify-between'
+                    } ${
+                        item.isActive
+                            ? 'bg-[#1f1d1b] text-[#f8f7f3] shadow-xs'
+                            : 'text-[#1d1d1d]/75 hover:bg-[#f8f7f3] hover:text-[#1d1d1d]'
+                    }`}
+                >
+                    <div className="flex items-center gap-3">
+                        <Icon
+                            className={`size-5 shrink-0 transition-colors ${
+                                item.isActive
+                                    ? 'text-[#f8f7f3]'
+                                    : 'text-[#1d1d1d]/60 group-hover:text-[#1d1d1d]'
+                            }`}
+                        />
+                        {!options.collapsed && <span>{item.label}</span>}
+                    </div>
+
+                    {!options.collapsed && item.badge && (
+                        <span
+                            className={`rounded-full px-2 py-0.5 text-xs font-semibold tracking-wide transition-colors ${
+                                item.isActive
+                                    ? 'bg-white/20 text-white'
+                                    : 'border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]/70 group-hover:border-[#1d1d1d]/20'
+                            }`}
+                        >
+                            {item.badge}
+                        </span>
+                    )}
+
+                    {options.collapsed && item.badge && (
+                        <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#2f4a3c] px-1 text-[9px] font-bold text-white">
+                            {item.badge}
+                        </span>
+                    )}
+                </Link>
+            );
+        });
+
     return (
         <div className="flex min-h-screen bg-[#f8f7f3] text-[#1d1d1d]">
-            {/* Desktop Sidebar (TailAdmin style) */}
             <aside
                 className={`sticky top-0 hidden h-screen shrink-0 flex-col justify-between border-r border-[#dedbd3] bg-white transition-all duration-300 lg:flex ${
                     sidebarCollapsed ? 'w-20 px-3 py-6' : 'w-72 px-6 py-6'
                 }`}
             >
                 <div className="flex flex-col">
-                    {/* Sidebar Brand Header */}
                     <div className="flex items-center justify-between border-b border-[#dedbd3]/70 pb-6">
                         {!sidebarCollapsed ? (
                             <div className="flex items-center gap-3">
@@ -136,88 +221,49 @@ export default function StaffLayout({
                                     Halden
                                 </Link>
                                 <span className="inline-flex items-center rounded-md border border-[#2f4a3c]/20 bg-[#2f4a3c]/10 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[#2f4a3c] uppercase">
-                                    Staff
+                                    {isAdmin ? 'Admin' : 'Staff'}
                                 </span>
                             </div>
                         ) : (
                             <Link
                                 href={dashboard.url()}
                                 className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f1d1b] font-heading text-lg font-bold text-[#f8f7f3]"
-                                title="Halden Staff Dashboard"
+                                title="Halden portal"
                             >
                                 H
                             </Link>
                         )}
                     </div>
 
-                    {/* Sidebar Menu Group */}
                     <div className="mt-7">
                         {!sidebarCollapsed && (
                             <h3 className="mb-3 px-3 text-[11px] font-semibold tracking-wider text-[#1d1d1d]/45 uppercase">
-                                Main Menu
+                                Floor
                             </h3>
                         )}
-
                         <nav className="flex flex-col gap-1.5">
-                            {navItems.map((item) => {
-                                const Icon = item.icon;
-                                return (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
-                                        title={
-                                            sidebarCollapsed
-                                                ? item.label
-                                                : undefined
-                                        }
-                                        className={`group relative flex items-center rounded-xl px-3.5 py-3 text-sm font-medium transition-all ${
-                                            sidebarCollapsed
-                                                ? 'justify-center'
-                                                : 'justify-between'
-                                        } ${
-                                            item.isActive
-                                                ? 'bg-[#1f1d1b] text-[#f8f7f3] shadow-xs'
-                                                : 'text-[#1d1d1d]/75 hover:bg-[#f8f7f3] hover:text-[#1d1d1d]'
-                                        }`}
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <Icon
-                                                className={`size-5 shrink-0 transition-colors ${
-                                                    item.isActive
-                                                        ? 'text-[#f8f7f3]'
-                                                        : 'text-[#1d1d1d]/60 group-hover:text-[#1d1d1d]'
-                                                }`}
-                                            />
-                                            {!sidebarCollapsed && (
-                                                <span>{item.label}</span>
-                                            )}
-                                        </div>
-
-                                        {!sidebarCollapsed && item.badge && (
-                                            <span
-                                                className={`rounded-full px-2 py-0.5 text-xs font-semibold tracking-wide transition-colors ${
-                                                    item.isActive
-                                                        ? 'bg-white/20 text-white'
-                                                        : 'border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]/70 group-hover:border-[#1d1d1d]/20'
-                                                }`}
-                                            >
-                                                {item.badge}
-                                            </span>
-                                        )}
-
-                                        {sidebarCollapsed && item.badge && (
-                                            <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#2f4a3c] px-1 text-[9px] font-bold text-white">
-                                                {item.badge}
-                                            </span>
-                                        )}
-                                    </Link>
-                                );
+                            {renderNavItems(floorNavItems, {
+                                collapsed: sidebarCollapsed,
                             })}
                         </nav>
                     </div>
+
+                    {isAdmin && (
+                        <div className="mt-7">
+                            {!sidebarCollapsed && (
+                                <h3 className="mb-3 px-3 text-[11px] font-semibold tracking-wider text-[#1d1d1d]/45 uppercase">
+                                    Admin
+                                </h3>
+                            )}
+                            <nav className="flex flex-col gap-1.5">
+                                {renderNavItems(adminNavItems, {
+                                    collapsed: sidebarCollapsed,
+                                })}
+                            </nav>
+                        </div>
+                    )}
                 </div>
 
-                {/* Sidebar Footer User Area */}
                 <div className="border-t border-[#dedbd3]/70 pt-4">
                     {!sidebarCollapsed ? (
                         <div className="flex items-center justify-between rounded-xl border border-[#dedbd3]/60 bg-[#f8f7f3]/60 p-2.5">
@@ -265,7 +311,6 @@ export default function StaffLayout({
                 </div>
             </aside>
 
-            {/* Mobile Drawer (TailAdmin responsive drawer) */}
             {mobileOpen && (
                 <div className="fixed inset-0 z-50 lg:hidden">
                     <div
@@ -284,7 +329,7 @@ export default function StaffLayout({
                                         Halden
                                     </Link>
                                     <span className="rounded-md border border-[#2f4a3c]/20 bg-[#2f4a3c]/10 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[#2f4a3c] uppercase">
-                                        Staff
+                                        {isAdmin ? 'Admin' : 'Staff'}
                                     </span>
                                 </div>
                                 <Button
@@ -299,51 +344,30 @@ export default function StaffLayout({
 
                             <div className="mt-6">
                                 <h3 className="mb-3 px-3 text-[11px] font-semibold tracking-wider text-[#1d1d1d]/45 uppercase">
-                                    Main Menu
+                                    Floor
                                 </h3>
-
                                 <nav className="flex flex-col gap-1.5">
-                                    {navItems.map((item) => {
-                                        const Icon = item.icon;
-                                        return (
-                                            <Link
-                                                key={item.href}
-                                                href={item.href}
-                                                onClick={() =>
-                                                    setMobileOpen(false)
-                                                }
-                                                className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-                                                    item.isActive
-                                                        ? 'bg-[#1f1d1b] text-[#f8f7f3] shadow-xs'
-                                                        : 'text-[#1d1d1d]/75 hover:bg-[#f8f7f3] hover:text-[#1d1d1d]'
-                                                }`}
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    <Icon
-                                                        className={`size-5 ${
-                                                            item.isActive
-                                                                ? 'text-[#f8f7f3]'
-                                                                : 'text-[#1d1d1d]/60'
-                                                        }`}
-                                                    />
-                                                    <span>{item.label}</span>
-                                                </div>
-                                                {item.badge && (
-                                                    <span
-                                                        className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
-                                                            item.isActive
-                                                                ? 'bg-white/20 text-white'
-                                                                : 'border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]/70'
-                                                        }`}
-                                                    >
-                                                        {item.badge}
-                                                    </span>
-                                                )}
-                                            </Link>
-                                        );
+                                    {renderNavItems(floorNavItems, {
+                                        collapsed: false,
+                                        onNavigate: () => setMobileOpen(false),
                                     })}
                                 </nav>
                             </div>
+
+                            {isAdmin && (
+                                <div className="mt-6">
+                                    <h3 className="mb-3 px-3 text-[11px] font-semibold tracking-wider text-[#1d1d1d]/45 uppercase">
+                                        Admin
+                                    </h3>
+                                    <nav className="flex flex-col gap-1.5">
+                                        {renderNavItems(adminNavItems, {
+                                            collapsed: false,
+                                            onNavigate: () =>
+                                                setMobileOpen(false),
+                                        })}
+                                    </nav>
+                                </div>
+                            )}
                         </div>
 
                         <div className="border-t border-[#dedbd3] pt-4">
@@ -376,12 +400,9 @@ export default function StaffLayout({
                 </div>
             )}
 
-            {/* Main Content Area */}
             <div className="flex min-w-0 flex-1 flex-col">
-                {/* Sticky Topbar Header (TailAdmin style) */}
                 <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-[#dedbd3] bg-white/95 px-4 backdrop-blur-md sm:px-6 lg:px-8">
                     <div className="flex items-center gap-3 sm:gap-4">
-                        {/* Mobile Drawer Button */}
                         <button
                             type="button"
                             onClick={() => setMobileOpen(true)}
@@ -411,7 +432,6 @@ export default function StaffLayout({
                             )}
                         </button>
 
-                        {/* TailAdmin Search Input */}
                         <div className="relative hidden w-72 sm:block md:w-96">
                             <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#1d1d1d]/40" />
                             <input
@@ -432,7 +452,6 @@ export default function StaffLayout({
                     </div>
 
                     <div className="flex items-center gap-2.5 sm:gap-4">
-                        {/* New Reservation Action Button */}
                         <Link
                             href={reserve.url()}
                             className="inline-flex items-center gap-1.5 rounded-xl bg-[#1f1d1b] px-3.5 py-2 text-xs font-semibold tracking-wide text-[#f8f7f3] shadow-xs transition-all hover:bg-[#1f1d1b]/90 active:scale-[0.98]"
@@ -441,7 +460,6 @@ export default function StaffLayout({
                             <span>New Reservation</span>
                         </Link>
 
-                        {/* User Profile Menu Dropdown */}
                         <div className="relative" ref={userDropdownRef}>
                             <button
                                 type="button"
@@ -470,7 +488,6 @@ export default function StaffLayout({
                                 />
                             </button>
 
-                            {/* Dropdown Menu Popup */}
                             {userDropdownOpen && (
                                 <div className="absolute right-0 z-50 mt-2 w-56 animate-in rounded-2xl border border-[#dedbd3] bg-white p-2 shadow-lg duration-100 zoom-in-95 fade-in">
                                     <div className="border-b border-[#dedbd3]/70 px-3 py-2">
@@ -482,36 +499,45 @@ export default function StaffLayout({
                                         </p>
                                     </div>
                                     <div className="py-1">
-                                        <Link
-                                            href={dashboard.url()}
-                                            onClick={() =>
-                                                setUserDropdownOpen(false)
-                                            }
-                                            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-[#1d1d1d]/80 transition-colors hover:bg-[#f8f7f3] hover:text-[#1d1d1d]"
-                                        >
-                                            <LayoutDashboard className="size-4 text-[#1d1d1d]/50" />
-                                            <span>Dashboard Overview</span>
-                                        </Link>
-                                        <Link
-                                            href={reservationsRoute.url()}
-                                            onClick={() =>
-                                                setUserDropdownOpen(false)
-                                            }
-                                            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-[#1d1d1d]/80 transition-colors hover:bg-[#f8f7f3] hover:text-[#1d1d1d]"
-                                        >
-                                            <Calendar className="size-4 text-[#1d1d1d]/50" />
-                                            <span>Reservations Ledger</span>
-                                        </Link>
-                                        <Link
-                                            href={tablesRoute.url()}
-                                            onClick={() =>
-                                                setUserDropdownOpen(false)
-                                            }
-                                            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-[#1d1d1d]/80 transition-colors hover:bg-[#f8f7f3] hover:text-[#1d1d1d]"
-                                        >
-                                            <Grid3X3 className="size-4 text-[#1d1d1d]/50" />
-                                            <span>Floor Tables</span>
-                                        </Link>
+                                        {floorNavItems.map((item) => {
+                                            const Icon = item.icon;
+                                            return (
+                                                <Link
+                                                    key={item.href}
+                                                    href={item.href}
+                                                    onClick={() =>
+                                                        setUserDropdownOpen(
+                                                            false,
+                                                        )
+                                                    }
+                                                    className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-[#1d1d1d]/80 transition-colors hover:bg-[#f8f7f3] hover:text-[#1d1d1d]"
+                                                >
+                                                    <Icon className="size-4 text-[#1d1d1d]/50" />
+                                                    <span>{item.label}</span>
+                                                </Link>
+                                            );
+                                        })}
+                                        {isAdmin &&
+                                            adminNavItems.map((item) => {
+                                                const Icon = item.icon;
+                                                return (
+                                                    <Link
+                                                        key={item.href}
+                                                        href={item.href}
+                                                        onClick={() =>
+                                                            setUserDropdownOpen(
+                                                                false,
+                                                            )
+                                                        }
+                                                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-[#1d1d1d]/80 transition-colors hover:bg-[#f8f7f3] hover:text-[#1d1d1d]"
+                                                    >
+                                                        <Icon className="size-4 text-[#1d1d1d]/50" />
+                                                        <span>
+                                                            {item.label}
+                                                        </span>
+                                                    </Link>
+                                                );
+                                            })}
                                     </div>
                                     <div className="border-t border-[#dedbd3]/70 pt-1">
                                         <Link
@@ -530,8 +556,20 @@ export default function StaffLayout({
                     </div>
                 </header>
 
-                {/* Page Body */}
-                <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+                <main className="flex-1 p-4 sm:p-6 lg:p-8">
+                    {(flash?.success || flash?.error) && (
+                        <div
+                            className={`mb-6 border px-4 py-3 text-sm ${
+                                flash.error
+                                    ? 'border-[#8a4b3b]/30 bg-[#8a4b3b]/10 text-[#8a4b3b]'
+                                    : 'border-[#2f4a3c]/30 bg-[#2f4a3c]/10 text-[#2f4a3c]'
+                            }`}
+                        >
+                            {flash.error || flash.success}
+                        </div>
+                    )}
+                    {children}
+                </main>
             </div>
         </div>
     );

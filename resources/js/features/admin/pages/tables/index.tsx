@@ -1,17 +1,89 @@
-import { Form, Link } from '@inertiajs/react';
+import { Form, Head } from '@inertiajs/react';
+import { MoreVertical, Plus, Users, X } from 'lucide-react';
+import {
+    useEffect,
+    useId,
+    useRef,
+    useState,
+    type ReactNode,
+} from 'react';
+import TableForm from '@/features/admin/components/table-form';
 import type { DiningTable } from '@/features/staff/types';
-import AdminLayout from '@/features/admin/layouts/admin-layout';
-import { Button } from '@/shared/components/ui/button';
-import { create, destroy, edit } from '@/routes/admin/tables';
+import StaffLayout from '@/shared/layouts/staff-layout';
+import { destroy, store, update } from '@/routes/admin/tables';
+
+type ImageOption = {
+    value: string;
+    label: string;
+};
 
 type TablesIndexProps = {
     tables: DiningTable[];
+    imageOptions: ImageOption[];
 };
 
-export default function AdminTablesIndex({ tables }: TablesIndexProps) {
+export default function AdminTablesIndex({
+    tables,
+    imageOptions,
+}: TablesIndexProps) {
+    const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+    const [createOpen, setCreateOpen] = useState(false);
+    const [editingTable, setEditingTable] = useState<DiningTable | null>(null);
+    const [deletingTable, setDeletingTable] = useState<DiningTable | null>(
+        null,
+    );
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!menuOpenId) {
+            return;
+        }
+
+        const handlePointerDown = (event: MouseEvent) => {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(event.target as Node)
+            ) {
+                setMenuOpenId(null);
+            }
+        };
+
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setMenuOpenId(null);
+            }
+        };
+
+        document.addEventListener('mousedown', handlePointerDown);
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+            document.removeEventListener('mousedown', handlePointerDown);
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [menuOpenId]);
+
+    useEffect(() => {
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key !== 'Escape') {
+                return;
+            }
+
+            setCreateOpen(false);
+            setEditingTable(null);
+            setDeletingTable(null);
+        };
+
+        document.addEventListener('keydown', handleEscape);
+
+        return () => document.removeEventListener('keydown', handleEscape);
+    }, []);
+
     return (
-        <AdminLayout title="Tables">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <StaffLayout>
+            <Head title="Tables | Halden Admin" />
+
+            <div className="relative pb-24">
                 <div>
                     <p className="text-xs font-semibold tracking-widest text-[#2f4a3c] uppercase">
                         Catalog
@@ -20,100 +92,263 @@ export default function AdminTablesIndex({ tables }: TablesIndexProps) {
                         Dining tables
                     </h2>
                     <p className="mt-2 text-sm text-[#1d1d1d]/70">
-                        Create and update tables used by the floor and booking
-                        flow.
+                        Manage the tables used by the floor and booking flow.
                     </p>
                 </div>
-                <Link href={create.url()}>
-                    <Button className="h-10 rounded-full bg-[#1f1d1b] px-5 text-xs font-semibold tracking-wide text-[#f8f7f3] uppercase">
-                        Add table
-                    </Button>
-                </Link>
-            </div>
 
-            <div className="mt-8 overflow-hidden border border-[#dedbd3] bg-white">
-                <table className="w-full text-left text-sm">
-                    <thead className="border-b border-[#dedbd3] bg-[#f8f7f3] text-xs tracking-wider text-[#1d1d1d]/60 uppercase">
-                        <tr>
-                            <th className="px-4 py-3 font-semibold">Table</th>
-                            <th className="px-4 py-3 font-semibold">Seats</th>
-                            <th className="px-4 py-3 font-semibold">Image</th>
-                            <th className="px-4 py-3 font-semibold">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {tables.length === 0 ? (
-                            <tr>
-                                <td
-                                    colSpan={4}
-                                    className="px-4 py-10 text-center text-[#1d1d1d]/60"
-                                >
-                                    No tables yet. Add the first dining table.
-                                </td>
-                            </tr>
-                        ) : (
-                            tables.map((table) => (
-                                <tr
+                {tables.length === 0 ? (
+                    <div className="mt-8 border border-[#dedbd3] bg-white px-6 py-16 text-center">
+                        <p className="text-sm text-[#1d1d1d]/70">
+                            No tables yet. Tap + to add the first one.
+                        </p>
+                    </div>
+                ) : (
+                    <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                        {tables.map((table) => {
+                            const menuOpen = menuOpenId === table.id;
+
+                            return (
+                                <article
                                     key={table.id}
-                                    className="border-b border-[#dedbd3] last:border-0"
+                                    className="relative overflow-hidden border border-[#dedbd3] bg-white"
                                 >
-                                    <td className="px-4 py-4 font-medium text-[#1d1d1d]">
-                                        {table.name}
-                                    </td>
-                                    <td className="px-4 py-4 text-[#1d1d1d]/75">
-                                        {table.capacity}
-                                    </td>
-                                    <td className="px-4 py-4">
+                                    <div className="absolute top-3 right-3 z-10">
+                                        <button
+                                            type="button"
+                                            aria-label={`Actions for ${table.name}`}
+                                            aria-haspopup="menu"
+                                            aria-expanded={menuOpen}
+                                            onClick={() =>
+                                                setMenuOpenId(
+                                                    menuOpen ? null : table.id,
+                                                )
+                                            }
+                                            className="flex h-9 w-9 items-center justify-center border border-[#dedbd3]/80 bg-white/95 text-[#1d1d1d]/70 shadow-sm backdrop-blur-sm transition-colors hover:bg-white hover:text-[#1d1d1d]"
+                                        >
+                                            <MoreVertical className="size-4" />
+                                        </button>
+
+                                        {menuOpen && (
+                                            <div
+                                                ref={menuRef}
+                                                role="menu"
+                                                className="absolute top-11 right-0 w-36 border border-[#dedbd3] bg-white p-1 shadow-lg"
+                                            >
+                                                <button
+                                                    type="button"
+                                                    role="menuitem"
+                                                    className="flex w-full px-3 py-2 text-left text-xs font-medium text-[#1d1d1d] transition-colors hover:bg-[#f8f7f3]"
+                                                    onClick={() => {
+                                                        setMenuOpenId(null);
+                                                        setEditingTable(table);
+                                                    }}
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    role="menuitem"
+                                                    className="flex w-full px-3 py-2 text-left text-xs font-medium text-[#8a4b3b] transition-colors hover:bg-[#8a4b3b]/8"
+                                                    onClick={() => {
+                                                        setMenuOpenId(null);
+                                                        setDeletingTable(table);
+                                                    }}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="aspect-[4/3] bg-[#f8f7f3]">
                                         {table.image_url ? (
                                             <img
                                                 src={table.image_url}
-                                                alt=""
-                                                className="h-12 w-16 object-cover"
+                                                alt={table.name}
+                                                className="h-full w-full object-cover"
                                             />
                                         ) : (
-                                            <span className="text-[#1d1d1d]/45">
-                                                —
-                                            </span>
+                                            <div className="flex h-full items-center justify-center text-xs tracking-widest text-[#1d1d1d]/40 uppercase">
+                                                No photo
+                                            </div>
                                         )}
-                                    </td>
-                                    <td className="px-4 py-4">
-                                        <div className="flex flex-wrap items-center gap-3">
-                                            <Link
-                                                href={edit.url(table.id)}
-                                                className="text-xs font-medium underline underline-offset-4"
-                                            >
-                                                Edit
-                                            </Link>
-                                            <Form
-                                                {...destroy.form(table.id)}
-                                                onSubmit={(event) => {
-                                                    if (
-                                                        !confirm(
-                                                            `Delete ${table.name}?`,
-                                                        )
-                                                    ) {
-                                                        event.preventDefault();
-                                                    }
-                                                }}
-                                            >
-                                                {({ processing }) => (
-                                                    <button
-                                                        type="submit"
-                                                        disabled={processing}
-                                                        className="text-xs font-medium text-[#8a4b3b] underline underline-offset-4 disabled:opacity-50"
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                )}
-                                            </Form>
+                                    </div>
+
+                                    <div className="space-y-2 p-5">
+                                        <div className="flex items-start justify-between gap-3">
+                                            <h3 className="font-heading text-2xl text-[#1d1d1d]">
+                                                {table.name}
+                                            </h3>
+                                            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#1d1d1d]/70">
+                                                <Users className="size-3.5" />
+                                                Seats {table.capacity}
+                                            </span>
                                         </div>
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                                    </div>
+                                </article>
+                            );
+                        })}
+                    </div>
+                )}
+
+                <button
+                    type="button"
+                    onClick={() => setCreateOpen(true)}
+                    aria-label="Add table"
+                    className="fixed right-5 bottom-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#1f1d1b] text-[#f8f7f3] shadow-lg transition-transform hover:scale-[1.03] hover:bg-[#1f1d1b]/90 active:scale-95 sm:right-8 sm:bottom-8"
+                >
+                    <Plus className="size-6" strokeWidth={2.25} />
+                </button>
             </div>
-        </AdminLayout>
+
+            {createOpen && (
+                <Modal
+                    title="Add table"
+                    onClose={() => setCreateOpen(false)}
+                >
+                    <TableForm
+                        formKey="create-table"
+                        formProps={store.form()}
+                        imageOptions={imageOptions}
+                        submitLabel="Create table"
+                        onCancel={() => setCreateOpen(false)}
+                        onSuccess={() => setCreateOpen(false)}
+                    />
+                </Modal>
+            )}
+
+            {editingTable && (
+                <Modal
+                    title={`Edit ${editingTable.name}`}
+                    onClose={() => setEditingTable(null)}
+                >
+                    <TableForm
+                        formKey={`edit-table-${editingTable.id}`}
+                        formProps={update.form(editingTable.id)}
+                        imageOptions={imageOptions}
+                        defaults={{
+                            name: editingTable.name,
+                            capacity: editingTable.capacity,
+                            image_url: editingTable.image_url,
+                        }}
+                        submitLabel="Save changes"
+                        onCancel={() => setEditingTable(null)}
+                        onSuccess={() => setEditingTable(null)}
+                    />
+                </Modal>
+            )}
+
+            {deletingTable && (
+                <Modal
+                    title="Delete table"
+                    tone="danger"
+                    onClose={() => setDeletingTable(null)}
+                >
+                    <p className="text-sm leading-relaxed text-[#1d1d1d]/80">
+                        Delete{' '}
+                        <span className="font-semibold text-[#1d1d1d]">
+                            {deletingTable.name}
+                        </span>
+                        ? This cannot be undone. Tables with reservations cannot
+                        be removed.
+                    </p>
+
+                    <Form
+                        {...destroy.form(deletingTable.id)}
+                        className="mt-6 flex flex-wrap items-center justify-end gap-3"
+                        options={{ preserveScroll: true }}
+                        onSuccess={() => setDeletingTable(null)}
+                    >
+                        {({ processing }) => (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={() => setDeletingTable(null)}
+                                    className="px-3 py-2 text-sm text-[#1d1d1d]/70 underline-offset-4 hover:underline"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="h-11 rounded-full bg-[#8a4b3b] px-6 text-xs font-semibold tracking-wide text-white uppercase transition-opacity disabled:opacity-50"
+                                >
+                                    {processing ? 'Deleting…' : 'Delete table'}
+                                </button>
+                            </>
+                        )}
+                    </Form>
+                </Modal>
+            )}
+        </StaffLayout>
+    );
+}
+
+function Modal({
+    title,
+    children,
+    onClose,
+    tone = 'default',
+}: {
+    title: string;
+    children: ReactNode;
+    onClose: () => void;
+    tone?: 'default' | 'danger';
+}) {
+    const titleId = useId();
+
+    useEffect(() => {
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+
+        return () => {
+            document.body.style.overflow = previousOverflow;
+        };
+    }, []);
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6">
+            <button
+                type="button"
+                aria-label="Close dialog"
+                className="absolute inset-0 bg-[#1d1d1d]/45 backdrop-blur-[2px]"
+                onClick={onClose}
+            />
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={titleId}
+                className="relative z-10 w-full max-w-lg border border-[#dedbd3] bg-white shadow-2xl sm:max-h-[90vh] sm:overflow-y-auto"
+            >
+                <div className="flex items-start justify-between gap-4 border-b border-[#dedbd3] px-5 py-4 sm:px-6">
+                    <div>
+                        <p
+                            className={`text-[10px] font-semibold tracking-widest uppercase ${
+                                tone === 'danger'
+                                    ? 'text-[#8a4b3b]'
+                                    : 'text-[#2f4a3c]'
+                            }`}
+                        >
+                            {tone === 'danger' ? 'Danger zone' : 'Catalog'}
+                        </p>
+                        <h3
+                            id={titleId}
+                            className="mt-1 font-heading text-2xl text-[#1d1d1d]"
+                        >
+                            {title}
+                        </h3>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        aria-label="Close"
+                        className="flex h-9 w-9 items-center justify-center text-[#1d1d1d]/55 transition-colors hover:bg-[#f8f7f3] hover:text-[#1d1d1d]"
+                    >
+                        <X className="size-4" />
+                    </button>
+                </div>
+                <div className="px-5 py-5 sm:px-6 sm:py-6">{children}</div>
+            </div>
+        </div>
     );
 }
