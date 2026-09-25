@@ -5,7 +5,6 @@ import {
     Grid3X3,
     Clock,
     CalendarCheck,
-    TrendingUp,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import FloorBoard from '@/features/staff/components/floor-board';
@@ -61,7 +60,6 @@ export default function StaffDashboard() {
         setReservations((prev) =>
             prev.map((r) => (r.id === id ? { ...r, status: 'Seated' } : r)),
         );
-        // Also update table status if matched
         setTables((prev) =>
             prev.map((t) =>
                 tableLabel.includes(t.name)
@@ -118,8 +116,8 @@ export default function StaffDashboard() {
         >
             <Head title="Staff Overview | Halden" />
 
-            <div className="max-w-8xl mx-auto space-y-6">
-                {/* Action Feedback Banner */}
+            <div className="mx-auto max-w-7xl space-y-6">
+                {/* Action Feedback Toast */}
                 {actionMessage && (
                     <div className="flex items-center justify-between rounded-xl border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 px-4 py-3 text-xs font-medium text-[#2f4a3c] shadow-2xs">
                         <span className="flex items-center gap-2">
@@ -136,7 +134,7 @@ export default function StaffDashboard() {
                     </div>
                 )}
 
-                {/* Dashboard Page Header */}
+                {/* Dashboard Header */}
                 <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="font-heading text-2xl font-normal tracking-tight text-[#1d1d1d] sm:text-3xl">
@@ -150,7 +148,7 @@ export default function StaffDashboard() {
 
                     <div className="flex items-center gap-2 text-xs text-[#1d1d1d]/60">
                         <span>
-                            Dining Capacity: <strong>20 seats</strong>
+                            Capacity: <strong>20 covers</strong>
                         </span>
                         <span>•</span>
                         <span>
@@ -159,111 +157,73 @@ export default function StaffDashboard() {
                     </div>
                 </div>
 
-                {/* Metric Group (TailAdmin Card Hierarchy) */}
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    {/* Metric 1 */}
-                    <div className="rounded-2xl border border-[#dedbd3] bg-white p-5 shadow-xs transition-shadow hover:shadow-sm">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
-                            <Users className="size-6 text-[#1d1d1d]" />
+                {/* Streamlined Shift Summary Bar (Clean, no AI slop) */}
+                <div className="grid grid-cols-2 divide-y divide-[#dedbd3]/70 overflow-hidden rounded-2xl border border-[#dedbd3] bg-white shadow-xs sm:divide-x sm:divide-y-0 lg:grid-cols-4">
+                    <div className="flex items-center gap-3.5 p-4 sm:p-5">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
+                            <Users className="size-5" />
                         </div>
-                        <div className="mt-4 flex items-end justify-between">
-                            <div>
-                                <span className="text-xs font-semibold tracking-wider text-[#1d1d1d]/60 uppercase">
-                                    Total Covers
-                                </span>
-                                <h3 className="mt-1 font-heading text-3xl font-semibold tracking-tight text-[#1d1d1d]">
-                                    {totalCovers} Guests
-                                </h3>
-                            </div>
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
-                                <TrendingUp className="size-3" />
-                                18 booked
+                        <div>
+                            <span className="text-[11px] font-semibold tracking-wider text-[#1d1d1d]/50 uppercase">
+                                Total Covers
                             </span>
+                            <p className="font-heading text-xl font-semibold text-[#1d1d1d]">
+                                {totalCovers} Guests
+                            </p>
                         </div>
-                        <p className="mt-2 text-[11px] text-[#1d1d1d]/60">
-                            Across lunch & dinner seating blocks
-                        </p>
                     </div>
 
-                    {/* Metric 2 */}
-                    <div className="rounded-2xl border border-[#dedbd3] bg-white p-5 shadow-xs transition-shadow hover:shadow-sm">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
-                            <Grid3X3 className="size-6 text-[#1d1d1d]" />
+                    <div className="flex items-center gap-3.5 p-4 sm:p-5">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
+                            <Grid3X3 className="size-5" />
                         </div>
-                        <div className="mt-4 flex items-end justify-between">
-                            <div>
-                                <span className="text-xs font-semibold tracking-wider text-[#1d1d1d]/60 uppercase">
-                                    Active Tables
-                                </span>
-                                <h3 className="mt-1 font-heading text-3xl font-semibold tracking-tight text-[#1d1d1d]">
-                                    {activeSeatedCount} of 5
-                                </h3>
-                            </div>
-                            <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-800">
-                                {Math.round((activeSeatedCount / 5) * 100)}%
-                                Occ.
+                        <div>
+                            <span className="text-[11px] font-semibold tracking-wider text-[#1d1d1d]/50 uppercase">
+                                Active Seating
                             </span>
+                            <p className="font-heading text-xl font-semibold text-[#1d1d1d]">
+                                {activeSeatedCount} of 5 Tables
+                            </p>
                         </div>
-                        <p className="mt-2 text-[11px] text-[#1d1d1d]/60">
-                            Currently seated in dining room
-                        </p>
                     </div>
 
-                    {/* Metric 3 */}
-                    <div className="rounded-2xl border border-[#dedbd3] bg-white p-5 shadow-xs transition-shadow hover:shadow-sm">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
-                            <Clock className="size-6 text-[#1d1d1d]" />
+                    <div className="flex items-center gap-3.5 p-4 sm:p-5">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
+                            <Clock className="size-5" />
                         </div>
-                        <div className="mt-4 flex items-end justify-between">
-                            <div>
-                                <span className="text-xs font-semibold tracking-wider text-[#1d1d1d]/60 uppercase">
-                                    Next Seating
-                                </span>
-                                <h3 className="mt-1 font-heading text-3xl font-semibold tracking-tight text-[#1d1d1d]">
-                                    19:00
-                                </h3>
-                            </div>
-                            <span className="rounded-full border border-[#2f4a3c]/20 bg-[#2f4a3c]/10 px-2 py-0.5 text-xs font-semibold text-[#2f4a3c]">
-                                2 Parties
+                        <div>
+                            <span className="text-[11px] font-semibold tracking-wider text-[#1d1d1d]/50 uppercase">
+                                Next Arrival
                             </span>
+                            <p className="font-heading text-xl font-semibold text-[#1d1d1d]">
+                                19:00 (2 Parties)
+                            </p>
                         </div>
-                        <p className="mt-2 text-[11px] text-[#1d1d1d]/60">
-                            Henrik Berg & Elena Rost arriving
-                        </p>
                     </div>
 
-                    {/* Metric 4 */}
-                    <div className="rounded-2xl border border-[#dedbd3] bg-white p-5 shadow-xs transition-shadow hover:shadow-sm">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
-                            <CalendarCheck className="size-6 text-[#1d1d1d]" />
+                    <div className="flex items-center gap-3.5 p-4 sm:p-5">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
+                            <CalendarCheck className="size-5" />
                         </div>
-                        <div className="mt-4 flex items-end justify-between">
-                            <div>
-                                <span className="text-xs font-semibold tracking-wider text-[#1d1d1d]/60 uppercase">
-                                    Reservations
-                                </span>
-                                <h3 className="mt-1 font-heading text-3xl font-semibold tracking-tight text-[#1d1d1d]">
-                                    {reservations.length} Booked
-                                </h3>
-                            </div>
-                            <span className="rounded-full border border-stone-200 bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-700">
-                                100% Target
+                        <div>
+                            <span className="text-[11px] font-semibold tracking-wider text-[#1d1d1d]/50 uppercase">
+                                Bookings
                             </span>
+                            <p className="font-heading text-xl font-semibold text-[#1d1d1d]">
+                                {reservations.length} Booked
+                            </p>
                         </div>
-                        <p className="mt-2 text-[11px] text-[#1d1d1d]/60">
-                            3 Dinner • 2 Lunch parties recorded
-                        </p>
                     </div>
                 </div>
 
-                {/* Floor Board Section */}
+                {/* Floor Board Section with Table Photos */}
                 <FloorBoard
                     tables={tables}
                     onResetTable={handleResetTable}
                     showViewAllLink={true}
                 />
 
-                {/* Reservations List Section */}
+                {/* Active Reservations Ledger Section */}
                 <ReservationList
                     reservations={reservations}
                     filteredReservations={filteredReservations}

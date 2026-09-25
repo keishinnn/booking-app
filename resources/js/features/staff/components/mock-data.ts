@@ -9,6 +9,8 @@ export const initialTables: TableState[] = [
         statusLabel: 'Occupied',
         partyInfo: 'Sara Lindqvist, 2 guests',
         timeSlot: '18:30–20:30',
+        image: '/images/dining-table.png',
+        location: 'Window alcove • South facing',
     },
     {
         id: 2,
@@ -18,6 +20,8 @@ export const initialTables: TableState[] = [
         statusLabel: 'Open',
         partyInfo: 'Available for walk-in',
         timeSlot: 'Free until 20:00',
+        image: '/images/dining-room.png',
+        location: 'Main dining room • Center floor',
     },
     {
         id: 3,
@@ -27,6 +31,8 @@ export const initialTables: TableState[] = [
         statusLabel: 'Reserved 19:00',
         partyInfo: 'Henrik Berg, 4 guests',
         timeSlot: '19:00–21:00',
+        image: '/images/dining-table.png',
+        location: 'East wall • Leather banquette',
     },
     {
         id: 4,
@@ -36,6 +42,8 @@ export const initialTables: TableState[] = [
         statusLabel: 'Open',
         partyInfo: 'Available for walk-in',
         timeSlot: 'Free all evening',
+        image: '/images/lunch.png',
+        location: 'West side • Garden atrium view',
     },
     {
         id: 5,
@@ -46,6 +54,8 @@ export const initialTables: TableState[] = [
         statusLabel: 'Reserved 19:00',
         partyInfo: 'Elena Rost, 6 guests',
         timeSlot: '19:00–21:00',
+        image: '/images/long-table.png',
+        location: 'Private bay • Oak communal table',
     },
 ];
 

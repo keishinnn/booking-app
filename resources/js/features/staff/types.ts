@@ -9,6 +9,8 @@ export type TableState = {
     statusLabel?: string;
     partyInfo?: string;
     timeSlot?: string;
+    image?: string;
+    location?: string;
 };
 
 export type ReservationStatus =

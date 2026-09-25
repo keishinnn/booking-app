@@ -20,7 +20,7 @@ export default function FloorBoard({
 
     return (
         <div className="rounded-2xl border border-[#dedbd3] bg-white p-5 shadow-xs md:p-6">
-            {/* TailAdmin Card Header */}
+            {/* Header */}
             <div className="flex flex-col gap-3 border-b border-[#dedbd3]/70 pb-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <div className="flex items-center gap-2.5">
@@ -64,7 +64,7 @@ export default function FloorBoard({
                 </div>
             </div>
 
-            {/* Grid of Tables */}
+            {/* Grid of Tables with Real Table Photography */}
             <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
                 {tables.map((table) => {
                     const isOccupied = table.status === 'Occupied';
@@ -74,7 +74,7 @@ export default function FloorBoard({
                     return (
                         <div
                             key={table.id}
-                            className={`group relative flex flex-col justify-between rounded-xl border p-4 transition-all hover:shadow-xs ${
+                            className={`group relative flex flex-col justify-between rounded-xl border p-3.5 transition-all hover:shadow-xs ${
                                 isOccupied
                                     ? 'border-[#1f1d1b] bg-white ring-1 ring-[#1f1d1b]/10'
                                     : isReserved
@@ -83,51 +83,66 @@ export default function FloorBoard({
                             }`}
                         >
                             <div>
-                                <div className="flex items-start justify-between gap-2">
+                                {/* Table Image Thumbnail */}
+                                <div className="relative mb-3 aspect-16/10 w-full overflow-hidden rounded-lg bg-stone-100">
+                                    <img
+                                        src={
+                                            table.image ||
+                                            '/images/dining-table.png'
+                                        }
+                                        alt={table.name}
+                                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                    />
+                                    <div className="absolute top-2 right-2">
+                                        <span className="inline-flex items-center gap-1 rounded-md bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-white backdrop-blur-xs">
+                                            <Users className="size-2.5 text-white/80" />
+                                            {table.capacity}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start justify-between gap-1">
                                     <div>
-                                        <h3 className="font-heading text-lg font-semibold text-[#1d1d1d]">
+                                        <h3 className="font-heading text-base font-semibold text-[#1d1d1d]">
                                             {table.name}
                                         </h3>
                                         {table.subtitle && (
-                                            <p className="text-[11px] font-medium text-[#2f4a3c]">
+                                            <p className="text-[10px] font-medium text-[#2f4a3c]">
                                                 {table.subtitle}
                                             </p>
                                         )}
                                     </div>
-                                    <span className="inline-flex items-center gap-1 rounded-md border border-[#dedbd3] bg-[#f8f7f3] px-2 py-0.5 text-[11px] font-medium text-[#1d1d1d]/70">
-                                        <Users className="size-3 text-[#1d1d1d]/50" />
-                                        {table.capacity}
-                                    </span>
                                 </div>
 
-                                <div className="mt-3.5 min-h-[50px]">
-                                    <p className="line-clamp-2 text-xs font-medium text-[#1d1d1d]">
-                                        {table.partyInfo || 'No active party'}
+                                <div className="mt-2 min-h-[44px]">
+                                    <p className="line-clamp-2 text-[11px] font-medium text-[#1d1d1d]">
+                                        {table.partyInfo ||
+                                            'Available for walk-in'}
                                     </p>
                                     {table.timeSlot && (
-                                        <div className="mt-1.5 flex items-center gap-1 text-[11px] text-[#1d1d1d]/60">
-                                            <Clock className="size-3 shrink-0" />
+                                        <div className="mt-1 flex items-center gap-1 text-[10px] text-[#1d1d1d]/60">
+                                            <Clock className="size-2.5 shrink-0" />
                                             <span>{table.timeSlot}</span>
                                         </div>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="mt-4 flex items-center justify-between border-t border-[#dedbd3]/60 pt-3">
+                            <div className="mt-3 flex items-center justify-between border-t border-[#dedbd3]/60 pt-2.5">
                                 {isOccupied && (
-                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1f1d1b] px-2.5 py-0.5 text-[10px] font-semibold tracking-wider text-[#f8f7f3] uppercase">
+                                    <span className="inline-flex items-center gap-1 rounded-full bg-[#1f1d1b] px-2 py-0.5 text-[9px] font-semibold tracking-wider text-[#f8f7f3] uppercase">
                                         <span className="size-1.5 rounded-full bg-amber-400" />
                                         Occupied
                                     </span>
                                 )}
                                 {isReserved && (
-                                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 px-2.5 py-0.5 text-[10px] font-semibold tracking-wider text-[#2f4a3c] uppercase">
+                                    <span className="inline-flex items-center gap-1 rounded-full border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 px-2 py-0.5 text-[9px] font-semibold tracking-wider text-[#2f4a3c] uppercase">
                                         <span className="size-1.5 rounded-full bg-[#2f4a3c]" />
-                                        {table.statusLabel || 'Reserved'}
+                                        Reserved
                                     </span>
                                 )}
                                 {isOpen && (
-                                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#dedbd3] bg-white px-2.5 py-0.5 text-[10px] font-semibold tracking-wider text-[#1d1d1d]/70 uppercase">
+                                    <span className="inline-flex items-center gap-1 rounded-full border border-[#dedbd3] bg-white px-2 py-0.5 text-[9px] font-semibold tracking-wider text-[#1d1d1d]/70 uppercase">
                                         <span className="size-1.5 rounded-full bg-stone-400" />
                                         Open
                                     </span>
@@ -137,7 +152,7 @@ export default function FloorBoard({
                                     <button
                                         type="button"
                                         onClick={() => onResetTable(table.id)}
-                                        className="text-[11px] font-medium text-[#1d1d1d]/60 underline underline-offset-2 transition-colors hover:text-[#1d1d1d]"
+                                        className="text-[10px] font-medium text-[#1d1d1d]/60 underline underline-offset-2 transition-colors hover:text-[#1d1d1d]"
                                     >
                                         Reset
                                     </button>
