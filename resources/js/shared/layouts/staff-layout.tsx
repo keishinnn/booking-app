@@ -11,13 +11,11 @@ import {
     ChevronDown,
     PanelLeftClose,
     PanelLeftOpen,
-    Settings2,
     Library,
 } from 'lucide-react';
 import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { Button } from '@/shared/components/ui/button';
 import { logout, reserve } from '@/routes';
-import { dashboard as adminDashboard } from '@/routes/admin';
 import { index as adminTables } from '@/routes/admin/tables';
 import {
     dashboard,
@@ -129,16 +127,6 @@ export default function StaffLayout({
 
     const adminNavItems: NavItem[] = isAdmin
         ? [
-              {
-                  href: adminDashboard.url(),
-                  label: 'Control',
-                  icon: Settings2,
-                  isActive:
-                      url === '/admin' ||
-                      url === '/admin/dashboard' ||
-                      url.startsWith('/admin/dashboard?'),
-                  badge: null,
-              },
               {
                   href: adminTables.url(),
                   label: 'Catalog',
