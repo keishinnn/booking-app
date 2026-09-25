@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Database\Seeders\TableSeeder;
 
 test('guests are redirected from staff pages to login', function () {
     $this->get('/staff')->assertRedirect(route('login'));
@@ -10,6 +11,7 @@ test('guests are redirected from staff pages to login', function () {
 });
 
 test('authenticated staff can visit staff pages', function () {
+    $this->seed(TableSeeder::class);
     $user = User::factory()->staff()->create();
 
     $this->actingAs($user)
@@ -29,5 +31,8 @@ test('authenticated staff can visit staff pages', function () {
     $this->actingAs($user)
         ->get(route('staff.tables'))
         ->assertOk()
-        ->assertInertia(fn ($page) => $page->component('staff/tables'));
+        ->assertInertia(fn ($page) => $page
+            ->component('staff/tables')
+            ->has('tables', 5)
+        );
 });

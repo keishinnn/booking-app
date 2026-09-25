@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\TableController as AdminTableController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
 use App\Http\Controllers\Staff\ReservationController as StaffReservationController;
@@ -32,6 +33,7 @@ Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->grou
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::redirect('/', '/admin/dashboard');
     Route::get('/dashboard', AdminDashboardController::class)->name('dashboard');
+    Route::resource('tables', AdminTableController::class)->except(['show']);
 });
 
 Route::get('/reserve', function (Request $request) {
