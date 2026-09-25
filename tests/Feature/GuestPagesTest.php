@@ -59,3 +59,15 @@ test('the terms page can be visited via named route', function () {
         ->assertOk()
         ->assertInertia(fn ($page) => $page->component('terms'));
 });
+
+test('the privacy page returns 200 and renders the privacy component', function () {
+    $this->get('/privacy')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->component('privacy'));
+});
+
+test('the privacy page can be visited via named route', function () {
+    $this->get(route('privacy'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->component('privacy'));
+});
