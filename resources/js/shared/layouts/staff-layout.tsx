@@ -8,7 +8,9 @@ import {
     X,
 } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/components/ui/button';
+import { home, login, reserve } from '@/routes';
+import { dashboard } from '@/routes/staff';
 
 export default function StaffLayout({ children }: { children: ReactNode }) {
     const { url } = usePage();
@@ -16,19 +18,19 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
 
     const navItems = [
         {
-            href: '/staff/dashboard',
+            href: dashboard.url(),
             label: 'Overview',
             icon: LayoutDashboard,
             isActive: url.startsWith('/staff'),
         },
         {
-            href: '/reservations',
+            href: reserve.url(),
             label: 'Public Reservations',
             icon: Calendar,
-            isActive: url.startsWith('/reservations'),
+            isActive: url.startsWith('/reserve'),
         },
         {
-            href: '/',
+            href: home.url(),
             label: 'Public Dining Room',
             icon: ArrowUpRight,
             isActive: url === '/',
@@ -37,13 +39,11 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
 
     return (
         <div className="flex min-h-screen bg-[#f8f7f3] text-[#1d1d1d]">
-            {/* Desktop Sidebar */}
             <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col justify-between border-r border-white/10 bg-[#1f1d1b] p-6 text-[#f8f7f3] lg:flex">
                 <div>
-                    {/* Brand Header */}
                     <div className="flex items-center justify-between">
                         <Link
-                            href="/staff/dashboard"
+                            href={dashboard.url()}
                             className="font-heading text-2xl tracking-tight text-[#f8f7f3]"
                         >
                             Halden
@@ -53,16 +53,16 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
                         </span>
                     </div>
 
-                    {/* Service status pill in sidebar */}
                     <div className="mt-5 flex items-center gap-2.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-[#f8f7f3]/80">
                         <span className="relative flex h-2 w-2">
                             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                             <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                         </span>
-                        <span className="truncate">Dinner Service • 11:00–21:00</span>
+                        <span className="truncate">
+                            Dinner Service • 11:00–21:00
+                        </span>
                     </div>
 
-                    {/* Navigation items */}
                     <nav className="mt-8 flex flex-col gap-1.5">
                         {navItems.map((item) => {
                             const Icon = item.icon;
@@ -84,7 +84,6 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
                     </nav>
                 </div>
 
-                {/* Sidebar Footer */}
                 <div className="border-t border-white/10 pt-5">
                     <div className="flex items-center gap-3 px-2 py-1">
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold tracking-wider text-[#f8f7f3]">
@@ -101,7 +100,7 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
                     </div>
                     <div className="mt-3">
                         <Link
-                            href="/login"
+                            href={login.url()}
                             className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-[#f8f7f3]/70 transition-colors hover:bg-white/5 hover:text-[#f8f7f3]"
                         >
                             <LogOut className="size-4 shrink-0" />
@@ -111,12 +110,11 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
                 </div>
             </aside>
 
-            {/* Mobile Responsive Header & Drawer */}
             <div className="flex min-w-0 flex-1 flex-col">
                 <header className="sticky top-0 z-40 flex items-center justify-between border-b border-white/10 bg-[#1f1d1b] px-4 py-3 text-[#f8f7f3] lg:hidden">
                     <div className="flex items-center gap-2.5">
                         <Link
-                            href="/staff/dashboard"
+                            href={dashboard.url()}
                             className="font-heading text-xl tracking-tight text-[#f8f7f3]"
                         >
                             Halden
@@ -130,14 +128,21 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
                         size="icon"
                         className="text-[#f8f7f3] hover:bg-white/10 hover:text-[#f8f7f3]"
                         aria-expanded={mobileOpen}
-                        aria-label={mobileOpen ? 'Close navigation drawer' : 'Open navigation drawer'}
+                        aria-label={
+                            mobileOpen
+                                ? 'Close navigation drawer'
+                                : 'Open navigation drawer'
+                        }
                         onClick={() => setMobileOpen(!mobileOpen)}
                     >
-                        {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+                        {mobileOpen ? (
+                            <X className="size-5" />
+                        ) : (
+                            <Menu className="size-5" />
+                        )}
                     </Button>
                 </header>
 
-                {/* Mobile Drawer Overlay */}
                 {mobileOpen && (
                     <div className="fixed inset-0 z-50 lg:hidden">
                         <div
@@ -149,7 +154,7 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         <Link
-                                            href="/staff/dashboard"
+                                            href={dashboard.url()}
                                             className="font-heading text-2xl tracking-tight text-[#f8f7f3]"
                                             onClick={() => setMobileOpen(false)}
                                         >
@@ -174,7 +179,9 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
                                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                                         <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                                     </span>
-                                    <span className="truncate">Dinner Service • 11:00–21:00</span>
+                                    <span className="truncate">
+                                        Dinner Service • 11:00–21:00
+                                    </span>
                                 </div>
 
                                 <nav className="mt-8 flex flex-col gap-1.5">
@@ -184,7 +191,9 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
                                             <Link
                                                 key={item.href}
                                                 href={item.href}
-                                                onClick={() => setMobileOpen(false)}
+                                                onClick={() =>
+                                                    setMobileOpen(false)
+                                                }
                                                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
                                                     item.isActive
                                                         ? 'bg-white/10 font-medium text-[#f8f7f3]'
@@ -215,7 +224,7 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
                                 </div>
                                 <div className="mt-3">
                                     <Link
-                                        href="/login"
+                                        href={login.url()}
                                         className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-[#f8f7f3]/70 transition-colors hover:bg-white/5 hover:text-[#f8f7f3]"
                                     >
                                         <LogOut className="size-4 shrink-0" />
@@ -227,7 +236,6 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
                     </div>
                 )}
 
-                {/* Top Header Bar above Content */}
                 <header className="sticky top-0 z-30 flex items-center justify-between border-b border-[#dedbd3] bg-[#f8f7f3]/95 px-5 py-3.5 backdrop-blur-xs sm:px-8 lg:px-10">
                     <div className="flex items-center gap-2 sm:gap-3">
                         <span className="text-xs font-medium text-[#1d1d1d]/85 sm:text-sm">
@@ -236,17 +244,14 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
                     </div>
                     <Button
                         nativeButton={false}
-                        render={<Link href="/reserve" />}
+                        render={<Link href={reserve.url()} />}
                         className="rounded-full bg-[#1f1d1b] px-4 py-2 text-xs font-semibold tracking-wide text-[#f8f7f3] uppercase transition-all duration-300 hover:bg-[#1f1d1b]/90"
                     >
                         New Reservation
                     </Button>
                 </header>
 
-                {/* Main Content */}
-                <main className="flex-1 p-5 sm:p-8 lg:p-10">
-                    {children}
-                </main>
+                <main className="flex-1 p-5 sm:p-8 lg:p-10">{children}</main>
             </div>
         </div>
     );

@@ -1,14 +1,24 @@
-import { Link } from "@inertiajs/react";
-import { Menu, X } from "lucide-react";
-import { useState, type ReactNode } from "react";
-import { Button } from "@/components/ui/button";
+import { Link } from '@inertiajs/react';
+import { Menu, X } from 'lucide-react';
+import { useState, type ReactNode } from 'react';
+import { Button } from '@/shared/components/ui/button';
+import {
+    about,
+    contact,
+    home,
+    menu,
+    privacy,
+    privateMethod,
+    reserve,
+    terms,
+} from '@/routes';
 
 const links = [
-    { href: "/menu", label: "Menu" },
-    { href: "/private", label: "Private dining" },
-    { href: "/about", label: "Our story" },
-    { href: "/contact", label: "Contact" },
-    { href: "/reservations", label: "Reservations" },
+    { href: menu.url(), label: 'Menu' },
+    { href: privateMethod.url(), label: 'Private dining' },
+    { href: about.url(), label: 'Our story' },
+    { href: contact.url(), label: 'Contact' },
+    { href: reserve.url(), label: 'Reservations' },
 ];
 
 export default function GuestLayout({ children }: { children: ReactNode }) {
@@ -19,7 +29,7 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
             <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#1f1d1b]/95 text-primary-foreground backdrop-blur-md transition-colors duration-200">
                 <div className="flex w-full items-center gap-3 px-4 py-3 sm:px-6 lg:gap-8 lg:px-12 lg:py-4">
                     <Link
-                        href="/"
+                        href={home.url()}
                         className="font-heading text-xl tracking-tight sm:text-2xl"
                     >
                         Halden
@@ -37,7 +47,7 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                         ))}
                         <Button
                             nativeButton={false}
-                            render={<Link href="/reserve" />}
+                            render={<Link href={reserve.url()} />}
                             className="rounded-full bg-primary-foreground px-5 text-xs font-semibold tracking-wide text-primary uppercase hover:bg-primary-foreground/90"
                         >
                             Reserve
@@ -47,7 +57,7 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                     <div className="ml-auto flex shrink-0 items-center gap-2 lg:hidden">
                         <Button
                             nativeButton={false}
-                            render={<Link href="/reserve" />}
+                            render={<Link href={reserve.url()} />}
                             className="h-9 rounded-full bg-primary-foreground px-3 text-[11px] font-semibold tracking-wide text-primary uppercase hover:bg-primary-foreground/90"
                         >
                             Reserve
@@ -57,7 +67,7 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                             size="icon"
                             className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
                             aria-expanded={open}
-                            aria-label={open ? "Close menu" : "Menu"}
+                            aria-label={open ? 'Close menu' : 'Menu'}
                             onClick={() => setOpen((current) => !current)}
                         >
                             {open ? <X /> : <Menu />}
@@ -83,7 +93,7 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                     <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
                         <div>
                             <Link
-                                href="/"
+                                href={home.url()}
                                 className="font-heading text-2xl tracking-tight"
                             >
                                 Halden
@@ -117,13 +127,13 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                         </p>
                         <div className="flex items-center gap-6">
                             <Link
-                                href="/terms"
+                                href={terms.url()}
                                 className="transition-colors hover:text-primary-foreground hover:underline underline-offset-4"
                             >
                                 Terms
                             </Link>
                             <Link
-                                href="/privacy"
+                                href={privacy.url()}
                                 className="transition-colors hover:text-primary-foreground hover:underline underline-offset-4"
                             >
                                 Privacy
