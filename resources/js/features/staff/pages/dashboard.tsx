@@ -42,9 +42,17 @@ export default function StaffDashboard({
     const [actionMessage, setActionMessage] = useState<string | null>(null);
     const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
 
+    const todaysReservations = useMemo(
+        () =>
+            todayReservations.filter(
+                (reservation) => reservation.reserved_on === today,
+            ),
+        [todayReservations, today],
+    );
+
     const floorTables = useMemo(
-        () => buildFloorTableCards(tables, todayReservations, today),
-        [tables, todayReservations, today],
+        () => buildFloorTableCards(tables, todaysReservations, today),
+        [tables, todaysReservations, today],
     );
 
     const selectedTable = useMemo(
@@ -106,7 +114,7 @@ export default function StaffDashboard({
         (t) => t.status === 'In service',
     ).length;
     const totalSeats = tables.reduce((sum, table) => sum + table.capacity, 0);
-    const totalCovers = todayReservations.reduce(
+    const totalCovers = todaysReservations.reduce(
         (acc, curr) => acc + curr.party_size,
         0,
     );
@@ -115,7 +123,7 @@ export default function StaffDashboard({
         const now = new Date();
         const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
-        const upcoming = todayReservations
+        const upcoming = todaysReservations
             .map((reservation) => {
                 const [hours, minutes] = reservation.starts_at
                     .split(':')
@@ -138,11 +146,11 @@ export default function StaffDashboard({
         ).length;
 
         return { time: firstTime, parties: partiesAtTime };
-    }, [todayReservations]);
+    }, [todaysReservations]);
 
     return (
         <StaffLayout
-            reservationCount={todayReservations.length}
+            reservationCount={todaysReservations.length}
             activeTablesCount={`${inServiceCount}/${tables.length}`}
             searchValue={search}
             onSearchChange={setSearch}
@@ -238,7 +246,7 @@ export default function StaffDashboard({
                                 Bookings
                             </span>
                             <p className="font-heading text-xl font-semibold text-[#1d1d1d]">
-                                {todayReservations.length} Booked
+                                {todaysReservations.length} Booked
                             </p>
                         </div>
                     </div>

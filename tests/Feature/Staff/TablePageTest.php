@@ -57,9 +57,10 @@ test('staff tables page includes todays confirmed reservations for the floor sch
         ->assertOk()
         ->assertInertia(fn ($page) => $page
             ->component('staff/tables')
-            ->has('reservations', 1)
+            ->has('reservations', 2)
             ->where('reservations.0.guest_name', 'Floor Guest')
             ->where('reservations.0.service', 'Lunch')
+            ->where('reservations.1.guest_name', 'Tomorrow Guest')
             ->where('today', now()->toDateString())
         );
 });

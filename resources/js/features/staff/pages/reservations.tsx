@@ -1,27 +1,26 @@
-import { Form, Head } from '@inertiajs/react';
-import { MoreVertical, Plus, Search, X } from 'lucide-react';
+import { Form, Head } from "@inertiajs/react";
+import { MoreVertical, Plus, Search, X } from "lucide-react";
 import {
     useEffect,
     useId,
+    useLayoutEffect,
     useMemo,
     useRef,
     useState,
     type ReactNode,
-} from 'react';
-import ReservationForm from '@/features/staff/components/reservation-form';
+    type RefObject,
+} from "react";
+import { createPortal } from "react-dom";
+import ReservationForm from "@/features/staff/components/reservation-form";
 import type {
     DiningReservation,
     DiningTable,
     ReservationServiceFilter,
     ReservationStatusFilter,
-} from '@/features/staff/types';
-import StaffLayout from '@/shared/layouts/staff-layout';
-import { useLockBodyScroll } from '@/shared/lib/use-lock-body-scroll';
-import {
-    destroy,
-    store,
-    update,
-} from '@/actions/App/Http/Controllers/Staff/ReservationController';
+} from "@/features/staff/types";
+import { destroy, store, update } from "@/routes/staff/reservations";
+import StaffLayout from "@/shared/layouts/staff-layout";
+import { useLockBodyScroll } from "@/shared/lib/use-lock-body-scroll";
 
 type StaffReservationsPageProps = {
     reservations: DiningReservation[];
@@ -34,41 +33,22 @@ export default function StaffReservationsPage({
     tables,
     startTimes,
 }: StaffReservationsPageProps) {
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] =
-        useState<ReservationStatusFilter>('All');
+        useState<ReservationStatusFilter>("All");
     const [serviceFilter, setServiceFilter] =
-        useState<ReservationServiceFilter>('All');
+        useState<ReservationServiceFilter>("All");
     const [menuOpenId, setMenuOpenId] = useState<number | null>(null);
     const [createOpen, setCreateOpen] = useState(false);
     const [editing, setEditing] = useState<DiningReservation | null>(null);
     const [cancelling, setCancelling] = useState<DiningReservation | null>(
         null,
     );
-    const menuRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (menuOpenId === null) {
-            return;
-        }
-
-        const onPointerDown = (event: MouseEvent) => {
-            if (
-                menuRef.current &&
-                !menuRef.current.contains(event.target as Node)
-            ) {
-                setMenuOpenId(null);
-            }
-        };
-
-        document.addEventListener('mousedown', onPointerDown);
-        return () => document.removeEventListener('mousedown', onPointerDown);
-    }, [menuOpenId]);
 
     const filteredReservations = useMemo(() => {
         return reservations.filter((reservation) => {
             const query = search.trim().toLowerCase();
-            const tableName = reservation.table?.name ?? '';
+            const tableName = reservation.table?.name ?? "";
             const matchesQuery =
                 !query ||
                 reservation.guest_name.toLowerCase().includes(query) ||
@@ -77,10 +57,10 @@ export default function StaffReservationsPage({
                 tableName.toLowerCase().includes(query);
 
             const matchesStatus =
-                statusFilter === 'All' || reservation.status === statusFilter;
+                statusFilter === "All" || reservation.status === statusFilter;
 
             const matchesService =
-                serviceFilter === 'All' ||
+                serviceFilter === "All" ||
                 reservation.service === serviceFilter;
 
             return matchesQuery && matchesStatus && matchesService;
@@ -88,7 +68,7 @@ export default function StaffReservationsPage({
     }, [reservations, search, statusFilter, serviceFilter]);
 
     const activeCount = reservations.filter(
-        (reservation) => reservation.status === 'confirmed',
+        (reservation) => reservation.status === "confirmed",
     ).length;
 
     return (
@@ -132,7 +112,7 @@ export default function StaffReservationsPage({
 
                         <div className="flex flex-wrap items-center gap-2">
                             <div className="inline-flex rounded-xl border border-[#dedbd3] bg-[#f8f7f3] p-1">
-                                {(['All', 'Dinner', 'Lunch'] as const).map(
+                                {(["All", "Dinner", "Lunch"] as const).map(
                                     (service) => (
                                         <button
                                             key={service}
@@ -142,8 +122,8 @@ export default function StaffReservationsPage({
                                             }
                                             className={`rounded-lg px-3 py-1 text-xs font-medium ${
                                                 serviceFilter === service
-                                                    ? 'bg-white font-semibold text-[#1d1d1d] shadow-2xs'
-                                                    : 'text-[#1d1d1d]/65'
+                                                    ? "bg-white font-semibold text-[#1d1d1d] shadow-2xs"
+                                                    : "text-[#1d1d1d]/65"
                                             }`}
                                         >
                                             {service}
@@ -152,7 +132,7 @@ export default function StaffReservationsPage({
                                 )}
                             </div>
 
-                            {(['All', 'confirmed', 'cancelled'] as const).map(
+                            {(["All", "confirmed", "cancelled"] as const).map(
                                 (status) => (
                                     <button
                                         key={status}
@@ -160,15 +140,15 @@ export default function StaffReservationsPage({
                                         onClick={() => setStatusFilter(status)}
                                         className={`rounded-lg px-2.5 py-1.5 text-xs font-medium ${
                                             statusFilter === status
-                                                ? 'bg-[#1f1d1b] font-semibold text-[#f8f7f3]'
-                                                : 'border border-[#dedbd3] bg-white text-[#1d1d1d]/70'
+                                                ? "bg-[#1f1d1b] font-semibold text-[#f8f7f3]"
+                                                : "border border-[#dedbd3] bg-white text-[#1d1d1d]/70"
                                         }`}
                                     >
-                                        {status === 'All'
-                                            ? 'All'
-                                            : status === 'confirmed'
-                                              ? 'Confirmed'
-                                              : 'Cancelled'}
+                                        {status === "All"
+                                            ? "All"
+                                            : status === "confirmed"
+                                              ? "Confirmed"
+                                              : "Cancelled"}
                                     </button>
                                 ),
                             )}
@@ -234,15 +214,15 @@ export default function StaffReservationsPage({
                                                             <div className="mt-0.5 text-xs text-[#1d1d1d]/60">
                                                                 {
                                                                     reservation.email
-                                                                }{' '}
-                                                                ·{' '}
+                                                                }{" "}
+                                                                ·{" "}
                                                                 {
                                                                     reservation.phone
                                                                 }
                                                             </div>
                                                             {reservation.notes && (
                                                                 <div className="mt-1 text-[11px] font-medium text-[#2f4a3c]">
-                                                                    Note:{' '}
+                                                                    Note:{" "}
                                                                     {
                                                                         reservation.notes
                                                                     }
@@ -254,16 +234,16 @@ export default function StaffReservationsPage({
                                                                 {reservation
                                                                     .table
                                                                     ?.name ??
-                                                                    '—'}
+                                                                    "—"}
                                                             </div>
                                                             <div className="mt-0.5 text-xs text-[#1d1d1d]/60">
                                                                 {
                                                                     reservation.party_size
-                                                                }{' '}
+                                                                }{" "}
                                                                 {reservation.party_size ===
                                                                 1
-                                                                    ? 'guest'
-                                                                    : 'guests'}
+                                                                    ? "guest"
+                                                                    : "guests"}
                                                             </div>
                                                         </td>
                                                         <td className="px-4 py-3.5">
@@ -275,7 +255,7 @@ export default function StaffReservationsPage({
                                                         </td>
                                                         <td className="px-4 py-3.5">
                                                             {reservation.status ===
-                                                            'confirmed' ? (
+                                                            "confirmed" ? (
                                                                 <span className="inline-flex items-center gap-1.5 rounded-full border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-[#2f4a3c] uppercase">
                                                                     Confirmed
                                                                 </span>
@@ -285,67 +265,41 @@ export default function StaffReservationsPage({
                                                                 </span>
                                                             )}
                                                         </td>
-                                                        <td className="relative px-4 py-3.5 text-right">
-                                                            <button
-                                                                type="button"
-                                                                aria-label={`Actions for ${reservation.guest_name}`}
-                                                                aria-expanded={
-                                                                    menuOpen
+                                                        <td className="px-4 py-3.5 text-right">
+                                                            <RowActions
+                                                                reservation={
+                                                                    reservation
                                                                 }
-                                                                onClick={() =>
+                                                                open={menuOpen}
+                                                                onToggle={() =>
                                                                     setMenuOpenId(
                                                                         menuOpen
                                                                             ? null
                                                                             : reservation.id,
                                                                     )
                                                                 }
-                                                                className="inline-flex h-8 w-8 items-center justify-center border border-[#dedbd3] text-[#1d1d1d]/70 hover:bg-[#f8f7f3]"
-                                                            >
-                                                                <MoreVertical className="size-4" />
-                                                            </button>
-                                                            {menuOpen && (
-                                                                <div
-                                                                    ref={
-                                                                        menuRef
-                                                                    }
-                                                                    role="menu"
-                                                                    className="absolute top-12 right-4 z-20 w-36 border border-[#dedbd3] bg-white p-1 shadow-lg"
-                                                                >
-                                                                    <button
-                                                                        type="button"
-                                                                        role="menuitem"
-                                                                        className="flex w-full px-3 py-2 text-left text-xs font-medium hover:bg-[#f8f7f3]"
-                                                                        onClick={() => {
-                                                                            setMenuOpenId(
-                                                                                null,
-                                                                            );
-                                                                            setEditing(
-                                                                                reservation,
-                                                                            );
-                                                                        }}
-                                                                    >
-                                                                        Edit
-                                                                    </button>
-                                                                    {reservation.status ===
-                                                                        'confirmed' && (
-                                                                        <button
-                                                                            type="button"
-                                                                            role="menuitem"
-                                                                            className="flex w-full px-3 py-2 text-left text-xs font-medium text-[#8a4b3b] hover:bg-[#8a4b3b]/8"
-                                                                            onClick={() => {
-                                                                                setMenuOpenId(
-                                                                                    null,
-                                                                                );
-                                                                                setCancelling(
-                                                                                    reservation,
-                                                                                );
-                                                                            }}
-                                                                        >
-                                                                            Cancel
-                                                                        </button>
-                                                                    )}
-                                                                </div>
-                                                            )}
+                                                                onClose={() =>
+                                                                    setMenuOpenId(
+                                                                        null,
+                                                                    )
+                                                                }
+                                                                onEdit={() => {
+                                                                    setMenuOpenId(
+                                                                        null,
+                                                                    );
+                                                                    setEditing(
+                                                                        reservation,
+                                                                    );
+                                                                }}
+                                                                onCancel={() => {
+                                                                    setMenuOpenId(
+                                                                        null,
+                                                                    );
+                                                                    setCancelling(
+                                                                        reservation,
+                                                                    );
+                                                                }}
+                                                            />
                                                         </td>
                                                     </tr>
                                                 );
@@ -421,11 +375,11 @@ export default function StaffReservationsPage({
                     onClose={() => setCancelling(null)}
                 >
                     <p className="text-sm leading-relaxed text-[#1d1d1d]/80">
-                        Cancel{' '}
+                        Cancel{" "}
                         <span className="font-semibold text-[#1d1d1d]">
                             {cancelling.guest_name}
                         </span>
-                        ’s booking for {cancelling.reserved_on} at{' '}
+                        ’s booking for {cancelling.reserved_on} at{" "}
                         {cancelling.starts_at}? The row is kept as cancelled so
                         the table can be booked again.
                     </p>
@@ -450,8 +404,8 @@ export default function StaffReservationsPage({
                                     className="h-11 rounded-full bg-[#8a4b3b] px-6 text-xs font-semibold tracking-wide text-white uppercase disabled:opacity-50"
                                 >
                                     {processing
-                                        ? 'Cancelling…'
-                                        : 'Cancel reservation'}
+                                        ? "Cancelling…"
+                                        : "Cancel reservation"}
                                 </button>
                             </>
                         )}
@@ -462,16 +416,173 @@ export default function StaffReservationsPage({
     );
 }
 
+function RowActions({
+    reservation,
+    open,
+    onToggle,
+    onClose,
+    onEdit,
+    onCancel,
+}: {
+    reservation: DiningReservation;
+    open: boolean;
+    onToggle: () => void;
+    onClose: () => void;
+    onEdit: () => void;
+    onCancel: () => void;
+}) {
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!open) {
+            return;
+        }
+
+        const onPointerDown = (event: MouseEvent) => {
+            const target = event.target as Node;
+
+            if (
+                menuRef.current?.contains(target) ||
+                buttonRef.current?.contains(target)
+            ) {
+                return;
+            }
+
+            onClose();
+        };
+
+        const onEscape = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                onClose();
+            }
+        };
+
+        document.addEventListener("mousedown", onPointerDown);
+        document.addEventListener("keydown", onEscape);
+
+        return () => {
+            document.removeEventListener("mousedown", onPointerDown);
+            document.removeEventListener("keydown", onEscape);
+        };
+    }, [open, onClose]);
+
+    return (
+        <>
+            <button
+                ref={buttonRef}
+                type="button"
+                aria-label={`Actions for ${reservation.guest_name}`}
+                aria-haspopup="menu"
+                aria-expanded={open}
+                onClick={onToggle}
+                className="inline-flex h-8 w-8 items-center justify-center border border-[#dedbd3] text-[#1d1d1d]/70 hover:bg-[#f8f7f3]"
+            >
+                <MoreVertical className="size-4" />
+            </button>
+            {open && (
+                <ActionMenu anchorRef={buttonRef} menuRef={menuRef}>
+                    <button
+                        type="button"
+                        role="menuitem"
+                        className="flex w-full px-3 py-2 text-left text-xs font-medium hover:bg-[#f8f7f3]"
+                        onClick={onEdit}
+                    >
+                        Edit
+                    </button>
+                    {reservation.status === "confirmed" && (
+                        <button
+                            type="button"
+                            role="menuitem"
+                            className="flex w-full px-3 py-2 text-left text-xs font-medium text-[#8a4b3b] hover:bg-[#8a4b3b]/8"
+                            onClick={onCancel}
+                        >
+                            Cancel
+                        </button>
+                    )}
+                </ActionMenu>
+            )}
+        </>
+    );
+}
+
+function ActionMenu({
+    anchorRef,
+    menuRef,
+    children,
+}: {
+    anchorRef: RefObject<HTMLButtonElement | null>;
+    menuRef: RefObject<HTMLDivElement | null>;
+    children: ReactNode;
+}) {
+    const [position, setPosition] = useState<{
+        top: number;
+        left: number;
+    } | null>(null);
+
+    useLayoutEffect(() => {
+        const update = () => {
+            const anchor = anchorRef.current;
+            const menu = menuRef.current;
+
+            if (!anchor || !menu) {
+                return;
+            }
+
+            const rect = anchor.getBoundingClientRect();
+            const menuRect = menu.getBoundingClientRect();
+            const gap = 4;
+            let top = rect.bottom + gap;
+
+            if (top + menuRect.height > window.innerHeight - 8) {
+                top = Math.max(8, rect.top - gap - menuRect.height);
+            }
+
+            const left = Math.min(
+                Math.max(8, rect.right - menuRect.width),
+                window.innerWidth - menuRect.width - 8,
+            );
+
+            setPosition({ top, left });
+        };
+
+        update();
+        window.addEventListener("resize", update);
+        window.addEventListener("scroll", update, true);
+
+        return () => {
+            window.removeEventListener("resize", update);
+            window.removeEventListener("scroll", update, true);
+        };
+    }, [anchorRef, menuRef]);
+
+    return createPortal(
+        <div
+            ref={menuRef}
+            role="menu"
+            style={{
+                top: position?.top ?? 0,
+                left: position?.left ?? 0,
+                visibility: position ? "visible" : "hidden",
+            }}
+            className="fixed z-50 w-36 border border-[#dedbd3] bg-white p-1 shadow-lg"
+        >
+            {children}
+        </div>,
+        document.body,
+    );
+}
+
 function Modal({
     title,
     children,
     onClose,
-    tone = 'default',
+    tone = "default",
 }: {
     title: string;
     children: ReactNode;
     onClose: () => void;
-    tone?: 'default' | 'danger';
+    tone?: "default" | "danger";
 }) {
     const titleId = useId();
 
@@ -495,12 +606,12 @@ function Modal({
                     <div>
                         <p
                             className={`text-[10px] font-semibold tracking-widest uppercase ${
-                                tone === 'danger'
-                                    ? 'text-[#8a4b3b]'
-                                    : 'text-[#2f4a3c]'
+                                tone === "danger"
+                                    ? "text-[#8a4b3b]"
+                                    : "text-[#2f4a3c]"
                             }`}
                         >
-                            {tone === 'danger' ? 'Danger zone' : 'Ledger'}
+                            {tone === "danger" ? "Danger zone" : "Ledger"}
                         </p>
                         <h3
                             id={titleId}

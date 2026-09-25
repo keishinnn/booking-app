@@ -24,9 +24,17 @@ export default function StaffTablesPage({
     const [search, setSearch] = useState('');
     const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
 
+    const todaysReservations = useMemo(
+        () =>
+            reservations.filter(
+                (reservation) => reservation.reserved_on === today,
+            ),
+        [reservations, today],
+    );
+
     const floorTables = useMemo(
-        () => buildFloorTableCards(tables, reservations, today),
-        [tables, reservations, today],
+        () => buildFloorTableCards(tables, todaysReservations, today),
+        [tables, todaysReservations, today],
     );
 
     const filteredTables = useMemo(() => {

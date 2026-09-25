@@ -29,8 +29,9 @@ class TableController extends Controller
 
         $reservations = Reservation::query()
             ->with('table')
-            ->whereDate('reserved_on', $today)
+            ->whereDate('reserved_on', '>=', $today)
             ->where('status', ReservationStatus::Confirmed)
+            ->orderBy('reserved_on')
             ->orderBy('starts_at')
             ->get();
 

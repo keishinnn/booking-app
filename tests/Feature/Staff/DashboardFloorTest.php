@@ -39,9 +39,10 @@ test('staff dashboard receives tables and todays confirmed reservations', functi
             ->component('staff/dashboard')
             ->has('tables')
             ->where('today', now()->toDateString())
-            ->has('reservations', 1)
+            ->has('reservations', 2)
             ->where('reservations.0.guest_name', 'Today Guest')
             ->where('reservations.0.service', 'Dinner')
+            ->where('reservations.1.guest_name', 'Tomorrow Guest')
         );
 });
 

@@ -63,7 +63,7 @@ export default function TableScheduleModal({
                             {table.name}
                         </h3>
                         <p className="mt-1 text-xs text-[#1d1d1d]/60">
-                            Seats {table.capacity} · Today · {today}
+                            Seats {table.capacity} · From {today}
                         </p>
                     </div>
                     <button
@@ -79,7 +79,7 @@ export default function TableScheduleModal({
                 <div className="overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
                     {reservations.length === 0 ? (
                         <p className="text-sm text-[#1d1d1d]/70">
-                            No reservations today
+                            No upcoming reservations
                         </p>
                     ) : (
                         <ul className="divide-y divide-[#dedbd3]/80">
@@ -90,6 +90,7 @@ export default function TableScheduleModal({
                                 >
                                     <div className="flex flex-wrap items-center gap-2">
                                         <span className="font-heading text-base font-semibold text-[#1d1d1d]">
+                                            {reservation.reserved_on}{' '}
                                             {reservationTimeWindow(
                                                 reservation.starts_at,
                                             )}
