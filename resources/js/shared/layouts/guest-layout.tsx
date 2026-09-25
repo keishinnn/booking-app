@@ -1,64 +1,56 @@
-import { Link } from "@inertiajs/react";
-import { Menu, X } from "lucide-react";
-import { useState, type ReactNode } from "react";
-import { Button } from "@/shared/components/ui/button";
-import {
-    about,
-    contact,
-    home,
-    menu,
-    privacy,
-    privateMethod,
-    reserve,
-    terms,
-} from "@/routes";
+import { Link } from '@inertiajs/react';
+import { Menu, X } from 'lucide-react';
+import { useState, type ReactNode } from 'react';
+import { Button } from '@/shared/components/ui/button';
+import { home, privacy, reserve, terms } from '@/routes';
 
-const links = [
-    { href: menu.url(), label: "Menu" },
-    { href: privateMethod.url(), label: "Private dining" },
-    { href: about.url(), label: "Our story" },
-    { href: contact.url(), label: "Contact" },
-    { href: reserve.url(), label: "Reservations" },
+const navLinks = [
+    { href: '/#story', label: 'Our Story' },
+    { href: '/#menu', label: 'Menu' },
+    { href: '/#private', label: 'The Long Table' },
+    { href: '/#visit', label: 'Visit & Hours' },
 ];
 
 export default function GuestLayout({ children }: { children: ReactNode }) {
     const [open, setOpen] = useState(false);
 
     return (
-        <div className="flex min-h-screen flex-col overflow-x-clip bg-background text-foreground">
+        <div className="flex min-h-screen flex-col overflow-x-clip scroll-smooth bg-background text-foreground">
             <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#1f1d1b]/95 text-primary-foreground backdrop-blur-md transition-colors duration-200">
-                <div className="flex w-full items-center gap-3 px-4 py-3 sm:px-6 lg:gap-8 lg:px-12 lg:py-4">
+                <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-3.5 sm:px-8 lg:px-12">
                     <Link
                         href={home.url()}
-                        className="font-heading text-xl tracking-tight sm:text-2xl"
+                        className="font-heading text-xl tracking-tight transition-opacity hover:opacity-90 sm:text-2xl"
                     >
                         Halden
                     </Link>
 
-                    <nav className="ml-auto hidden items-center gap-6 lg:flex">
-                        {links.map((link) => (
-                            <Link
+                    {/* Desktop Navigation */}
+                    <nav className="hidden items-center gap-7 lg:flex">
+                        {navLinks.map((link) => (
+                            <a
                                 key={link.href}
                                 href={link.href}
-                                className="text-sm"
+                                className="text-sm font-medium text-white/80 transition-colors hover:text-white"
                             >
                                 {link.label}
-                            </Link>
+                            </a>
                         ))}
                         <Button
                             nativeButton={false}
                             render={<Link href={reserve.url()} />}
-                            className="rounded-full bg-primary-foreground px-5 text-xs font-semibold tracking-wide text-primary uppercase hover:bg-primary-foreground/90"
+                            className="rounded-full bg-primary-foreground px-5 text-xs font-semibold tracking-wide text-primary uppercase transition-all duration-300 hover:bg-primary-foreground/90 hover:shadow-xs active:scale-98"
                         >
                             Reserve
                         </Button>
                     </nav>
 
-                    <div className="ml-auto flex shrink-0 items-center gap-2 lg:hidden">
+                    {/* Mobile Navigation Controls */}
+                    <div className="flex items-center gap-2 lg:hidden">
                         <Button
                             nativeButton={false}
                             render={<Link href={reserve.url()} />}
-                            className="h-9 rounded-full bg-primary-foreground px-3 text-[11px] font-semibold tracking-wide text-primary uppercase hover:bg-primary-foreground/90"
+                            className="h-9 rounded-full bg-primary-foreground px-3.5 text-[11px] font-semibold tracking-wide text-primary uppercase hover:bg-primary-foreground/90"
                         >
                             Reserve
                         </Button>
@@ -67,20 +59,30 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                             size="icon"
                             className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
                             aria-expanded={open}
-                            aria-label={open ? "Close menu" : "Menu"}
+                            aria-label={open ? 'Close menu' : 'Menu'}
                             onClick={() => setOpen((current) => !current)}
                         >
-                            {open ? <X /> : <Menu />}
+                            {open ? (
+                                <X className="size-5" />
+                            ) : (
+                                <Menu className="size-5" />
+                            )}
                         </Button>
                     </div>
                 </div>
 
+                {/* Mobile Drawer Menu */}
                 {open && (
-                    <nav className="flex flex-col gap-4 px-6 pb-6 lg:hidden">
-                        {links.map((link) => (
-                            <Link key={link.href} href={link.href}>
+                    <nav className="flex animate-in flex-col gap-3 border-t border-white/10 px-6 pt-2 pb-6 duration-150 fade-in slide-in-from-top-2 lg:hidden">
+                        {navLinks.map((link) => (
+                            <a
+                                key={link.href}
+                                href={link.href}
+                                onClick={() => setOpen(false)}
+                                className="py-2 text-sm font-medium text-white/85 hover:text-white"
+                            >
                                 {link.label}
-                            </Link>
+                            </a>
                         ))}
                     </nav>
                 )}
@@ -89,8 +91,8 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
             <main className="flex-1">{children}</main>
 
             <footer className="border-t border-white/15 bg-primary text-primary-foreground">
-                <div className="mx-auto flex max-w-7xl flex-col gap-8 px-5 py-12 sm:px-8 lg:px-14">
-                    <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+                <div className="mx-auto flex max-w-7xl flex-col gap-10 px-5 py-14 sm:px-8 lg:px-12">
+                    <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
                         <div>
                             <Link
                                 href={home.url()}
@@ -101,29 +103,38 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                             <div className="mt-3 flex flex-col gap-1 text-sm text-primary-foreground/75">
                                 <p>18 Mercer Lane</p>
                                 <p>
-                                    Lunch and dinner, 11:00 to 21:00. Last
-                                    seating 19:00.
+                                    Lunch & dinner, 11:00 to 21:00. Last seating
+                                    19:00.
+                                </p>
+                                <p className="mt-1 text-xs text-primary-foreground/60">
+                                    Direct inquiries: hello@halden.test
                                 </p>
                             </div>
                         </div>
 
-                        <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-primary-foreground/80">
-                            {links.map((link) => (
-                                <Link
+                        <nav className="flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-primary-foreground/80">
+                            {navLinks.map((link) => (
+                                <a
                                     key={link.href}
                                     href={link.href}
                                     className="underline-offset-4 transition-colors hover:text-primary-foreground hover:underline"
                                 >
                                     {link.label}
-                                </Link>
+                                </a>
                             ))}
+                            <Link
+                                href={reserve.url()}
+                                className="font-semibold text-white underline-offset-4 hover:underline"
+                            >
+                                Reserve a table
+                            </Link>
                         </nav>
                     </div>
 
                     <div className="flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between">
                         <p>
-                            © {new Date().getFullYear()} Halden. All rights
-                            reserved.
+                            © {new Date().getFullYear()} Halden Dining Room. All
+                            rights reserved.
                         </p>
                         <div className="flex items-center gap-6">
                             <Link

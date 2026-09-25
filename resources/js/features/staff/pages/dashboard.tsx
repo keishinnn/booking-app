@@ -1,32 +1,32 @@
-import { Head } from "@inertiajs/react";
+import { Head } from '@inertiajs/react';
 import {
     CheckCircle2,
     Users,
     Grid3X3,
     Clock,
     CalendarCheck,
-} from "lucide-react";
-import { useMemo, useState } from "react";
-import FloorBoard from "@/features/staff/components/floor-board";
+} from 'lucide-react';
+import { useMemo, useState } from 'react';
+import FloorBoard from '@/features/staff/components/floor-board';
 import {
     initialReservations,
     initialTables,
-} from "@/features/staff/components/mock-data";
-import ReservationList from "@/features/staff/components/reservation-list";
-import StaffLayout from "@/shared/layouts/staff-layout";
+} from '@/features/staff/components/mock-data';
+import ReservationList from '@/features/staff/components/reservation-list';
+import StaffLayout from '@/shared/layouts/staff-layout';
 import type {
     Reservation,
     ReservationServiceFilter,
     ReservationStatusFilter,
     TableState,
-} from "@/features/staff/types";
+} from '@/features/staff/types';
 
 export default function StaffDashboard() {
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] =
-        useState<ReservationStatusFilter>("All");
+        useState<ReservationStatusFilter>('All');
     const [serviceFilter, setServiceFilter] =
-        useState<ReservationServiceFilter>("All");
+        useState<ReservationServiceFilter>('All');
     const [reservations, setReservations] =
         useState<Reservation[]>(initialReservations);
     const [tables, setTables] = useState<TableState[]>(initialTables);
@@ -43,10 +43,10 @@ export default function StaffDashboard() {
                 res.table.toLowerCase().includes(query);
 
             const matchesStatus =
-                statusFilter === "All" || res.status === statusFilter;
+                statusFilter === 'All' || res.status === statusFilter;
 
             const matchesService =
-                serviceFilter === "All" || res.service === serviceFilter;
+                serviceFilter === 'All' || res.service === serviceFilter;
 
             return matchesQuery && matchesStatus && matchesService;
         });
@@ -58,14 +58,14 @@ export default function StaffDashboard() {
         tableLabel: string,
     ) => {
         setReservations((prev) =>
-            prev.map((r) => (r.id === id ? { ...r, status: "Seated" } : r)),
+            prev.map((r) => (r.id === id ? { ...r, status: 'Seated' } : r)),
         );
         setTables((prev) =>
             prev.map((t) =>
                 tableLabel.includes(t.name)
                     ? {
                           ...t,
-                          status: "Occupied",
+                          status: 'Occupied',
                           partyInfo: `${guestName}, seated`,
                       }
                     : t,
@@ -77,7 +77,7 @@ export default function StaffDashboard() {
 
     const handleCompleteParty = (id: string, guestName: string) => {
         setReservations((prev) =>
-            prev.map((r) => (r.id === id ? { ...r, status: "Completed" } : r)),
+            prev.map((r) => (r.id === id ? { ...r, status: 'Completed' } : r)),
         );
         setActionMessage(`Service completed for ${guestName}. Table reset.`);
         setTimeout(() => setActionMessage(null), 4000);
@@ -89,8 +89,8 @@ export default function StaffDashboard() {
                 t.id === tableId
                     ? {
                           ...t,
-                          status: "Open",
-                          partyInfo: "Available for walk-in",
+                          status: 'Open',
+                          partyInfo: 'Available for walk-in',
                       }
                     : t,
             ),
@@ -100,7 +100,7 @@ export default function StaffDashboard() {
     };
 
     const activeSeatedCount = tables.filter(
-        (t) => t.status === "Occupied",
+        (t) => t.status === 'Occupied',
     ).length;
     const totalCovers = reservations.reduce(
         (acc, curr) => acc + curr.partySize,
@@ -116,7 +116,7 @@ export default function StaffDashboard() {
         >
             <Head title="Staff Overview | Halden" />
 
-            <div className="mx-auto max-w-8xl space-y-6">
+            <div className="max-w-8xl mx-auto space-y-6">
                 {/* Action Feedback Toast */}
                 {actionMessage && (
                     <div className="flex items-center justify-between rounded-xl border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 px-4 py-3 text-xs font-medium text-[#2f4a3c] shadow-2xs">
@@ -234,9 +234,9 @@ export default function StaffDashboard() {
                     onStatusFilterChange={setStatusFilter}
                     onServiceFilterChange={setServiceFilter}
                     onClearFilters={() => {
-                        setSearch("");
-                        setStatusFilter("All");
-                        setServiceFilter("All");
+                        setSearch('');
+                        setStatusFilter('All');
+                        setServiceFilter('All');
                     }}
                     onSeatParty={handleSeatParty}
                     onCompleteParty={handleCompleteParty}
