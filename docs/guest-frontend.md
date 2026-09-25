@@ -146,16 +146,17 @@ type BookPageProps = {
         starts_at: string | null;
     };
     tables: Array<{
-        id: number;
+        id: string;
         name: string;
         capacity: number;
+        image_url: string | null;
     }>;
 };
 ```
 
 Until all three filters are set, show no cards. When they are set and `tables` is empty: **Nothing open at that time. Try another hour.**
 
-Each card shows the table name, **Seats {capacity}**, and **Reserve**. **Reserve** opens one guest form under the cards. Another card replaces that form.
+Each card shows the table photo (or a cream placeholder if `image_url` is null), the table name, **Seats {capacity}**, and **Reserve**. **Reserve** opens one guest form under the cards. Another card replaces that form.
 
 The form line: **{Table name} is free at {time}.**
 

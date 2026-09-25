@@ -11,6 +11,13 @@ Route::inertia('/about', 'about')->name('about');
 Route::inertia('/contact', 'contact')->name('contact');
 Route::inertia('/terms', 'terms')->name('terms');
 Route::inertia('/privacy', 'privacy')->name('privacy');
+Route::inertia('/login', 'login')->name('login');
+Route::post('/login', function (Request $request) {
+    return redirect()->back()->with('error', 'Staff authentication requires active database connection.');
+})->name('login.store');
+
+Route::get('/staff', fn () => redirect()->route('staff.dashboard'));
+Route::get('/staff/dashboard', fn () => Inertia::render('staff/dashboard'))->name('staff.dashboard');
 
 Route::get('/reserve', function (Request $request) {
     $date = $request->query('date');

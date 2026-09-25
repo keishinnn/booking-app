@@ -32,19 +32,20 @@ The trial asks for a designed booking site with working create, read, update, an
 
 | Column | Notes |
 | --- | --- |
-| id | |
+| id | UUID primary key |
 | name | unique, e.g. "Table 1" |
 | capacity | integer, at least 1 |
+| image_url | nullable string; public URL or path for the table photo |
 | timestamps | |
 
-Seed: Table 1–2 capacity 2, Table 3–4 capacity 4, Table 5 capacity 6.
+Seed: Table 1–2 capacity 2, Table 3–4 capacity 4, Table 5 capacity 6. Each seeded table gets an `image_url`.
 
 ### `reservations`
 
 | Column | Notes |
 | --- | --- |
 | id | |
-| table_id | foreign key, restrict on delete |
+| table_id | UUID foreign key → `tables.id`, restrict on delete |
 | guest_name | required |
 | email | required |
 | phone | required |
@@ -55,7 +56,7 @@ Seed: Table 1–2 capacity 2, Table 3–4 capacity 4, Table 5 capacity 6.
 | notes | nullable |
 | timestamps | |
 
-Index `(table_id, reserved_on, status)` for the overlap check.
+Index `(table_id, reserved_on, status)` for the overlap check. Also index `reserved_on`, `status`, `party_size`, `guest_name`, `email`, `phone`, and `created_at` for list filters, search, and newest-first order. On `tables`, `name` is unique and `capacity` is indexed for party-size matching.
 
 Switch `.env` from SQLite to MySQL before the first migration of these tables.
 
