@@ -97,12 +97,16 @@ export function buildFloorTableCards(
             );
 
         // In service: seated (any time) or confirmed within the 2h window.
-        const inService = tableReservations.find(
-            (reservation) =>
-                reservation.status === 'seated' ||
-                (reservation.status === 'confirmed' &&
-                    isWindowActive(reservation.starts_at, now, today)),
+        const seated = tableReservations.find(
+            (reservation) => reservation.status === 'seated',
         );
+        const inService =
+            seated ??
+            tableReservations.find(
+                (reservation) =>
+                    reservation.status === 'confirmed' &&
+                    isWindowActive(reservation.starts_at, now, today),
+            );
 
         if (inService) {
             const preview = previewCopy(inService);
