@@ -83,7 +83,12 @@ export function buildFloorTableCards(
 ): FloorTableCard[] {
     return tables.map((table) => {
         const tableReservations = reservations
-            .filter((reservation) => reservation.table_id === table.id)
+            .filter(
+                (reservation) =>
+                    reservation.table_id === table.id &&
+                    (reservation.status === 'confirmed' ||
+                        reservation.status === 'seated'),
+            )
             .slice()
             .sort(
                 (a, b) =>
@@ -91,8 +96,12 @@ export function buildFloorTableCards(
                     parseStartsAtMinutes(b.starts_at),
             );
 
-        const inService = tableReservations.find((reservation) =>
-            isWindowActive(reservation.starts_at, now, today),
+        // In service: seated (any time) or confirmed within the 2h window.
+        const inService = tableReservations.find(
+            (reservation) =>
+                reservation.status === 'seated' ||
+                (reservation.status === 'confirmed' &&
+                    isWindowActive(reservation.starts_at, now, today)),
         );
 
         if (inService) {
@@ -110,8 +119,10 @@ export function buildFloorTableCards(
             };
         }
 
-        const next = tableReservations.find((reservation) =>
-            isUpcoming(reservation.starts_at, now, today),
+        const next = tableReservations.find(
+            (reservation) =>
+                reservation.status === 'confirmed' &&
+                isUpcoming(reservation.starts_at, now, today),
         );
 
         if (next) {

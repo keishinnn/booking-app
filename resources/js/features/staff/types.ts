@@ -7,7 +7,12 @@ export type DiningTable = {
     updated_at?: string | null;
 };
 
-export type ReservationStatus = 'confirmed' | 'cancelled';
+export type ReservationStatus =
+    | 'confirmed'
+    | 'seated'
+    | 'completed'
+    | 'no_show'
+    | 'cancelled';
 
 export type DiningReservation = {
     id: number;

@@ -46,6 +46,35 @@ test('staff dashboard receives tables and todays confirmed reservations', functi
         );
 });
 
+test('dashboard floor props include seated but not completed reservations', function () {
+    $user = User::factory()->staff()->create();
+    $table = Table::factory()->create();
+    $today = now()->toDateString();
+
+    Reservation::factory()->seated()->create([
+        'table_id' => $table->id,
+        'guest_name' => 'Seated Now',
+        'reserved_on' => $today,
+        'starts_at' => '12:00',
+    ]);
+
+    Reservation::factory()->completed()->create([
+        'table_id' => $table->id,
+        'guest_name' => 'Done Guest',
+        'reserved_on' => $today,
+        'starts_at' => '18:00',
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('staff.dashboard'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('reservations', 1)
+            ->where('reservations.0.guest_name', 'Seated Now')
+            ->where('reservations.0.status', 'seated')
+        );
+});
+
 test('guests cannot view the staff dashboard floor', function () {
     $this->get(route('staff.dashboard'))
         ->assertRedirect(route('login'));

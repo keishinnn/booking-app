@@ -25,6 +25,35 @@ test('staff tables page receives dining tables from the database', function () {
         );
 });
 
+test('tables floor props include seated but not completed reservations', function () {
+    $user = User::factory()->staff()->create();
+    $table = Table::factory()->create();
+    $today = now()->toDateString();
+
+    Reservation::factory()->seated()->create([
+        'table_id' => $table->id,
+        'guest_name' => 'Seated Now',
+        'reserved_on' => $today,
+        'starts_at' => '12:00',
+    ]);
+
+    Reservation::factory()->completed()->create([
+        'table_id' => $table->id,
+        'guest_name' => 'Done Guest',
+        'reserved_on' => $today,
+        'starts_at' => '18:00',
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('staff.tables'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('reservations', 1)
+            ->where('reservations.0.guest_name', 'Seated Now')
+            ->where('reservations.0.status', 'seated')
+        );
+});
+
 test('staff tables page includes todays confirmed reservations for the floor schedule', function () {
     $user = User::factory()->staff()->create();
     $table = Table::factory()->create(['name' => 'Table Bay', 'capacity' => 4]);
