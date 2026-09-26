@@ -1,4 +1,5 @@
 import { Link } from "@inertiajs/react";
+import HaldenLogo, { HaldenMark } from "@/shared/components/halden-logo";
 import { dashboard } from "@/routes/staff";
 import { StaffNavList, type StaffNavItem } from "@/shared/layouts/staff/nav";
 
@@ -29,9 +30,13 @@ export default function StaffSidebar({
                         <div className="flex items-center gap-3">
                             <Link
                                 href={dashboard.url()}
-                                className="font-heading text-2xl font-normal tracking-tight text-[#1d1d1d] transition-opacity hover:opacity-85"
+                                className="transition-opacity hover:opacity-85"
                             >
-                                Halden
+                                <HaldenLogo
+                                    variant="full"
+                                    markClassName="size-6 text-[#1d1d1d]"
+                                    textClassName="font-heading text-2xl font-normal tracking-tight text-[#1d1d1d]"
+                                />
                             </Link>
                             <span className="inline-flex items-center rounded-md border border-[#2f4a3c]/20 bg-[#2f4a3c]/10 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[#2f4a3c] uppercase">
                                 {isAdmin ? "Admin" : "Staff"}
@@ -40,10 +45,10 @@ export default function StaffSidebar({
                     ) : (
                         <Link
                             href={dashboard.url()}
-                            className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f1d1b] font-heading text-lg font-bold text-[#f8f7f3]"
+                            className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-[#1f1d1b] text-[#f8f7f3] transition-opacity hover:opacity-90"
                             title="Halden portal"
                         >
-                            H
+                            <HaldenMark className="size-5 text-[#f8f7f3]" />
                         </Link>
                     )}
                 </div>

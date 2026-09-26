@@ -2,6 +2,7 @@ import { Link } from '@inertiajs/react';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { Button } from '@/shared/components/ui/button';
+import HaldenLogo from '@/shared/components/halden-logo';
 import { home, privacy, reserve, terms } from '@/routes';
 
 const navLinks = [
@@ -20,9 +21,13 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                 <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-5 sm:h-18 sm:px-8 lg:px-12">
                     <Link
                         href={home.url()}
-                        className="font-heading text-xl tracking-tight transition-opacity hover:opacity-90 sm:text-2xl"
+                        className="transition-opacity hover:opacity-90"
                     >
-                        Halden
+                        <HaldenLogo
+                            variant="full"
+                            markClassName="size-6 sm:size-7 text-[#f8f7f3]"
+                            textClassName="font-heading text-xl tracking-tight text-[#f8f7f3] sm:text-2xl"
+                        />
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -99,9 +104,13 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                         <div>
                             <Link
                                 href={home.url()}
-                                className="font-heading text-2xl tracking-tight text-[#f8f7f3]"
+                                className="transition-opacity hover:opacity-90"
                             >
-                                Halden
+                                <HaldenLogo
+                                    variant="full"
+                                    markClassName="size-6 text-[#f8f7f3]"
+                                    textClassName="font-heading text-2xl tracking-tight text-[#f8f7f3]"
+                                />
                             </Link>
                             <div className="mt-3 flex flex-col gap-1 text-sm text-[#f8f7f3]/75">
                                 <p>18 Mercer Lane</p>

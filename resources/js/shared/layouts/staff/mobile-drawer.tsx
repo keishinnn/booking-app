@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { LogOut, X } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
+import HaldenLogo from '@/shared/components/halden-logo';
 import { logout } from '@/routes';
 import { dashboard } from '@/routes/staff';
 import { StaffNavList, type StaffNavItem } from '@/shared/layouts/staff/nav';
@@ -45,9 +46,13 @@ export default function StaffMobileDrawer({
                             <Link
                                 href={dashboard.url()}
                                 onClick={onClose}
-                                className="font-heading text-2xl font-normal tracking-tight text-[#1d1d1d]"
+                                className="transition-opacity hover:opacity-85"
                             >
-                                Halden
+                                <HaldenLogo
+                                    variant="full"
+                                    markClassName="size-6 text-[#1d1d1d]"
+                                    textClassName="font-heading text-2xl font-normal tracking-tight text-[#1d1d1d]"
+                                />
                             </Link>
                             <span className="rounded-md border border-[#2f4a3c]/20 bg-[#2f4a3c]/10 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[#2f4a3c] uppercase">
                                 {isAdmin ? 'Admin' : 'Staff'}
