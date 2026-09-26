@@ -85,51 +85,7 @@ export default function StaffSidebar({
                 )}
             </div>
 
-            <div className="border-t border-[#dedbd3]/70 pt-4">
-                {!collapsed ? (
-                    <div className="flex items-center justify-between rounded-xl border border-[#dedbd3]/60 bg-[#f8f7f3]/60 p-2.5">
-                        <div className="flex min-w-0 items-center gap-3">
-                            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#1f1d1b] text-xs font-semibold text-[#f8f7f3]">
-                                {displayInitials}
-                                <span className="absolute right-0 bottom-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                                <p className="truncate text-xs font-semibold text-[#1d1d1d]">
-                                    {displayName}
-                                </p>
-                                <p className="truncate text-[11px] text-[#1d1d1d]/60">
-                                    {displayRole}
-                                </p>
-                            </div>
-                        </div>
-                        <Link
-                            href={logout.url()}
-                            method="post"
-                            as="button"
-                            title="Sign out"
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-[#1d1d1d]/60 shadow-2xs transition-colors hover:bg-white hover:text-rose-600"
-                        >
-                            <LogOut className="size-4" />
-                        </Link>
-                    </div>
-                ) : (
-                    <div className="flex flex-col items-center gap-3">
-                        <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-[#1f1d1b] text-xs font-semibold text-[#f8f7f3]">
-                            {displayInitials}
-                            <span className="absolute right-0 bottom-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
-                        </div>
-                        <Link
-                            href={logout.url()}
-                            method="post"
-                            as="button"
-                            title="Sign out"
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-[#1d1d1d]/60 transition-colors hover:bg-[#f8f7f3] hover:text-rose-600"
-                        >
-                            <LogOut className="size-4" />
-                        </Link>
-                    </div>
-                )}
-            </div>
+        
         </aside>
     );
 }
