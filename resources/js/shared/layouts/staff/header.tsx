@@ -22,9 +22,6 @@ type StaffHeaderProps = {
     displayEmail: string;
     displayRole: string;
     displayInitials: string;
-    isAdmin: boolean;
-    floorNavItems: StaffNavItem[];
-    adminNavItems: StaffNavItem[];
     accountNavItems: StaffNavItem[];
 };
 
@@ -39,9 +36,6 @@ export default function StaffHeader({
     displayEmail,
     displayRole,
     displayInitials,
-    isAdmin,
-    floorNavItems,
-    adminNavItems,
     accountNavItems,
 }: StaffHeaderProps) {
     const searchEnabled = typeof onSearchChange === 'function';
@@ -123,10 +117,6 @@ export default function StaffHeader({
                             placeholder={searchPlaceholder}
                             className="h-10 w-full border border-[#dedbd3] bg-[#f8f7f3]/60 pr-14 pl-10 text-xs text-[#1d1d1d] transition-all placeholder:text-[#1d1d1d]/40 focus:border-[#1f1d1b] focus:bg-white focus:ring-1 focus:ring-[#1f1d1b] focus:outline-none"
                         />
-                        <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-0.5 border border-[#dedbd3] bg-white px-1.5 py-0.5 text-[10px] font-medium text-[#1d1d1d]/50 shadow-2xs sm:flex">
-                            <span>⌘</span>
-                            <span>K</span>
-                        </div>
                     </div>
                 )}
             </div>
@@ -168,44 +158,7 @@ export default function StaffHeader({
                                     {displayEmail}
                                 </p>
                             </div>
-                            <div className="py-1">
-                                {floorNavItems.map((item) => {
-                                    const Icon = item.icon;
-
-                                    return (
-                                        <Link
-                                            key={item.href}
-                                            href={item.href}
-                                            onClick={() =>
-                                                setUserDropdownOpen(false)
-                                            }
-                                            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-[#1d1d1d]/80 transition-colors hover:bg-[#f8f7f3] hover:text-[#1d1d1d]"
-                                        >
-                                            <Icon className="size-4 text-[#1d1d1d]/50" />
-                                            <span>{item.label}</span>
-                                        </Link>
-                                    );
-                                })}
-                                {isAdmin &&
-                                    adminNavItems.map((item) => {
-                                        const Icon = item.icon;
-
-                                        return (
-                                            <Link
-                                                key={item.href}
-                                                href={item.href}
-                                                onClick={() =>
-                                                    setUserDropdownOpen(false)
-                                                }
-                                                className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-[#1d1d1d]/80 transition-colors hover:bg-[#f8f7f3] hover:text-[#1d1d1d]"
-                                            >
-                                                <Icon className="size-4 text-[#1d1d1d]/50" />
-                                                <span>{item.label}</span>
-                                            </Link>
-                                        );
-                                    })}
-                            </div>
-                            <div className="border-t border-[#dedbd3]/70 pt-1">
+                            <div className="pt-1">
                                 {accountNavItems.map((item) => {
                                     const Icon = item.icon;
 

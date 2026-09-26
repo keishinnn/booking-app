@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link } from "@inertiajs/react";
 import {
     Calendar,
     Grid3X3,
@@ -8,16 +8,16 @@ import {
     UserRound,
     Users,
     type LucideIcon,
-} from 'lucide-react';
-import { index as adminAdmins } from '@/routes/admin/admins';
-import { index as adminStaff } from '@/routes/admin/staff';
-import { index as adminTables } from '@/routes/admin/tables';
-import { edit as editProfile } from '@/routes/profile';
+} from "lucide-react";
+import { index as adminAdmins } from "@/routes/admin/admins";
+import { index as adminStaff } from "@/routes/admin/staff";
+import { index as adminTables } from "@/routes/admin/tables";
+import { edit as editProfile } from "@/routes/profile";
 import {
     dashboard,
     reservations as reservationsRoute,
     tables as tablesRoute,
-} from '@/routes/staff';
+} from "@/routes/staff";
 
 export type StaffNavItem = {
     href: string;
@@ -31,32 +31,32 @@ export function initials(name: string): string {
         .split(/\s+/)
         .filter(Boolean)
         .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase() ?? '')
-        .join('');
+        .map((part) => part[0]?.toUpperCase() ?? "")
+        .join("");
 }
 
 export function buildFloorNavItems(url: string): StaffNavItem[] {
     return [
         {
             href: dashboard.url(),
-            label: 'Overview',
+            label: "Overview",
             icon: LayoutDashboard,
             isActive:
-                url === '/staff' ||
-                url === '/staff/dashboard' ||
-                url.startsWith('/staff/dashboard?'),
+                url === "/staff" ||
+                url === "/staff/dashboard" ||
+                url.startsWith("/staff/dashboard?"),
         },
         {
             href: reservationsRoute.url(),
-            label: 'Reservations',
+            label: "Reservations",
             icon: Calendar,
-            isActive: url.startsWith('/staff/reservations'),
+            isActive: url.startsWith("/staff/reservations"),
         },
         {
             href: tablesRoute.url(),
-            label: 'Floor tables',
+            label: "Floor tables",
             icon: Grid3X3,
-            isActive: url.startsWith('/staff/tables'),
+            isActive: url.startsWith("/staff/tables"),
         },
     ];
 }
@@ -65,21 +65,21 @@ export function buildAdminNavItems(url: string): StaffNavItem[] {
     return [
         {
             href: adminTables.url(),
-            label: 'Catalog',
+            label: "Catalog",
             icon: Library,
-            isActive: url.startsWith('/admin/tables'),
+            isActive: url.startsWith("/admin/tables"),
         },
         {
             href: adminStaff.url(),
-            label: 'Staff',
+            label: "Staff",
             icon: Users,
-            isActive: url.startsWith('/admin/staff'),
+            isActive: url.startsWith("/admin/staff"),
         },
         {
             href: adminAdmins.url(),
-            label: 'Admins',
+            label: "Admins",
             icon: Shield,
-            isActive: url.startsWith('/admin/admins'),
+            isActive: url.startsWith("/admin/admins"),
         },
     ];
 }
@@ -88,9 +88,9 @@ export function buildAccountNavItems(url: string): StaffNavItem[] {
     return [
         {
             href: editProfile.url(),
-            label: 'Profile',
+            label: "Profile",
             icon: UserRound,
-            isActive: url === '/profile' || url.startsWith('/profile?'),
+            isActive: url === "/profile" || url.startsWith("/profile?"),
         },
     ];
 }
@@ -118,19 +118,19 @@ export function StaffNavList({
                         title={collapsed ? item.label : undefined}
                         onClick={onNavigate}
                         className={`group relative flex items-center rounded-xl px-3.5 py-3 text-sm font-medium transition-all ${
-                            collapsed ? 'justify-center' : ''
+                            collapsed ? "justify-center" : ""
                         } ${
                             item.isActive
-                                ? 'bg-[#1f1d1b] text-[#f8f7f3] shadow-xs'
-                                : 'text-[#1d1d1d]/75 hover:bg-[#f8f7f3] hover:text-[#1d1d1d]'
+                                ? "bg-[#1f1d1b] text-[#f8f7f3] shadow-xs"
+                                : "text-[#1d1d1d]/75 hover:bg-[#f8f7f3] hover:text-[#1d1d1d]"
                         }`}
                     >
                         <div className="flex items-center gap-3">
                             <Icon
                                 className={`size-5 shrink-0 transition-colors ${
                                     item.isActive
-                                        ? 'text-[#f8f7f3]'
-                                        : 'text-[#1d1d1d]/60 group-hover:text-[#1d1d1d]'
+                                        ? "text-[#f8f7f3]"
+                                        : "text-[#1d1d1d]/60 group-hover:text-[#1d1d1d]"
                                 }`}
                             />
                             {!collapsed && <span>{item.label}</span>}

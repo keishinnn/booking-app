@@ -78,9 +78,6 @@ export default function StaffLayout({
                     displayEmail={displayEmail}
                     displayRole={displayRole}
                     displayInitials={displayInitials}
-                    isAdmin={isAdmin}
-                    floorNavItems={floorNavItems}
-                    adminNavItems={adminNavItems}
                     accountNavItems={accountNavItems}
                 />
 
