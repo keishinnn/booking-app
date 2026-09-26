@@ -41,6 +41,9 @@ test('guest can create a reservation and is redirected to confirmation with mail
         $mail->assertSeeInText('party of 2');
         $mail->assertSeeInText('We will hold it for two hours.');
         $mail->assertDontSeeInText('Status:');
+        $mail->assertSeeInHtml('#F8F7F3');
+        $mail->assertSeeInHtml('#1F1D1B');
+        $mail->assertSeeInHtml('#1D1D1D');
 
         return $mail->reservation->is($reservation)
             && $mail->hasTo('astrid@example.com');

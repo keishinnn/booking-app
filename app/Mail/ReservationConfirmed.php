@@ -13,6 +13,8 @@ class ReservationConfirmed extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $theme = 'halden';
+
     public function __construct(public Reservation $reservation)
     {
         $this->reservation->loadMissing('table');
