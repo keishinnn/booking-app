@@ -45,7 +45,10 @@ class UpdateReservationRequest extends FormRequest
             'reserved_on' => ['required', 'date'],
             'starts_at' => ['required', 'string', Rule::in(EnsuresTableAvailability::START_TIMES)],
             'notes' => ['nullable', 'string', 'max:2000'],
-            'status' => ['sometimes', Rule::enum(ReservationStatus::class)],
+            'status' => ['sometimes', Rule::in([
+                ReservationStatus::Confirmed->value,
+                ReservationStatus::Cancelled->value,
+            ])],
         ];
     }
 

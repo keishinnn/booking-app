@@ -11,6 +11,7 @@ use App\Http\Resources\TableResource;
 use App\Models\Reservation;
 use App\Models\Table;
 use App\Services\EnsuresTableAvailability;
+use App\Services\TransitionsReservationStatus;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -84,5 +85,29 @@ class ReservationController extends Controller
         return redirect()
             ->route('staff.reservations')
             ->with('success', 'Reservation cancelled.');
+    }
+
+    public function seat(Reservation $reservation, TransitionsReservationStatus $transitions): RedirectResponse
+    {
+        $this->authorize('update', $reservation);
+        $transitions->seat($reservation);
+
+        return back()->with('success', 'Guest seated.');
+    }
+
+    public function complete(Reservation $reservation, TransitionsReservationStatus $transitions): RedirectResponse
+    {
+        $this->authorize('update', $reservation);
+        $transitions->complete($reservation);
+
+        return back()->with('success', 'Reservation completed.');
+    }
+
+    public function noShow(Reservation $reservation, TransitionsReservationStatus $transitions): RedirectResponse
+    {
+        $this->authorize('update', $reservation);
+        $transitions->noShow($reservation);
+
+        return back()->with('success', 'Marked as no-show.');
     }
 }
