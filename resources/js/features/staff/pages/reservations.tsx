@@ -1,4 +1,4 @@
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, router } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import {
@@ -13,7 +13,14 @@ import type {
     ReservationServiceFilter,
     ReservationStatusFilter,
 } from '@/features/staff/types';
-import { destroy, store, update } from '@/routes/staff/reservations';
+import {
+    complete,
+    destroy,
+    noShow,
+    seat,
+    store,
+    update,
+} from '@/routes/staff/reservations';
 import PortalDialog from '@/shared/components/portal-dialog';
 import StaffLayout from '@/shared/layouts/staff-layout';
 
@@ -267,6 +274,48 @@ export default function StaffReservationsPage({
                                                                         reservation,
                                                                     );
                                                                 }}
+                                                                onSeat={() => {
+                                                                    setMenuOpenId(
+                                                                        null,
+                                                                    );
+                                                                    router.post(
+                                                                        seat.url(
+                                                                            reservation.id,
+                                                                        ),
+                                                                        {},
+                                                                        {
+                                                                            preserveScroll: true,
+                                                                        },
+                                                                    );
+                                                                }}
+                                                                onComplete={() => {
+                                                                    setMenuOpenId(
+                                                                        null,
+                                                                    );
+                                                                    router.post(
+                                                                        complete.url(
+                                                                            reservation.id,
+                                                                        ),
+                                                                        {},
+                                                                        {
+                                                                            preserveScroll: true,
+                                                                        },
+                                                                    );
+                                                                }}
+                                                                onNoShow={() => {
+                                                                    setMenuOpenId(
+                                                                        null,
+                                                                    );
+                                                                    router.post(
+                                                                        noShow.url(
+                                                                            reservation.id,
+                                                                        ),
+                                                                        {},
+                                                                        {
+                                                                            preserveScroll: true,
+                                                                        },
+                                                                    );
+                                                                }}
                                                                 onCancel={() => {
                                                                     setMenuOpenId(
                                                                         null,
@@ -329,7 +378,10 @@ export default function StaffReservationsPage({
                         formProps={update.form(editing.id)}
                         tables={tables}
                         startTimes={startTimes}
-                        showStatus
+                        showStatus={
+                            editing.status === 'confirmed' ||
+                            editing.status === 'cancelled'
+                        }
                         defaults={{
                             table_id: editing.table_id,
                             guest_name: editing.guest_name,
@@ -339,7 +391,10 @@ export default function StaffReservationsPage({
                             reserved_on: editing.reserved_on,
                             starts_at: editing.starts_at,
                             notes: editing.notes,
-                            status: editing.status,
+                            ...(editing.status === 'confirmed' ||
+                            editing.status === 'cancelled'
+                                ? { status: editing.status }
+                                : {}),
                         }}
                         submitLabel="Save changes"
                         onCancel={() => setEditing(null)}

@@ -9,11 +9,17 @@ const serviceTone: Record<ServiceName, string> = {
 
 const statusTone: Record<ReservationStatus, string> = {
     confirmed: 'bg-[#1a7a4c] text-white',
+    seated: 'bg-[#1d4ed8] text-white',
+    completed: 'bg-[#57534e] text-white',
+    no_show: 'bg-[#a16207] text-white',
     cancelled: 'bg-[#9f1239] text-white',
 };
 
 const statusLabel: Record<ReservationStatus, string> = {
     confirmed: 'Confirmed',
+    seated: 'Seated',
+    completed: 'Completed',
+    no_show: 'No-show',
     cancelled: 'Cancelled',
 };
 

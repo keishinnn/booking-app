@@ -17,6 +17,9 @@ type ReservationRowActionsProps = {
     onClose: () => void;
     onEdit: () => void;
     onCancel: () => void;
+    onSeat: () => void;
+    onComplete: () => void;
+    onNoShow: () => void;
 };
 
 export default function ReservationRowActions({
@@ -26,9 +29,14 @@ export default function ReservationRowActions({
     onClose,
     onEdit,
     onCancel,
+    onSeat,
+    onComplete,
+    onNoShow,
 }: ReservationRowActionsProps) {
     const buttonRef = useRef<HTMLButtonElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
+    const canCancel =
+        reservation.status === 'confirmed' || reservation.status === 'seated';
 
     useEffect(() => {
         if (!open) {
@@ -87,6 +95,36 @@ export default function ReservationRowActions({
                         Edit
                     </button>
                     {reservation.status === 'confirmed' && (
+                        <>
+                            <button
+                                type="button"
+                                role="menuitem"
+                                className="flex w-full px-3 py-2 text-left text-xs font-medium hover:bg-[#f8f7f3]"
+                                onClick={onSeat}
+                            >
+                                Seat
+                            </button>
+                            <button
+                                type="button"
+                                role="menuitem"
+                                className="flex w-full px-3 py-2 text-left text-xs font-medium hover:bg-[#f8f7f3]"
+                                onClick={onNoShow}
+                            >
+                                No-show
+                            </button>
+                        </>
+                    )}
+                    {reservation.status === 'seated' && (
+                        <button
+                            type="button"
+                            role="menuitem"
+                            className="flex w-full px-3 py-2 text-left text-xs font-medium hover:bg-[#f8f7f3]"
+                            onClick={onComplete}
+                        >
+                            Complete
+                        </button>
+                    )}
+                    {canCancel && (
                         <button
                             type="button"
                             role="menuitem"
