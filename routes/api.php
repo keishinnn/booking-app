@@ -10,12 +10,15 @@ Route::middleware(['auth', 'role:staff'])->name('api.')->group(function () {
 
     Route::get('reservations', [ReservationController::class, 'index'])->name('reservations.index');
     Route::get('reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
-    Route::post('reservations', [ReservationController::class, 'store'])->name('reservations.store');
-    Route::match(['put', 'patch'], 'reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update');
-    Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+
+    Route::middleware('throttle:api-mutations')->group(function () {
+        Route::post('reservations', [ReservationController::class, 'store'])->name('reservations.store');
+        Route::match(['put', 'patch'], 'reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update');
+        Route::delete('reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+    });
 });
 
-Route::middleware(['auth', 'role:admin'])->name('api.')->group(function () {
+Route::middleware(['auth', 'role:admin', 'throttle:api-mutations'])->name('api.')->group(function () {
     Route::post('tables', [TableController::class, 'store'])->name('tables.store');
     Route::match(['put', 'patch'], 'tables/{table}', [TableController::class, 'update'])->name('tables.update');
     Route::delete('tables/{table}', [TableController::class, 'destroy'])->name('tables.destroy');

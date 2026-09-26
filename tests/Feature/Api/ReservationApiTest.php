@@ -104,3 +104,15 @@ test('creating an overlapping confirmed reservation is rejected', function () {
         ->assertUnprocessable()
         ->assertJsonValidationErrors('starts_at');
 });
+
+test('reservation api mutations are rate limited', function () {
+    $user = User::factory()->staff()->create();
+
+    for ($i = 0; $i < 60; $i++) {
+        $this->actingAs($user)->postJson('/api/reservations', []);
+    }
+
+    $this->actingAs($user)
+        ->postJson('/api/reservations', [])
+        ->assertTooManyRequests();
+});

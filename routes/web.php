@@ -61,6 +61,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 Route::get('/reserve', ReserveController::class)->name('reserve');
 Route::get('/reserve/availability', ReserveAvailabilityController::class)->name('reserve.availability');
-Route::post('/reservations', [GuestReservationController::class, 'store'])->name('reservations.store');
+Route::post('/reservations', [GuestReservationController::class, 'store'])
+    ->middleware('throttle:guest-reservations')
+    ->name('reservations.store');
 Route::get('/reservations/{reservation}/confirmation', [GuestReservationController::class, 'confirmation'])
     ->name('reservations.confirmation');

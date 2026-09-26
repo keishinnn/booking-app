@@ -131,3 +131,14 @@ test('cancelled reservation does not block guest booking for the same window', f
 
     Mail::assertSent(ReservationConfirmed::class);
 });
+
+test('guest reservation store is rate limited', function () {
+    Mail::fake();
+
+    for ($i = 0; $i < 5; $i++) {
+        $this->post(route('reservations.store'), []);
+    }
+
+    $this->post(route('reservations.store'), [])
+        ->assertTooManyRequests();
+});
