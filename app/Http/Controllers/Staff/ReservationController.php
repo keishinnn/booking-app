@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Staff;
 use App\Enums\ReservationStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReservationRequest;
+use App\Http\Requests\StoreWalkInReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
 use App\Http\Resources\ReservationResource;
 use App\Http\Resources\TableResource;
@@ -56,6 +57,16 @@ class ReservationController extends Controller
         return redirect()
             ->route('staff.reservations')
             ->with('success', 'Reservation created.');
+    }
+
+    public function walkIn(StoreWalkInReservationRequest $request): RedirectResponse
+    {
+        $data = $request->validated();
+        $data['status'] = ReservationStatus::Seated->value;
+
+        Reservation::query()->create($data);
+
+        return back()->with('success', 'Walk-in seated.');
     }
 
     public function edit(Reservation $reservation): RedirectResponse

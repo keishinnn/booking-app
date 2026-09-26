@@ -42,6 +42,7 @@ Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->grou
     Route::get('/reservations', [StaffReservationController::class, 'index'])->name('reservations');
     Route::get('/reservations/create', [StaffReservationController::class, 'create'])->name('reservations.create');
     Route::post('/reservations', [StaffReservationController::class, 'store'])->name('reservations.store');
+    Route::post('/reservations/walk-in', [StaffReservationController::class, 'walkIn'])->name('reservations.walk-in');
     Route::post('/reservations/{reservation}/seat', [StaffReservationController::class, 'seat'])->name('reservations.seat');
     Route::post('/reservations/{reservation}/complete', [StaffReservationController::class, 'complete'])->name('reservations.complete');
     Route::post('/reservations/{reservation}/no-show', [StaffReservationController::class, 'noShow'])->name('reservations.no-show');
