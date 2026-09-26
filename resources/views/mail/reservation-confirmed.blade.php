@@ -1,16 +1,9 @@
 <x-mail::message>
-# You're booked
+{{ $reservation->guest_name }}, your table is booked.
 
-{{ $reservation->guest_name }}, your table is confirmed.
+{{ $reservation->table?->name }} · {{ $reservation->reserved_on->format('l, j F Y') }} · {{ \Illuminate\Support\Str::of((string) $reservation->starts_at)->substr(0, 5) }} · party of {{ $reservation->party_size }}
 
-- **Table:** {{ $reservation->table?->name }}
-- **Date:** {{ $reservation->reserved_on->format('l, j F Y') }}
-- **Time:** {{ \Illuminate\Support\Str::of((string) $reservation->starts_at)->substr(0, 5) }}
-- **Party:** {{ $reservation->party_size }}
-- **Status:** {{ $reservation->status->value }}
+We will hold it for two hours.
 
-This table is yours for two hours.
-
-Thanks,<br>
-{{ config('app.name') }}
+Halden
 </x-mail::message>
