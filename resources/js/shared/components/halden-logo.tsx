@@ -31,30 +31,92 @@ export function HaldenMark({
     );
 }
 
+export type HaldenBadgeProps = {
+    className?: string;
+    markClassName?: string;
+    tone?: 'linen' | 'dark';
+};
+
+/**
+ * Halden architectural monogram encased in a rounded tactile tile.
+ * - 'linen': warm linen background (#f8f7f3) with dark soot 'H' mark (#1f1d1b).
+ * - 'dark': dark soot background (#1f1d1b) with warm linen 'H' mark (#f8f7f3).
+ */
+export function HaldenBadge({
+    className = 'size-8.5 sm:size-9.5 rounded-lg sm:rounded-xl',
+    markClassName = 'size-5 sm:size-5.5',
+    tone = 'linen',
+}: HaldenBadgeProps) {
+    const toneClasses =
+        tone === 'dark'
+            ? 'bg-[#1f1d1b] text-[#f8f7f3] border border-white/10'
+            : 'bg-[#f8f7f3] text-[#1f1d1b] shadow-2xs';
+
+    return (
+        <span
+            className={`inline-flex shrink-0 items-center justify-center transition-all ${toneClasses} ${className}`}
+            aria-hidden="true"
+        >
+            <HaldenMark className={markClassName} />
+        </span>
+    );
+}
+
 export type HaldenLogoProps = {
-    variant?: 'mark' | 'full';
+    variant?: 'mark' | 'full' | 'badge' | 'badge-full';
+    tone?: 'linen' | 'dark';
     className?: string;
     markClassName?: string;
     textClassName?: string;
+    badgeClassName?: string;
 };
 
 /**
  * Halden brand logo component.
- * Supports standalone architectural monogram mark or full wordmark lockup.
+ * Supports:
+ * - 'mark': standalone vector monogram icon
+ * - 'full': bare monogram mark + wordmark
+ * - 'badge': rounded-corner tile asset (H as primary on linen background)
+ * - 'badge-full': rounded-corner badge asset + wordmark
  */
 export default function HaldenLogo({
     variant = 'full',
-    className = 'inline-flex items-center gap-2.5',
-    markClassName = 'size-6 shrink-0',
+    tone = 'linen',
+    className = 'inline-flex items-center gap-3',
+    markClassName,
     textClassName = 'font-heading text-xl tracking-tight sm:text-2xl',
+    badgeClassName,
 }: HaldenLogoProps) {
     if (variant === 'mark') {
-        return <HaldenMark className={markClassName} />;
+        return <HaldenMark className={markClassName ?? 'size-6 shrink-0'} />;
+    }
+
+    if (variant === 'badge') {
+        return (
+            <HaldenBadge
+                tone={tone}
+                className={badgeClassName}
+                markClassName={markClassName}
+            />
+        );
+    }
+
+    if (variant === 'badge-full') {
+        return (
+            <span className={className}>
+                <HaldenBadge
+                    tone={tone}
+                    className={badgeClassName}
+                    markClassName={markClassName}
+                />
+                <span className={textClassName}>Halden</span>
+            </span>
+        );
     }
 
     return (
         <span className={className}>
-            <HaldenMark className={markClassName} />
+            <HaldenMark className={markClassName ?? 'size-6 shrink-0'} />
             <span className={textClassName}>Halden</span>
         </span>
     );

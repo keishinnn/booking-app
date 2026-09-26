@@ -24,8 +24,8 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                         className="transition-opacity hover:opacity-90"
                     >
                         <HaldenLogo
-                            variant="full"
-                            markClassName="size-6 sm:size-7 text-[#f8f7f3]"
+                            variant="badge-full"
+                            tone="linen"
                             textClassName="font-heading text-xl tracking-tight text-[#f8f7f3] sm:text-2xl"
                         />
                     </Link>
@@ -107,8 +107,8 @@ export default function GuestLayout({ children }: { children: ReactNode }) {
                                 className="transition-opacity hover:opacity-90"
                             >
                                 <HaldenLogo
-                                    variant="full"
-                                    markClassName="size-6 text-[#f8f7f3]"
+                                    variant="badge-full"
+                                    tone="linen"
                                     textClassName="font-heading text-2xl tracking-tight text-[#f8f7f3]"
                                 />
                             </Link>
