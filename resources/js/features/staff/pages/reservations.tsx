@@ -20,6 +20,7 @@ import {
     seat,
     store,
     update,
+    walkIn,
 } from '@/routes/staff/reservations';
 import PortalDialog from '@/shared/components/portal-dialog';
 import StaffLayout from '@/shared/layouts/staff-layout';
@@ -29,6 +30,12 @@ type StaffReservationsPageProps = {
     tables: DiningTable[];
     startTimes: string[];
 };
+
+const fieldClassName =
+    'w-full border border-[#dedbd3] bg-[#f8f7f3]/50 px-4 py-3 text-sm focus:border-[#1d1d1d] focus:bg-white focus:outline-none';
+
+const labelClassName =
+    'mb-2 block text-xs font-semibold tracking-wider text-[#1d1d1d]/80 uppercase';
 
 export default function StaffReservationsPage({
     reservations,
@@ -42,6 +49,7 @@ export default function StaffReservationsPage({
         useState<ReservationServiceFilter>('All');
     const [menuOpenId, setMenuOpenId] = useState<number | null>(null);
     const [createOpen, setCreateOpen] = useState(false);
+    const [walkInOpen, setWalkInOpen] = useState(false);
     const [editing, setEditing] = useState<DiningReservation | null>(null);
     const [cancelling, setCancelling] = useState<DiningReservation | null>(
         null,
@@ -82,7 +90,7 @@ export default function StaffReservationsPage({
             <Head title="Staff Reservations | Halden" />
 
             <div className="max-w-8xl relative mx-auto space-y-6 pb-24">
-                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="font-heading text-2xl font-normal tracking-tight text-[#1d1d1d] sm:text-3xl">
                             Reservations ledger
@@ -92,10 +100,20 @@ export default function StaffReservationsPage({
                             schedule
                         </p>
                     </div>
-                    <p className="text-xs text-[#1d1d1d]/60">
-                        {activeCount} confirmed · {filteredReservations.length}{' '}
-                        shown · {reservations.length} total
-                    </p>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <p className="text-xs text-[#1d1d1d]/60">
+                            {activeCount} confirmed ·{' '}
+                            {filteredReservations.length} shown ·{' '}
+                            {reservations.length} total
+                        </p>
+                        <button
+                            type="button"
+                            onClick={() => setWalkInOpen(true)}
+                            className="h-10 rounded-full bg-[#1f1d1b] px-5 text-xs font-semibold tracking-wide text-[#f8f7f3] uppercase"
+                        >
+                            Walk-in
+                        </button>
+                    </div>
                 </div>
 
                 <div className="border border-[#dedbd3] bg-white p-5 shadow-xs md:p-6">
@@ -363,6 +381,182 @@ export default function StaffReservationsPage({
                         onCancel={() => setCreateOpen(false)}
                         onSuccess={() => setCreateOpen(false)}
                     />
+                </PortalDialog>
+            )}
+
+            {walkInOpen && (
+                <PortalDialog
+                    title="Seat walk-in"
+                    eyebrow="Ledger"
+                    size="lg"
+                    onClose={() => setWalkInOpen(false)}
+                >
+                    <Form
+                        {...walkIn.form()}
+                        className="space-y-3"
+                        options={{ preserveScroll: true }}
+                        onSuccess={() => setWalkInOpen(false)}
+                    >
+                        {({ errors, processing }) => (
+                            <>
+                                <div>
+                                    <label
+                                        htmlFor="ledger_walk_in_table_id"
+                                        className={labelClassName}
+                                    >
+                                        Table
+                                    </label>
+                                    <select
+                                        id="ledger_walk_in_table_id"
+                                        name="table_id"
+                                        required
+                                        defaultValue=""
+                                        className={fieldClassName}
+                                    >
+                                        <option value="" disabled>
+                                            Select a table
+                                        </option>
+                                        {tables.map((table) => (
+                                            <option
+                                                key={table.id}
+                                                value={table.id}
+                                            >
+                                                {table.name} · seats{' '}
+                                                {table.capacity}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.table_id && (
+                                        <p className="mt-1.5 text-xs font-medium text-[#8a4b3b]">
+                                            {errors.table_id}
+                                        </p>
+                                    )}
+                                </div>
+                                <div>
+                                    <label
+                                        htmlFor="ledger_walk_in_guest_name"
+                                        className={labelClassName}
+                                    >
+                                        Guest name
+                                    </label>
+                                    <input
+                                        id="ledger_walk_in_guest_name"
+                                        name="guest_name"
+                                        type="text"
+                                        required
+                                        className={fieldClassName}
+                                    />
+                                    {errors.guest_name && (
+                                        <p className="mt-1.5 text-xs font-medium text-[#8a4b3b]">
+                                            {errors.guest_name}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="grid gap-3 sm:grid-cols-2">
+                                    <div>
+                                        <label
+                                            htmlFor="ledger_walk_in_email"
+                                            className={labelClassName}
+                                        >
+                                            Email
+                                        </label>
+                                        <input
+                                            id="ledger_walk_in_email"
+                                            name="email"
+                                            type="email"
+                                            required
+                                            className={fieldClassName}
+                                        />
+                                        {errors.email && (
+                                            <p className="mt-1.5 text-xs font-medium text-[#8a4b3b]">
+                                                {errors.email}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="ledger_walk_in_phone"
+                                            className={labelClassName}
+                                        >
+                                            Phone
+                                        </label>
+                                        <input
+                                            id="ledger_walk_in_phone"
+                                            name="phone"
+                                            type="text"
+                                            required
+                                            className={fieldClassName}
+                                        />
+                                        {errors.phone && (
+                                            <p className="mt-1.5 text-xs font-medium text-[#8a4b3b]">
+                                                {errors.phone}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label
+                                        htmlFor="ledger_walk_in_party_size"
+                                        className={labelClassName}
+                                    >
+                                        Party size
+                                    </label>
+                                    <input
+                                        id="ledger_walk_in_party_size"
+                                        name="party_size"
+                                        type="number"
+                                        min={1}
+                                        max={50}
+                                        required
+                                        defaultValue={2}
+                                        className={fieldClassName}
+                                    />
+                                    {errors.party_size && (
+                                        <p className="mt-1.5 text-xs font-medium text-[#8a4b3b]">
+                                            {errors.party_size}
+                                        </p>
+                                    )}
+                                </div>
+                                <div>
+                                    <label
+                                        htmlFor="ledger_walk_in_notes"
+                                        className={labelClassName}
+                                    >
+                                        Notes
+                                    </label>
+                                    <textarea
+                                        id="ledger_walk_in_notes"
+                                        name="notes"
+                                        rows={2}
+                                        className={fieldClassName}
+                                    />
+                                    {errors.notes && (
+                                        <p className="mt-1.5 text-xs font-medium text-[#8a4b3b]">
+                                            {errors.notes}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="flex flex-wrap items-center justify-end gap-3 pt-1">
+                                    <button
+                                        type="button"
+                                        onClick={() => setWalkInOpen(false)}
+                                        className="px-3 py-2 text-sm text-[#1d1d1d]/70 underline-offset-4 hover:underline"
+                                    >
+                                        Back
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={processing}
+                                        className="h-10 rounded-full bg-[#1f1d1b] px-5 text-xs font-semibold tracking-wide text-[#f8f7f3] uppercase disabled:opacity-50"
+                                    >
+                                        {processing
+                                            ? 'Seating…'
+                                            : 'Seat walk-in'}
+                                    </button>
+                                </div>
+                            </>
+                        )}
+                    </Form>
                 </PortalDialog>
             )}
 

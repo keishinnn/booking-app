@@ -83,6 +83,7 @@ test('staff can update and cancel a reservation from the ledger', function () {
     ]);
 
     $this->actingAs($user)
+        ->from(route('staff.reservations'))
         ->delete(route('staff.reservations.destroy', $reservation))
         ->assertRedirect(route('staff.reservations'))
         ->assertSessionHas('success');

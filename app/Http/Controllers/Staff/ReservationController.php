@@ -93,9 +93,7 @@ class ReservationController extends Controller
             'status' => ReservationStatus::Cancelled,
         ]);
 
-        return redirect()
-            ->route('staff.reservations')
-            ->with('success', 'Reservation cancelled.');
+        return back()->with('success', 'Reservation cancelled.');
     }
 
     public function seat(Reservation $reservation, TransitionsReservationStatus $transitions): RedirectResponse
