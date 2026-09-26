@@ -3,6 +3,7 @@ import { useState, type ReactNode } from 'react';
 import StaffHeader from '@/shared/layouts/staff/header';
 import StaffMobileDrawer from '@/shared/layouts/staff/mobile-drawer';
 import {
+    buildAccountNavItems,
     buildAdminNavItems,
     buildFloorNavItems,
     initials,
@@ -37,17 +38,16 @@ export default function StaffLayout({
 
     const floorNavItems = buildFloorNavItems(url);
     const adminNavItems = isAdmin ? buildAdminNavItems(url) : [];
+    const accountNavItems = buildAccountNavItems(url);
 
     return (
         <div className="flex min-h-screen bg-[#f8f7f3] text-[#1d1d1d]">
             <StaffSidebar
                 collapsed={sidebarCollapsed}
                 isAdmin={isAdmin}
-                displayName={displayName}
-                displayRole={displayRole}
-                displayInitials={displayInitials}
                 floorNavItems={floorNavItems}
                 adminNavItems={adminNavItems}
+                accountNavItems={accountNavItems}
             />
 
             <StaffMobileDrawer
@@ -59,6 +59,7 @@ export default function StaffLayout({
                 displayInitials={displayInitials}
                 floorNavItems={floorNavItems}
                 adminNavItems={adminNavItems}
+                accountNavItems={accountNavItems}
             />
 
             <div className="flex min-w-0 flex-1 flex-col">
@@ -77,6 +78,7 @@ export default function StaffLayout({
                     isAdmin={isAdmin}
                     floorNavItems={floorNavItems}
                     adminNavItems={adminNavItems}
+                    accountNavItems={accountNavItems}
                 />
 
                 <main className="flex-1 p-4 sm:p-6 lg:p-8">

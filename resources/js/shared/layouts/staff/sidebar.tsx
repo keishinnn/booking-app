@@ -1,27 +1,21 @@
 import { Link } from '@inertiajs/react';
-import { LogOut } from 'lucide-react';
-import { logout } from '@/routes';
 import { dashboard } from '@/routes/staff';
 import { StaffNavList, type StaffNavItem } from '@/shared/layouts/staff/nav';
 
 type StaffSidebarProps = {
     collapsed: boolean;
     isAdmin: boolean;
-    displayName: string;
-    displayRole: string;
-    displayInitials: string;
     floorNavItems: StaffNavItem[];
     adminNavItems: StaffNavItem[];
+    accountNavItems: StaffNavItem[];
 };
 
 export default function StaffSidebar({
     collapsed,
     isAdmin,
-    displayName,
-    displayRole,
-    displayInitials,
     floorNavItems,
     adminNavItems,
+    accountNavItems,
 }: StaffSidebarProps) {
     return (
         <aside
@@ -85,7 +79,19 @@ export default function StaffSidebar({
                 )}
             </div>
 
-        
+            <div className="border-t border-[#dedbd3]/70 pt-4">
+                {!collapsed && (
+                    <h3 className="mb-3 px-3 text-[11px] font-semibold tracking-wider text-[#1d1d1d]/45 uppercase">
+                        Account
+                    </h3>
+                )}
+                <nav className="flex flex-col gap-1.5">
+                    <StaffNavList
+                        items={accountNavItems}
+                        collapsed={collapsed}
+                    />
+                </nav>
+            </div>
         </aside>
     );
 }

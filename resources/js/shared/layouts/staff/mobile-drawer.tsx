@@ -14,6 +14,7 @@ type StaffMobileDrawerProps = {
     displayInitials: string;
     floorNavItems: StaffNavItem[];
     adminNavItems: StaffNavItem[];
+    accountNavItems: StaffNavItem[];
 };
 
 export default function StaffMobileDrawer({
@@ -25,6 +26,7 @@ export default function StaffMobileDrawer({
     displayInitials,
     floorNavItems,
     adminNavItems,
+    accountNavItems,
 }: StaffMobileDrawerProps) {
     if (!open) {
         return null;
@@ -86,6 +88,18 @@ export default function StaffMobileDrawer({
                             </nav>
                         </div>
                     )}
+
+                    <div className="mt-6">
+                        <h3 className="mb-3 px-3 text-[11px] font-semibold tracking-wider text-[#1d1d1d]/45 uppercase">
+                            Account
+                        </h3>
+                        <nav className="flex flex-col gap-1.5">
+                            <StaffNavList
+                                items={accountNavItems}
+                                onNavigate={onClose}
+                            />
+                        </nav>
+                    </div>
                 </div>
 
                 <div className="border-t border-[#dedbd3] pt-4">

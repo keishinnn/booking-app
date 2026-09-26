@@ -67,4 +67,15 @@ class User extends Authenticatable
             ? route('admin.dashboard')
             : route('staff.dashboard');
     }
+
+    public function isOnlyAdmin(): bool
+    {
+        if (! $this->isAdmin()) {
+            return false;
+        }
+
+        $adminCount = once(fn (): int => self::query()->where('role', UserRole::Admin)->count());
+
+        return $adminCount === 1;
+    }
 }

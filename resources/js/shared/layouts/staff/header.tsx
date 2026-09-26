@@ -24,6 +24,7 @@ type StaffHeaderProps = {
     isAdmin: boolean;
     floorNavItems: StaffNavItem[];
     adminNavItems: StaffNavItem[];
+    accountNavItems: StaffNavItem[];
 };
 
 export default function StaffHeader({
@@ -39,6 +40,7 @@ export default function StaffHeader({
     isAdmin,
     floorNavItems,
     adminNavItems,
+    accountNavItems,
 }: StaffHeaderProps) {
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
     const searchInputRef = useRef<HTMLInputElement>(null);
@@ -197,6 +199,23 @@ export default function StaffHeader({
                                     })}
                             </div>
                             <div className="border-t border-[#dedbd3]/70 pt-1">
+                                {accountNavItems.map((item) => {
+                                    const Icon = item.icon;
+
+                                    return (
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            onClick={() =>
+                                                setUserDropdownOpen(false)
+                                            }
+                                            className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-[#1d1d1d]/80 transition-colors hover:bg-[#f8f7f3] hover:text-[#1d1d1d]"
+                                        >
+                                            <Icon className="size-4 text-[#1d1d1d]/50" />
+                                            <span>{item.label}</span>
+                                        </Link>
+                                    );
+                                })}
                                 <Link
                                     href={logout.url()}
                                     method="post"

@@ -4,9 +4,15 @@ import {
     Grid3X3,
     LayoutDashboard,
     Library,
+    Shield,
+    UserRound,
+    Users,
     type LucideIcon,
 } from 'lucide-react';
+import { index as adminAdmins } from '@/routes/admin/admins';
+import { index as adminStaff } from '@/routes/admin/staff';
 import { index as adminTables } from '@/routes/admin/tables';
+import { edit as editProfile } from '@/routes/profile';
 import {
     dashboard,
     reservations as reservationsRoute,
@@ -62,6 +68,29 @@ export function buildAdminNavItems(url: string): StaffNavItem[] {
             label: 'Catalog',
             icon: Library,
             isActive: url.startsWith('/admin/tables'),
+        },
+        {
+            href: adminStaff.url(),
+            label: 'Staff',
+            icon: Users,
+            isActive: url.startsWith('/admin/staff'),
+        },
+        {
+            href: adminAdmins.url(),
+            label: 'Admins',
+            icon: Shield,
+            isActive: url.startsWith('/admin/admins'),
+        },
+    ];
+}
+
+export function buildAccountNavItems(url: string): StaffNavItem[] {
+    return [
+        {
+            href: editProfile.url(),
+            label: 'Profile',
+            icon: UserRound,
+            isActive: url === '/profile' || url.startsWith('/profile?'),
         },
     ];
 }
