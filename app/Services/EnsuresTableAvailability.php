@@ -65,7 +65,7 @@ class EnsuresTableAvailability
         $overlapping = Reservation::query()
             ->where('table_id', $tableId)
             ->whereDate('reserved_on', $reservedOn)
-            ->where('status', ReservationStatus::Confirmed)
+            ->whereIn('status', ReservationStatus::blocking())
             ->when(
                 $ignoreReservationId !== null,
                 fn ($query) => $query->where('id', '!=', $ignoreReservationId),

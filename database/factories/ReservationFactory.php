@@ -36,4 +36,19 @@ class ReservationFactory extends Factory
             'status' => ReservationStatus::Cancelled,
         ]);
     }
+
+    public function seated(): static
+    {
+        return $this->state(fn () => ['status' => ReservationStatus::Seated]);
+    }
+
+    public function completed(): static
+    {
+        return $this->state(fn () => ['status' => ReservationStatus::Completed]);
+    }
+
+    public function noShow(): static
+    {
+        return $this->state(fn () => ['status' => ReservationStatus::NoShow]);
+    }
 }
