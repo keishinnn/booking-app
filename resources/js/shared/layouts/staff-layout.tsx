@@ -15,12 +15,14 @@ interface StaffLayoutProps {
     children: ReactNode;
     searchValue?: string;
     onSearchChange?: (value: string) => void;
+    searchPlaceholder?: string;
 }
 
 export default function StaffLayout({
     children,
     searchValue,
     onSearchChange,
+    searchPlaceholder,
 }: StaffLayoutProps) {
     const { url, props } = usePage<{
         auth: Auth;
@@ -66,6 +68,7 @@ export default function StaffLayout({
                 <StaffHeader
                     searchValue={searchValue}
                     onSearchChange={onSearchChange}
+                    searchPlaceholder={searchPlaceholder}
                     sidebarCollapsed={sidebarCollapsed}
                     onToggleSidebar={() =>
                         setSidebarCollapsed(!sidebarCollapsed)

@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { ReservationServiceLabel } from '@/features/staff/components/reservation-badges';
 import { reservationTimeWindow } from '@/features/staff/lib/build-floor-table-cards';
 import type { DiningReservation, DiningTable } from '@/features/staff/types';
 import { reservations as reservationsRoute } from '@/routes/staff';
@@ -45,9 +46,9 @@ export default function TableScheduleModal({
                                         reservation.starts_at,
                                     )}
                                 </span>
-                                <span className="inline-flex rounded-full border border-[#dedbd3] bg-[#f8f7f3] px-2 py-0.5 text-[10px] font-semibold tracking-wide text-[#1d1d1d]/75 uppercase">
-                                    {reservation.service}
-                                </span>
+                                <ReservationServiceLabel
+                                    service={reservation.service}
+                                />
                             </div>
                             <p className="text-sm font-medium text-[#1d1d1d]">
                                 {reservation.guest_name}

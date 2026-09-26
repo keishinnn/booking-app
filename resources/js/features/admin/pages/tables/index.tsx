@@ -1,6 +1,6 @@
 import { Form, Head } from '@inertiajs/react';
 import { MoreVertical, Plus, Users } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import TableForm from '@/features/admin/components/table-form';
 import type { DiningTable } from '@/features/staff/types';
 import PortalDialog from '@/shared/components/portal-dialog';
@@ -21,6 +21,7 @@ export default function AdminTablesIndex({
     tables,
     imageOptions,
 }: TablesIndexProps) {
+    const [search, setSearch] = useState('');
     const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
     const [createOpen, setCreateOpen] = useState(false);
     const [editingTable, setEditingTable] = useState<DiningTable | null>(null);
@@ -28,6 +29,22 @@ export default function AdminTablesIndex({
         null,
     );
     const menuRef = useRef<HTMLDivElement>(null);
+
+    const filteredTables = useMemo(() => {
+        const query = search.trim().toLowerCase();
+
+        if (!query) {
+            return tables;
+        }
+
+        return tables.filter((table) => {
+            const haystack = [table.name, String(table.capacity)]
+                .join(' ')
+                .toLowerCase();
+
+            return haystack.includes(query);
+        });
+    }, [tables, search]);
 
     useEffect(() => {
         if (!menuOpenId) {
@@ -75,7 +92,11 @@ export default function AdminTablesIndex({
     }, []);
 
     return (
-        <StaffLayout>
+        <StaffLayout
+            searchValue={search}
+            onSearchChange={setSearch}
+            searchPlaceholder="Search tables by name or seats..."
+        >
             <Head title="Tables | Halden Admin" />
 
             <div className="relative pb-24">
@@ -88,6 +109,13 @@ export default function AdminTablesIndex({
                     </h2>
                     <p className="mt-2 text-sm text-[#1d1d1d]/70">
                         Manage the tables used by the floor and booking flow.
+                        {tables.length > 0 && (
+                            <>
+                                {' '}
+                                Showing {filteredTables.length} of{' '}
+                                {tables.length}.
+                            </>
+                        )}
                     </p>
                 </div>
 
@@ -97,9 +125,15 @@ export default function AdminTablesIndex({
                             No tables yet. Tap + to add the first one.
                         </p>
                     </div>
+                ) : filteredTables.length === 0 ? (
+                    <div className="mt-8 border border-[#dedbd3] bg-white px-6 py-16 text-center">
+                        <p className="text-sm text-[#1d1d1d]/70">
+                            No tables match this search.
+                        </p>
+                    </div>
                 ) : (
                     <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                        {tables.map((table) => {
+                        {filteredTables.map((table) => {
                             const menuOpen = menuOpenId === table.id;
 
                             return (

@@ -1,6 +1,6 @@
-import { Link } from '@inertiajs/react';
-import { dashboard } from '@/routes/staff';
-import { StaffNavList, type StaffNavItem } from '@/shared/layouts/staff/nav';
+import { Link } from "@inertiajs/react";
+import { dashboard } from "@/routes/staff";
+import { StaffNavList, type StaffNavItem } from "@/shared/layouts/staff/nav";
 
 type StaffSidebarProps = {
     collapsed: boolean;
@@ -20,7 +20,7 @@ export default function StaffSidebar({
     return (
         <aside
             className={`sticky top-0 hidden h-screen shrink-0 flex-col justify-between border-r border-[#dedbd3] bg-white transition-all duration-300 lg:flex ${
-                collapsed ? 'w-20 px-3 py-6' : 'w-72 px-6 py-6'
+                collapsed ? "w-20 px-3 py-6" : "w-72 px-6 py-6"
             }`}
         >
             <div className="flex flex-col">
@@ -34,7 +34,7 @@ export default function StaffSidebar({
                                 Halden
                             </Link>
                             <span className="inline-flex items-center rounded-md border border-[#2f4a3c]/20 bg-[#2f4a3c]/10 px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[#2f4a3c] uppercase">
-                                {isAdmin ? 'Admin' : 'Staff'}
+                                {isAdmin ? "Admin" : "Staff"}
                             </span>
                         </div>
                     ) : (
@@ -77,20 +77,6 @@ export default function StaffSidebar({
                         </nav>
                     </div>
                 )}
-            </div>
-
-            <div className="border-t border-[#dedbd3]/70 pt-4">
-                {!collapsed && (
-                    <h3 className="mb-3 px-3 text-[11px] font-semibold tracking-wider text-[#1d1d1d]/45 uppercase">
-                        Account
-                    </h3>
-                )}
-                <nav className="flex flex-col gap-1.5">
-                    <StaffNavList
-                        items={accountNavItems}
-                        collapsed={collapsed}
-                    />
-                </nav>
             </div>
         </aside>
     );

@@ -1,5 +1,9 @@
 import { Link } from '@inertiajs/react';
-import { ArrowRight, Search, X } from 'lucide-react';
+import { ArrowRight, X } from 'lucide-react';
+import {
+    ReservationServiceLabel,
+    ReservationStatusLabel,
+} from '@/features/staff/components/reservation-badges';
 import { reservations as reservationsRoute } from '@/routes/staff';
 import type {
     DiningReservation,
@@ -13,7 +17,6 @@ type ReservationListProps = {
     search: string;
     statusFilter: ReservationStatusFilter;
     serviceFilter: ReservationServiceFilter;
-    onSearchChange: (value: string) => void;
     onStatusFilterChange: (value: ReservationStatusFilter) => void;
     onServiceFilterChange: (value: ReservationServiceFilter) => void;
     onClearFilters: () => void;
@@ -27,7 +30,6 @@ export default function ReservationList({
     search,
     statusFilter,
     serviceFilter,
-    onSearchChange,
     onStatusFilterChange,
     onServiceFilterChange,
     onClearFilters,
@@ -38,25 +40,26 @@ export default function ReservationList({
         search || statusFilter !== 'All' || serviceFilter !== 'All';
 
     return (
-        <div className="rounded-2xl border border-[#dedbd3] bg-white p-5 shadow-xs md:p-6">
+        <div className="border border-[#dedbd3] bg-white p-5 shadow-xs md:p-6">
             <div className="flex flex-col gap-4 border-b border-[#dedbd3]/70 pb-5 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                     <div className="flex items-center gap-2.5">
                         <h2 className="font-heading text-xl font-semibold tracking-tight text-[#1d1d1d]">
                             {title}
                         </h2>
-                        <span className="rounded-full border border-[#dedbd3] bg-[#f8f7f3] px-2.5 py-0.5 text-xs font-semibold text-[#1d1d1d]/75">
+                        <span className="border border-[#dedbd3] bg-[#f8f7f3] px-2.5 py-0.5 text-xs font-semibold text-[#1d1d1d]/75">
                             {filteredReservations.length} of{' '}
                             {reservations.length}
                         </span>
                     </div>
                     <p className="mt-1 text-xs text-[#1d1d1d]/60">
-                        Confirmed bookings for today from the live ledger
+                        Use the header search to filter guests, tables, or
+                        bookings
                     </p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2.5">
-                    <div className="inline-flex rounded-xl border border-[#dedbd3] bg-[#f8f7f3] p-1">
+                    <div className="inline-flex border border-[#dedbd3] bg-[#f8f7f3] p-1">
                         {(['All', 'Dinner', 'Lunch'] as const).map(
                             (service) => (
                                 <button
@@ -65,7 +68,7 @@ export default function ReservationList({
                                     onClick={() =>
                                         onServiceFilterChange(service)
                                     }
-                                    className={`rounded-lg px-3 py-1 text-xs font-medium transition-all ${
+                                    className={`px-3 py-1 text-xs font-medium transition-all ${
                                         serviceFilter === service
                                             ? 'bg-white font-semibold text-[#1d1d1d] shadow-2xs'
                                             : 'text-[#1d1d1d]/65 hover:text-[#1d1d1d]'
@@ -80,7 +83,7 @@ export default function ReservationList({
                     {showViewAllLink && (
                         <Link
                             href={reservationsRoute.url()}
-                            className="inline-flex items-center gap-1 rounded-xl border border-[#dedbd3] bg-white px-3 py-1.5 text-xs font-semibold text-[#1d1d1d] shadow-2xs transition-colors hover:bg-[#f8f7f3]"
+                            className="inline-flex items-center gap-1 border border-[#dedbd3] bg-white px-3 py-1.5 text-xs font-semibold text-[#1d1d1d] shadow-2xs transition-colors hover:bg-[#f8f7f3]"
                         >
                             <span>Full ledger</span>
                             <ArrowRight className="size-3.5" />
@@ -89,56 +92,39 @@ export default function ReservationList({
                 </div>
             </div>
 
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="relative w-full max-w-sm">
-                    <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#1d1d1d]/40" />
-                    <input
-                        type="text"
-                        value={search}
-                        onChange={(e) => onSearchChange(e.target.value)}
-                        placeholder="Search guest, email, phone, or table..."
-                        className="h-10 w-full rounded-xl border border-[#dedbd3] bg-[#f8f7f3]/50 pr-4 pl-10 text-xs text-[#1d1d1d] transition-all placeholder:text-[#1d1d1d]/40 focus:border-[#1f1d1b] focus:bg-white focus:ring-1 focus:ring-[#1f1d1b] focus:outline-none"
-                    />
-                </div>
-
-                <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="mr-1 text-xs text-[#1d1d1d]/50">
-                        Status:
-                    </span>
-                    {(['All', 'confirmed', 'cancelled'] as const).map(
-                        (status) => (
-                            <button
-                                key={status}
-                                type="button"
-                                onClick={() => onStatusFilterChange(status)}
-                                className={`rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all ${
-                                    statusFilter === status
-                                        ? 'bg-[#1f1d1b] font-semibold text-[#f8f7f3] shadow-2xs'
-                                        : 'border border-[#dedbd3] bg-white text-[#1d1d1d]/70 hover:bg-[#f8f7f3]'
-                                }`}
-                            >
-                                {status === 'All'
-                                    ? 'All'
-                                    : status === 'confirmed'
-                                      ? 'Confirmed'
-                                      : 'Cancelled'}
-                            </button>
-                        ),
-                    )}
-                    {hasActiveFilters && (
-                        <button
-                            type="button"
-                            onClick={onClearFilters}
-                            className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-rose-600 transition-colors hover:bg-rose-50"
-                        >
-                            <X className="size-3.5" />
-                            <span>Reset</span>
-                        </button>
-                    )}
-                </div>
+            <div className="mt-5 flex flex-wrap items-center gap-1.5">
+                <span className="mr-1 text-xs text-[#1d1d1d]/50">Status:</span>
+                {(['All', 'confirmed', 'cancelled'] as const).map((status) => (
+                    <button
+                        key={status}
+                        type="button"
+                        onClick={() => onStatusFilterChange(status)}
+                        className={`px-2.5 py-1.5 text-xs font-medium transition-all ${
+                            statusFilter === status
+                                ? 'bg-[#1f1d1b] font-semibold text-[#f8f7f3] shadow-2xs'
+                                : 'border border-[#dedbd3] bg-white text-[#1d1d1d]/70 hover:bg-[#f8f7f3]'
+                        }`}
+                    >
+                        {status === 'All'
+                            ? 'All'
+                            : status === 'confirmed'
+                              ? 'Confirmed'
+                              : 'Cancelled'}
+                    </button>
+                ))}
+                {hasActiveFilters && (
+                    <button
+                        type="button"
+                        onClick={onClearFilters}
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-rose-600 transition-colors hover:bg-rose-50"
+                    >
+                        <X className="size-3.5" />
+                        <span>Reset</span>
+                    </button>
+                )}
             </div>
 
-            <div className="mt-5 overflow-hidden rounded-xl border border-[#dedbd3]/80">
+            <div className="mt-5 overflow-hidden border border-[#dedbd3]/80">
                 <div className="overflow-x-auto">
                     <table className="w-full border-collapse text-left text-sm">
                         <thead>
@@ -190,21 +176,14 @@ export default function ReservationList({
                                             </div>
                                         </td>
                                         <td className="px-4 py-3.5">
-                                            <span className="rounded-md border border-[#dedbd3] bg-[#f8f7f3] px-2 py-0.5 text-xs font-medium text-[#1d1d1d]/75">
-                                                {reservation.service}
-                                            </span>
+                                            <ReservationServiceLabel
+                                                service={reservation.service}
+                                            />
                                         </td>
                                         <td className="px-4 py-3.5">
-                                            {reservation.status ===
-                                            'confirmed' ? (
-                                                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-[#2f4a3c] uppercase">
-                                                    Confirmed
-                                                </span>
-                                            ) : (
-                                                <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-rose-700 uppercase">
-                                                    Cancelled
-                                                </span>
-                                            )}
+                                            <ReservationStatusLabel
+                                                status={reservation.status}
+                                            />
                                         </td>
                                     </tr>
                                 ))

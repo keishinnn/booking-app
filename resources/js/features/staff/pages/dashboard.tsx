@@ -86,6 +86,28 @@ export default function StaffDashboard({
         });
     }, [todaysReservations, search, statusFilter, serviceFilter]);
 
+    const filteredFloorTables = useMemo(() => {
+        const query = search.trim().toLowerCase();
+
+        if (!query) {
+            return floorTables;
+        }
+
+        return floorTables.filter((table) => {
+            const haystack = [
+                table.name,
+                String(table.capacity),
+                table.status,
+                table.partyInfo,
+                table.service ?? '',
+            ]
+                .join(' ')
+                .toLowerCase();
+
+            return haystack.includes(query);
+        });
+    }, [floorTables, search]);
+
     const inServiceCount = floorTables.filter(
         (t) => t.status === 'In service',
     ).length;
@@ -126,7 +148,11 @@ export default function StaffDashboard({
     }, [todaysReservations]);
 
     return (
-        <StaffLayout searchValue={search} onSearchChange={setSearch}>
+        <StaffLayout
+            searchValue={search}
+            onSearchChange={setSearch}
+            searchPlaceholder="Search guests, tables, bookings..."
+        >
             <Head title="Staff Overview | Halden" />
 
             <div className="max-w-8xl mx-auto space-y-6">
@@ -148,9 +174,9 @@ export default function StaffDashboard({
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 divide-y divide-[#dedbd3]/70 overflow-hidden rounded-2xl border border-[#dedbd3] bg-white shadow-xs sm:divide-x sm:divide-y-0 lg:grid-cols-4">
+                <div className="grid grid-cols-2 divide-y divide-[#dedbd3]/70 overflow-hidden border border-[#dedbd3] bg-white shadow-xs sm:divide-x sm:divide-y-0 lg:grid-cols-4">
                     <div className="flex items-center gap-3.5 p-4 sm:p-5">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
                             <Users className="size-5" />
                         </div>
                         <div>
@@ -164,7 +190,7 @@ export default function StaffDashboard({
                     </div>
 
                     <div className="flex items-center gap-3.5 p-4 sm:p-5">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
                             <Grid3X3 className="size-5" />
                         </div>
                         <div>
@@ -178,7 +204,7 @@ export default function StaffDashboard({
                     </div>
 
                     <div className="flex items-center gap-3.5 p-4 sm:p-5">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
                             <Clock className="size-5" />
                         </div>
                         <div>
@@ -194,7 +220,7 @@ export default function StaffDashboard({
                     </div>
 
                     <div className="flex items-center gap-3.5 p-4 sm:p-5">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#dedbd3] bg-[#f8f7f3] text-[#1d1d1d]">
                             <CalendarCheck className="size-5" />
                         </div>
                         <div>
@@ -209,7 +235,7 @@ export default function StaffDashboard({
                 </div>
 
                 <FloorBoard
-                    tables={floorTables}
+                    tables={filteredFloorTables}
                     onSelectTable={setSelectedTableId}
                     showViewAllLink={true}
                 />
@@ -220,7 +246,6 @@ export default function StaffDashboard({
                     search={search}
                     statusFilter={statusFilter}
                     serviceFilter={serviceFilter}
-                    onSearchChange={setSearch}
                     onStatusFilterChange={setStatusFilter}
                     onServiceFilterChange={setServiceFilter}
                     onClearFilters={() => {

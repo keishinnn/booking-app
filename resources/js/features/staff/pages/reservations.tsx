@@ -1,6 +1,10 @@
 import { Form, Head } from '@inertiajs/react';
-import { Plus, Search } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import {
+    ReservationServiceLabel,
+    ReservationStatusLabel,
+} from '@/features/staff/components/reservation-badges';
 import ReservationForm from '@/features/staff/components/reservation-form';
 import ReservationRowActions from '@/features/staff/components/reservation-row-actions';
 import type {
@@ -63,7 +67,11 @@ export default function StaffReservationsPage({
     ).length;
 
     return (
-        <StaffLayout searchValue={search} onSearchChange={setSearch}>
+        <StaffLayout
+            searchValue={search}
+            onSearchChange={setSearch}
+            searchPlaceholder="Search guests, email, phone, or table..."
+        >
             <Head title="Staff Reservations | Halden" />
 
             <div className="max-w-8xl relative mx-auto space-y-6 pb-24">
@@ -78,71 +86,57 @@ export default function StaffReservationsPage({
                         </p>
                     </div>
                     <p className="text-xs text-[#1d1d1d]/60">
-                        {activeCount} confirmed · {reservations.length} total
+                        {activeCount} confirmed · {filteredReservations.length}{' '}
+                        shown · {reservations.length} total
                     </p>
                 </div>
 
-                <div className="rounded-2xl border border-[#dedbd3] bg-white p-5 shadow-xs md:p-6">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="relative w-full max-w-sm">
-                            <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#1d1d1d]/40" />
-                            <input
-                                type="text"
-                                value={search}
-                                onChange={(event) =>
-                                    setSearch(event.target.value)
-                                }
-                                placeholder="Search guest, email, phone, or table..."
-                                className="h-10 w-full rounded-xl border border-[#dedbd3] bg-[#f8f7f3]/50 pr-4 pl-10 text-xs focus:border-[#1f1d1b] focus:bg-white focus:outline-none"
-                            />
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-2">
-                            <div className="inline-flex rounded-xl border border-[#dedbd3] bg-[#f8f7f3] p-1">
-                                {(['All', 'Dinner', 'Lunch'] as const).map(
-                                    (service) => (
-                                        <button
-                                            key={service}
-                                            type="button"
-                                            onClick={() =>
-                                                setServiceFilter(service)
-                                            }
-                                            className={`rounded-lg px-3 py-1 text-xs font-medium ${
-                                                serviceFilter === service
-                                                    ? 'bg-white font-semibold text-[#1d1d1d] shadow-2xs'
-                                                    : 'text-[#1d1d1d]/65'
-                                            }`}
-                                        >
-                                            {service}
-                                        </button>
-                                    ),
-                                )}
-                            </div>
-
-                            {(['All', 'confirmed', 'cancelled'] as const).map(
-                                (status) => (
+                <div className="border border-[#dedbd3] bg-white p-5 shadow-xs md:p-6">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <div className="inline-flex border border-[#dedbd3] bg-[#f8f7f3] p-1">
+                            {(['All', 'Dinner', 'Lunch'] as const).map(
+                                (service) => (
                                     <button
-                                        key={status}
+                                        key={service}
                                         type="button"
-                                        onClick={() => setStatusFilter(status)}
-                                        className={`rounded-lg px-2.5 py-1.5 text-xs font-medium ${
-                                            statusFilter === status
-                                                ? 'bg-[#1f1d1b] font-semibold text-[#f8f7f3]'
-                                                : 'border border-[#dedbd3] bg-white text-[#1d1d1d]/70'
+                                        onClick={() =>
+                                            setServiceFilter(service)
+                                        }
+                                        className={`px-3 py-1 text-xs font-medium ${
+                                            serviceFilter === service
+                                                ? 'bg-white font-semibold text-[#1d1d1d] shadow-2xs'
+                                                : 'text-[#1d1d1d]/65'
                                         }`}
                                     >
-                                        {status === 'All'
-                                            ? 'All'
-                                            : status === 'confirmed'
-                                              ? 'Confirmed'
-                                              : 'Cancelled'}
+                                        {service}
                                     </button>
                                 ),
                             )}
                         </div>
+
+                        {(['All', 'confirmed', 'cancelled'] as const).map(
+                            (status) => (
+                                <button
+                                    key={status}
+                                    type="button"
+                                    onClick={() => setStatusFilter(status)}
+                                    className={`px-2.5 py-1.5 text-xs font-medium ${
+                                        statusFilter === status
+                                            ? 'bg-[#1f1d1b] font-semibold text-[#f8f7f3]'
+                                            : 'border border-[#dedbd3] bg-white text-[#1d1d1d]/70'
+                                    }`}
+                                >
+                                    {status === 'All'
+                                        ? 'All'
+                                        : status === 'confirmed'
+                                          ? 'Confirmed'
+                                          : 'Cancelled'}
+                                </button>
+                            ),
+                        )}
                     </div>
 
-                    <div className="mt-5 overflow-hidden rounded-xl border border-[#dedbd3]/80">
+                    <div className="mt-5 overflow-hidden border border-[#dedbd3]/80">
                         <div className="overflow-x-auto">
                             <table className="w-full border-collapse text-left text-sm">
                                 <thead>
@@ -234,23 +228,18 @@ export default function StaffReservationsPage({
                                                             </div>
                                                         </td>
                                                         <td className="px-4 py-3.5">
-                                                            <span className="rounded-md border border-[#dedbd3] bg-[#f8f7f3] px-2 py-0.5 text-xs font-medium">
-                                                                {
+                                                            <ReservationServiceLabel
+                                                                service={
                                                                     reservation.service
                                                                 }
-                                                            </span>
+                                                            />
                                                         </td>
                                                         <td className="px-4 py-3.5">
-                                                            {reservation.status ===
-                                                            'confirmed' ? (
-                                                                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#2f4a3c]/30 bg-[#2f4a3c]/10 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-[#2f4a3c] uppercase">
-                                                                    Confirmed
-                                                                </span>
-                                                            ) : (
-                                                                <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-rose-700 uppercase">
-                                                                    Cancelled
-                                                                </span>
-                                                            )}
+                                                            <ReservationStatusLabel
+                                                                status={
+                                                                    reservation.status
+                                                                }
+                                                            />
                                                         </td>
                                                         <td className="px-4 py-3.5 text-right">
                                                             <ReservationRowActions

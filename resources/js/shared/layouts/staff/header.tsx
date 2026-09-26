@@ -14,6 +14,7 @@ import type { StaffNavItem } from '@/shared/layouts/staff/nav';
 type StaffHeaderProps = {
     searchValue?: string;
     onSearchChange?: (value: string) => void;
+    searchPlaceholder?: string;
     sidebarCollapsed: boolean;
     onToggleSidebar: () => void;
     onOpenMobile: () => void;
@@ -30,6 +31,7 @@ type StaffHeaderProps = {
 export default function StaffHeader({
     searchValue,
     onSearchChange,
+    searchPlaceholder = 'Search guests, tables, bookings...',
     sidebarCollapsed,
     onToggleSidebar,
     onOpenMobile,
@@ -42,11 +44,16 @@ export default function StaffHeader({
     adminNavItems,
     accountNavItems,
 }: StaffHeaderProps) {
+    const searchEnabled = typeof onSearchChange === 'function';
     const [userDropdownOpen, setUserDropdownOpen] = useState(false);
     const searchInputRef = useRef<HTMLInputElement>(null);
     const userDropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        if (!searchEnabled) {
+            return;
+        }
+
         const handleKeyDown = (event: KeyboardEvent) => {
             if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
                 event.preventDefault();
@@ -57,7 +64,7 @@ export default function StaffHeader({
         window.addEventListener('keydown', handleKeyDown);
 
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, []);
+    }, [searchEnabled]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -92,9 +99,7 @@ export default function StaffHeader({
                     onClick={onToggleSidebar}
                     className="hidden items-center justify-center rounded-lg p-1.5 text-[#1d1d1d]/50 transition-colors hover:bg-[#f8f7f3] hover:text-[#1d1d1d] lg:flex"
                     title={
-                        sidebarCollapsed
-                            ? 'Expand sidebar'
-                            : 'Collapse sidebar'
+                        sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'
                     }
                     aria-label="Toggle sidebar collapse"
                 >
@@ -105,23 +110,25 @@ export default function StaffHeader({
                     )}
                 </button>
 
-                <div className="relative hidden w-72 sm:block md:w-96">
-                    <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#1d1d1d]/40" />
-                    <input
-                        ref={searchInputRef}
-                        type="text"
-                        value={searchValue ?? ''}
-                        onChange={(event) =>
-                            onSearchChange?.(event.target.value)
-                        }
-                        placeholder="Search guests, tables, bookings..."
-                        className="h-10 w-full rounded-xl border border-[#dedbd3] bg-[#f8f7f3]/60 pr-14 pl-10 text-xs text-[#1d1d1d] transition-all placeholder:text-[#1d1d1d]/40 focus:border-[#1f1d1b] focus:bg-white focus:ring-1 focus:ring-[#1f1d1b] focus:outline-none"
-                    />
-                    <div className="pointer-events-none absolute top-1/2 right-2.5 flex -translate-y-1/2 items-center gap-0.5 rounded-md border border-[#dedbd3] bg-white px-1.5 py-0.5 text-[10px] font-medium text-[#1d1d1d]/50 shadow-2xs">
-                        <span>⌘</span>
-                        <span>K</span>
+                {searchEnabled && (
+                    <div className="relative w-44 min-w-0 flex-1 sm:w-72 sm:flex-none md:w-96">
+                        <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#1d1d1d]/40" />
+                        <input
+                            ref={searchInputRef}
+                            type="search"
+                            value={searchValue ?? ''}
+                            onChange={(event) =>
+                                onSearchChange(event.target.value)
+                            }
+                            placeholder={searchPlaceholder}
+                            className="h-10 w-full border border-[#dedbd3] bg-[#f8f7f3]/60 pr-14 pl-10 text-xs text-[#1d1d1d] transition-all placeholder:text-[#1d1d1d]/40 focus:border-[#1f1d1b] focus:bg-white focus:ring-1 focus:ring-[#1f1d1b] focus:outline-none"
+                        />
+                        <div className="pointer-events-none absolute top-1/2 right-2.5 hidden -translate-y-1/2 items-center gap-0.5 border border-[#dedbd3] bg-white px-1.5 py-0.5 text-[10px] font-medium text-[#1d1d1d]/50 shadow-2xs sm:flex">
+                            <span>⌘</span>
+                            <span>K</span>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
             <div className="flex items-center gap-2.5 sm:gap-4">
