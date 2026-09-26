@@ -34,7 +34,14 @@ test('guest can create a reservation and is redirected to confirmation with mail
         'table_id' => $table->id,
     ]);
 
-    Mail::assertSent(ReservationConfirmed::class, function (ReservationConfirmed $mail) use ($reservation) {
+    Mail::assertSent(ReservationConfirmed::class, function (ReservationConfirmed $mail) use ($reservation, $table) {
+        $mail->assertHasSubject('Your table at Halden');
+        $mail->assertSeeInText('Astrid Lind, your table is booked.');
+        $mail->assertSeeInText($table->name);
+        $mail->assertSeeInText('party of 2');
+        $mail->assertSeeInText('We will hold it for two hours.');
+        $mail->assertDontSeeInText('Status:');
+
         return $mail->reservation->is($reservation)
             && $mail->hasTo('astrid@example.com');
     });
