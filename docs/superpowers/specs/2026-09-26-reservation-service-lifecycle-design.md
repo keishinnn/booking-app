@@ -13,6 +13,7 @@ Give staff a service-night workflow for reservations and tables: hybrid floor oc
 - **Surface:** Both floor (tonight) and reservations ledger (any date)
 - **Data model:** Single expanded `ReservationStatus` enum (Approach 1)
 - **Out of scope:** Reassign table, undo/reconfirm from terminal states, double-booking race locks, capacity-shrink rules, guest self-cancel
+- **Auto-complete:** Seated reservations whose 2-hour window has ended (`now >= starts_at + 2h`) are completed by `reservations:auto-complete-seated` (scheduled every minute). No grace period. Manual Complete early still available. Nightly cleanup deferred.
 
 ## Status model
 
