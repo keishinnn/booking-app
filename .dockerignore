@@ -1,0 +1,15 @@
+.git
+.github
+.superpowers
+node_modules
+vendor
+public/build
+public/hot
+storage/logs
+storage/*.key
+.env
+.env.*
+!.env.example
+.phpunit.cache
+tests
+docs
