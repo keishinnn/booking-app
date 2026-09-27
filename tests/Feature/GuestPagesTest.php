@@ -1,5 +1,12 @@
 <?php
 
+test('a proxied https request is treated as secure', function () {
+    $this->withHeader('X-Forwarded-Proto', 'https')
+        ->get('/');
+
+    expect(request()->isSecure())->toBeTrue();
+});
+
 test('the home page returns 200 and renders the home component', function () {
     $this->get('/')
         ->assertOk()
